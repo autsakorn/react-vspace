@@ -47,7 +47,7 @@ class NewTypeCase extends Component {
         </div>
    }
    return (
-     <div>{ele}</div>
+     <div style={{'width':'400px'}}>{ele}</div>
    );
   }
 }
