@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 class NewTypeCase extends Component {
   constructor(props){
     super(props);
-    this.state = {openAddNewColumn:false, selectValue:this.props.listType[0].name, listType:this.props.listType};
+    this.state = {openAddNewColumn:false, value:this.props.listType[0].name, listType:this.props.listType};
     this.handleAddNewColumn = this.handleAddNewColumn.bind(this);
     this.handleTextareaClose = this.handleTextareaClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -13,41 +16,50 @@ class NewTypeCase extends Component {
   }
   handleSubmit(){
   }
-  handleChange(e){
-    this.setState({selectValue:e.target.value});
-  }
+  handleChange = (event, index, value) => this.setState({value});
   handleAddColumn(){
-    this.props.onAddColumn(this.state.selectValue);
+    this.props.onAddColumn(this.state.value);
     this.setState({openAddNewColumn:false});
   }
   handleTextareaClose(){
     this.setState({openAddNewColumn:false});
   }
   render(){
+    var styles = {
+      style:{
+        margin: 12,
+      }
+    }
     var ele;
    if(!this.state.openAddNewColumn){
       ele = <div className="lists mode-add"><div onClick={this.handleAddNewColumn}>Add New Column...</div></div>
    }else{
       var listType = this.props.listType.map(function(item,k){
-          return <option key={k}>{item.name}</option>;
+          return <MenuItem value={item.name} key={k} primaryText={item.name} />;
       });
       ele =
         <div className="lists">
           <form onSubmit={this.handleSubmit}>
             <div className="form-group form-group-sm">
-              <select className="form-control" onChange={this.handleChange}>
-                {listType}
-              </select>
+            <SelectField floatingLabelText="Type" value={this.state.value} onChange={this.handleChange}>
+              {listType}
+            </SelectField>
+            <br/>
             </div>
             <div className="form-footer">
-              <button onClick={this.handleAddColumn} type="button" className="btn">Add</button>
-              <a href="#" onClick={this.handleTextareaClose}><i className="fa fa-times" aria-hidden="true"></i></a>
+              <RaisedButton label="Add" onClick={this.handleAddColumn} primary={true} style={styles.style} />
+              <RaisedButton label="Cancel" onClick={this.handleTextareaClose} style={style} />
             </div>
           </form>
         </div>
    }
+   const style = {
+     box: {
+       'width':300,'padding':'8px','margin':'0px 10px','border': '1px solid rgb(217, 217, 217)'
+     }
+   }
    return (
-     <div style={{'width':'400px'}}>{ele}</div>
+     <div style={style.box}>{ele}</div>
    );
   }
 }

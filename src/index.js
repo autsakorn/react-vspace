@@ -14,7 +14,7 @@ if(InfoGen.token){
   formData.append('email',InfoGen.email);
   get(Url.info, formData).then(function(resInfo){
     if(localStorage.getItem("project_sid")){
-      formData.append('project_sid',250);
+      formData.append('project_sid',localStorage.getItem("project_sid"));
       get(Url.projectDetail, formData).then(function(resPd){
         get(Url.listCaseAll, formData).then(function(resLCA){
           ReactDOM.render(

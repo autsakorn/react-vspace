@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 class InputNew extends Component {
   constructor(props) {
     super(props);
@@ -29,23 +31,31 @@ class InputNew extends Component {
     e.preventDefault();
   }
   render(){
+    const styles = {
+      style:{
+        margin: 12,
+      },
+      box: {
+        'padding':'5px','margin':'0px 5px','border': '1px solid rgb(217, 217, 217)'
+      }
+    }
     var textarea;
     if(this.props.toggleTextarea==="Adding"){
       textarea =
         <form onSubmit={this.handleSubmit}>
           <div className="form">
-            <input className="add-subject" value={this.state.initialValue} onChange={this.handleSubjectChange} />
+            <TextField value={this.state.subject} onChange={this.handleSubjectChange} hintText="Subject"/><br />
           </div>
           <div className="form-footer">
-            <button type="button" onClick={this.handleAddNew} className="btn">Add</button>
-            <a href="#" onClick={this.handleTextareaClose}><i className="fa fa-times" aria-hidden="true"></i></a>
+            <RaisedButton onClick={this.handleAddNew} primary={true} label="Add" style={styles.style} />
+            <RaisedButton onClick={this.handleTextareaClose} label="Cancel" style={styles.style} />
           </div>
         </form>;
     }else{
       textarea = <a onClick={this.handleTextarea} className="open-card" href="#">{this.state.btnName}</a>
     }
     return(
-      <div>
+      <div style={styles.box}>
         {textarea}
       </div>
     );

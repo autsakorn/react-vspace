@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import FontIcon from 'material-ui/FontIcon';
 
 class CardItem extends Component {
   constructor(props) {
@@ -32,47 +35,52 @@ class CardItem extends Component {
     }
   }
   render(){
+    const iconStyles = {
+      marginRight: 24,
+    };
+    const style = {
+      box: {
+        'padding':'5px','margin':'0px 5px','border': '1px solid rgb(217, 217, 217)'
+      }
+    }
     if(this.props.case.status==="Editing"){
       return (
-        <form onSubmit={this.handleSubmit}>
-          <div className="form">
-            <a href="#" className="pull-right" onClick={this.handleTextareaClose}><i className="fa fa-times" aria-hidden="true"></i></a>
-            <input className="add-subject" onChange={this.handleTxtChange} value={this.state.name} />
-            <div><a href="#"><i className="fa fa-fw fa-user"></i> {(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</a></div>
-            <div><a href="#"><i className="fa fa-fw fa-clock-o"></i> 1 (Man Days)</a></div>
-            <div><a href="#" className="margin-left-4px" onClick={this.handleDelete}><i className="fa fa-trash-o" aria-hidden="true"></i> <small>Remove</small></a></div>
-          </div>
-        </form>
+        <div style={style.box}>
+          <form onSubmit={this.handleSubmit}>
+            <div className="form">
+              <FontIcon className="material-icons" onClick={this.handleTextareaClose} style={iconStyles}>x</FontIcon>
+              <input className="add-subject" onChange={this.handleTxtChange} value={this.state.name} />
+              <div><a href="#"><i className="fa fa-fw fa-user"></i> {(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</a></div>
+              <div><a href="#"><i className="fa fa-fw fa-clock-o"></i> 1 (Man Days)</a></div>
+              <div><a href="#" className="margin-left-4px" onClick={this.handleDelete}><i className="fa fa-trash-o" aria-hidden="true"></i> <small>Remove</small></a></div>
+            </div>
+          </form>
+        </div>
       )
     }else{
       return (
-        <div>
+        <div data-id={this.state.sid} style={style.box} onClick={this.handleEditing}>
           <CardHeader
-            title="Without Avatar"
-            subtitle="Subtitle"
+            title={this.state.item.subject}
+            subtitle={(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}
             actAsExpander={false}
             showExpandableButton={true}
           />
           <CardActions>
-            <FlatButton label="Action1" />
-            <FlatButton label="Action2" />
           </CardActions>
           <CardText expandable={true}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-            Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-            Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
           </CardText>
-          <article data-id={this.state.sid} className="card" onClick={this.handleEditing} >
-            <header >{this.state.item.subject}</header>
-            <div className="detail">
-              <span><i className="fa fa-fw fa-user"></i> {(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</span>
-              <span className="pull-right"><i className="fa fa-fw fa-clock-o"></i> 1 </span>
-            </div>
-          </article>
         </div>
       );
     }
   }
 }
 export default CardItem;
+
+// <article data-id={this.state.sid} className="card" onClick={this.handleEditing} >
+//   <header >{this.state.item.subject}</header>
+//   <div className="detail">
+//     <span><i className="fa fa-fw fa-user"></i> {(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</span>
+//     <span className="pull-right"><i className="fa fa-fw fa-clock-o"></i> 1 </span>
+//   </div>
+// </article>

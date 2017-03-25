@@ -21,6 +21,10 @@ class NavCompoment extends Component {
     localStorage.removeItem("case_token");
     location.reload();
   }
+  handlevSpace(){
+    localStorage.removeItem("project_sid");
+    location.reload();
+  }
   render(){
     const style = {
       title: {
@@ -39,7 +43,7 @@ class NavCompoment extends Component {
         <TextField inputStyle={style.search} hintStyle={style.search}
           hintText="Search"
         />
-        <ToolbarTitle text="vSpace">
+        <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer'}} text="vSpace">
         </ToolbarTitle>
         <ToolbarGroup>
           <ToolbarTitle style={style.title} text={this.props.info.name}>

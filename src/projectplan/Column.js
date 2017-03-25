@@ -70,14 +70,12 @@ class Column extends Component {
     return (
       <div>
         <HeaderProject projectInfo={this.props.projectInfo} />
-
               <div style={styles.root}>
                 <List style={styles.gridList} >
                   {lists}
                   <NewTypeCase onAddColumn={this.handleAddColumn} listType={this.props.listType}/>
                 </List>
               </div>
-
       </div>
     );
   }

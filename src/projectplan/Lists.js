@@ -44,12 +44,17 @@ class Lists extends Component {
     this.state.case.forEach((item) => {
       casetype.push(<CardItem case={item} key={item.sid} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} />);
     });
+    const style = {
+      box: {
+        'width':300,'padding':'8px','margin':'0px 10px','border': '1px solid rgb(217, 217, 217)'
+      }
+    }
     return (
-      <div style={{'width':400}} >
+      <List style={style.box} >
         <header>{this.props.header}</header>
         {casetype}
         <InputNew onAddNew={this.onAddNew} toggleTextarea={this.props.status} onAdding={this.onAdding} sid={this.props.sid} statusAdding={this.props.status} initialValue={""} />
-      </div>
+      </List>
     );
   }
 }
