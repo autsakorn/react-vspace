@@ -51,7 +51,7 @@ class Lists extends Component {
     }
     return (
       <List style={style.box} >
-        <header>{this.props.header}</header>
+        <Subheader>{this.props.header}</Subheader>
         {casetype}
         <InputNew onAddNew={this.onAddNew} toggleTextarea={this.props.status} onAdding={this.onAdding} sid={this.props.sid} statusAdding={this.props.status} initialValue={""} />
       </List>

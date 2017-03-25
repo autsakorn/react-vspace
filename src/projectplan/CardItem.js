@@ -4,6 +4,8 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import FontIcon from 'material-ui/FontIcon';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class CardItem extends Component {
   constructor(props) {
@@ -38,38 +40,39 @@ class CardItem extends Component {
     const iconStyles = {
       marginRight: 24,
     };
-    const style = {
+    const styles = {
       box: {
-        'padding':'5px','margin':'0px 5px','border': '1px solid rgb(217, 217, 217)'
+        'padding':'2px 4px','margin':'0px 4px','border': '1px solid rgb(217, 217, 217)',
+        'marginBottom':'10px'
+      },
+      style: {
+        margin: 4,
       }
     }
     if(this.props.case.status==="Editing"){
       return (
-        <div style={style.box}>
+        <div style={styles.box}>
           <form onSubmit={this.handleSubmit}>
             <div className="form">
-              <FontIcon className="material-icons" onClick={this.handleTextareaClose} style={iconStyles}>x</FontIcon>
-              <input className="add-subject" onChange={this.handleTxtChange} value={this.state.name} />
-              <div><a href="#"><i className="fa fa-fw fa-user"></i> {(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</a></div>
-              <div><a href="#"><i className="fa fa-fw fa-clock-o"></i> 1 (Man Days)</a></div>
-              <div><a href="#" className="margin-left-4px" onClick={this.handleDelete}><i className="fa fa-trash-o" aria-hidden="true"></i> <small>Remove</small></a></div>
+              <TextField hintText="Subject" value={this.state.name} onChange={this.handleTxtChange} />
+              <div>{(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</div>
+              <div>1 (Man Days)</div>
+              <br/>
+              <RaisedButton label="Remove" onClick={this.handleDelete} secondary={true} style={styles.style} />
+              <RaisedButton label="Close" onClick={this.handleTextareaClose}  style={styles.style} />
             </div>
           </form>
         </div>
       )
     }else{
       return (
-        <div data-id={this.state.sid} style={style.box} onClick={this.handleEditing}>
-          <CardHeader
-            title={this.state.item.subject}
-            subtitle={(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}
-            actAsExpander={false}
-            showExpandableButton={true}
-          />
-          <CardActions>
-          </CardActions>
-          <CardText expandable={true}>
-          </CardText>
+        <div data-id={this.state.sid} style={styles.box} onClick={this.handleEditing}>
+
+            <div>
+              {this.state.item.subject}
+            </div>
+            <div><small>{(this.state.item.owner_thainame)?this.state.item.owner_thainame:'ยังไม่กำหนด Owner'}</small></div>
+
         </div>
       );
     }
@@ -77,6 +80,10 @@ class CardItem extends Component {
 }
 export default CardItem;
 
+// <CardActions>
+// </CardActions>
+// <CardText expandable={true}>
+// </CardText>
 // <article data-id={this.state.sid} className="card" onClick={this.handleEditing} >
 //   <header >{this.state.item.subject}</header>
 //   <div className="detail">
