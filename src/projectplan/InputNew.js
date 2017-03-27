@@ -18,18 +18,23 @@ class InputNew extends Component {
   handleTextareaClose(){
     this.props.onAdding(0);
   }
-  handleAddNew(){
-    this.props.onAddNew(this.state.subject);
-    this.setState({subject:""});
+  handleAddNew(e){
+    e.preventDefault();
+    if(this.state.subject){
+      this.props.onAddNew(this.state.subject);
+      this.setState({subject:""});
+    }
   }
   handleSubjectChange(e){
     this.setState({subject:e.target.value});
     this.setState({initialValue:e.target.value});
   }
   handleSubmit(e){
-    this.props.onAddNew(this.state.subject);
-    this.setState({subject:""});
     e.preventDefault();
+    if(this.state.subject){
+      this.props.onAddNew(this.state.subject);
+      this.setState({subject:""});
+    }
   }
   render(){
     const styles = {
@@ -37,8 +42,8 @@ class InputNew extends Component {
         margin: 12,
       },
       box: {
-        'padding':'5px','margin':'0px 5px',
-        'border': '1px solid rgb(217, 217, 217)'
+        'padding':'10px','margin':'0px 5px',
+        'border': '1px solid rgb(217, 217, 217)','background': '#ffffff'
       }
     }
     var textarea;

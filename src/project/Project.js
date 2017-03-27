@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import LeftBar from '../nav/LeftBar';
-// import RightBar from '../nav/RightBar';
 import get from '../config/Get.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {GridList, GridTile} from 'material-ui/GridList';

@@ -11,7 +11,8 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 class Column extends Component {
   constructor(props) {
     super(props);
-    this.state = {casetype:this.props.casetype};
+    console.log(props);
+    this.state = {...props};
     this.onAddNew = this.onAddNew.bind(this);
     this.onAdding = this.onAdding.bind(this);
     this.onEdit = this.onEdit.bind(this);
@@ -37,11 +38,14 @@ class Column extends Component {
   handleAddColumn(data){
     this.props.onAddColumn(data);
   }
+  handleChangeStaffCase = (ticketSid,emailNewOwner) => {
+    this.props.onChangeStaffCase(ticketSid, emailNewOwner);
+  }
   render() {
     var lists = [];
     var that = this;
     this.props.casetype.forEach((item,k) => {
-      lists.push(<Lists key={k} sid={item.sid} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
+      lists.push(<Lists onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} key={k} sid={item.sid} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
     });
     const styles = {
       root: {
@@ -59,8 +63,7 @@ class Column extends Component {
       gridList: {
         display: '-webkit-inline-box',
         flexWrap: 'nowrap',
-        width:'400px'
-
+        width:'300px'
         // overflowX: 'auto',
       },
       titleStyle: {
@@ -70,12 +73,12 @@ class Column extends Component {
     return (
       <div>
         <HeaderProject projectInfo={this.props.projectInfo} />
-              <div style={styles.root}>
-                <List style={styles.gridList} >
-                  {lists}
-                  <NewTypeCase onAddColumn={this.handleAddColumn} listType={this.props.listType}/>
-                </List>
-              </div>
+        <div style={styles.root}>
+          <List style={styles.gridList} >
+            {lists}
+            <NewTypeCase onAddColumn={this.handleAddColumn} listType={this.props.listType}/>
+          </List>
+        </div>
       </div>
     );
   }

@@ -5,8 +5,13 @@ class HeaderProject extends Component {
     this.state = {...props};
   }
   render(){
+    const styles = {
+      header: {
+        margin:'0px 10px'
+      }
+    }
     return(
-      <div className="board-header">
+      <div className="board-header" style={styles.header}>
         <span className="board-header-btn vspace-header-btn-name js-rename-board" href="#">
             <span className="board-header-btn-text" dir="auto">{this.props.projectInfo.name}</span>
         </span>

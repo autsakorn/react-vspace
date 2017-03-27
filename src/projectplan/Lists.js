@@ -16,7 +16,7 @@ import MenuItem from 'material-ui/MenuItem';
 class Lists extends Component {
   constructor(props) {
      super(props);
-     this.state = {header:this.props.header,case:this.props.item,statusAdding:this.props.item.status, status:this.props.status, sid:this.props.sid}
+     this.state = {header:this.props.header,case:this.props.item,statusAdding:this.props.item.status, status:this.props.status, sid:this.props.sid,listUserCanAddProject:props.listUserCanAddProject}
      this.onAddNew = this.onAddNew.bind(this);
      this.onAdding = this.onAdding.bind(this);
      this.onEdit = this.onEdit.bind(this);
@@ -39,19 +39,26 @@ class Lists extends Component {
   onDelete(sid){
     this.props.onDelete(this.state.sid, sid);
   }
+  handleChangeStaffCase = (ticketSid, emailNewOwner) => {
+      this.props.onChangeStaffCase(ticketSid, emailNewOwner);
+  };
   render(){
     var casetype = [];
     this.state.case.forEach((item) => {
-      casetype.push(<CardItem case={item} key={item.sid} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} />);
+      casetype.push(<CardItem onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.props.listUserCanAddProject} case={item} key={item.sid} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} />);
     });
     const style = {
+      header: {
+        margin: '0px 0px',
+        paddingLeft: '5px'
+      },
       box: {
-        'width':300,'padding':'8px','margin':'0px 10px','border': '1px solid rgb(217, 217, 217)'
+        'width':300,'padding':'8px','margin':'0px 10px','border': '1px solid rgb(217, 217, 217)','background': '#fafbfc', 'borderRadius': '3px'
       }
     }
     return (
       <List style={style.box} >
-        <Subheader>{this.props.header}</Subheader>
+        <Subheader style={style.header}>{this.props.header}</Subheader>
         {casetype}
         <InputNew onAddNew={this.onAddNew} toggleTextarea={this.props.status} onAdding={this.onAdding} sid={this.props.sid} statusAdding={this.props.status} initialValue={""} />
       </List>
