@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import get from '../config/Get.js';
 import Url from '../config/url';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
@@ -87,13 +86,13 @@ class FormLogin extends Component{
         </Card>
       </div>);
      return(
-       <MuiThemeProvider>
+
          <div className="login" >
            <div className="login-screen">
             {TextFieldExampleSimple()}
            </div>
          </div>
-       </MuiThemeProvider>
+
      )
    }
  }
