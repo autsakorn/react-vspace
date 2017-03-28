@@ -8,7 +8,9 @@ var Url = {
   'editOwnerCase':END_POINT_2+'v1/casemodify/owner',
   'casemodifySubject':END_POINT_2+'v1/casemodify/subject',
   'caseCreate':END_POINT_2+'v1/casemanagement/createCasesProjectPlan',
-  'caseRemove':END_POINT_2+'v1/casemodify/removeCase'
+  'caseRemove':END_POINT_2+'v1/casemodify/removeCase',
+  'findContractInfo': END_POINT_2+'v1/contract/find_contract_info',
+  'projectCreate': END_POINT_2+'v1/project/ProjectCreate'
 }
 
 export default Url;

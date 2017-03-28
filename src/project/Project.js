@@ -3,12 +3,12 @@ import get from '../config/Get.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {GridList, GridTile} from 'material-ui/GridList';
 import NavCompoment from '../nav/NavCompoment';
-import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
-import FlatButton from 'material-ui/FlatButton';
-import Paper from 'material-ui/Paper';
+// import IconButton from 'material-ui/IconButton';
+// import Subheader from 'material-ui/Subheader';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
+// import StarBorder from 'material-ui/svg-icons/toggle/star-border';
+// import FlatButton from 'material-ui/FlatButton';
+// import Paper from 'material-ui/Paper';
 // import '../projectplan/App.css';
 // import './Project.css';
 class Project extends Component {
@@ -29,22 +29,11 @@ class Project extends Component {
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
     location.reload();
   }
+  handleCreateNewProject = () => {
+    localStorage.setItem("currectPage","ProjectCreate");
+    location.reload();
+  }
   render(){
-    // var projectList = this.state.projectList.map((item,i)=>{
-    //   return (
-    //      <div className="section-item" key={i}>
-    //       <span className="link section-tile color-2-0" onClick={this.handleSelectProject} data-id={item.sid}>
-    //         <span className="tile-details">
-    //           <span  dir="auto" className="tile-details">
-    //             <div title={item.contract} className="tile-details-name">{item.contract}</div>
-    //             <div ><small title={item.name}>{item.name}</small></div>
-    //           </span>
-    //         </span>
-    //       </span>
-    //     </div>
-    //   )
-    // });
-
     const styles = {
       root: {
         display: 'flex',
@@ -59,9 +48,18 @@ class Project extends Component {
       },
       styleBorder: {
         border: '1px solid #838383',
+        // margin:'10px 10px 0px 10px'
         // backgroundColor: 'red'
+      },
+      styleBorderNew: {
+        border: '1px dashed #838383',
       }
     };
+    var numberColumn = 5;
+    console.log(window.innerWidth);
+    if(window.innerWidth<376){
+      numberColumn = 2;
+    }
     const GridListExampleSimple = () => (
       <Card>
         <CardHeader
@@ -71,10 +69,19 @@ class Project extends Component {
         <CardText>
           <div style={styles.root}>
             <GridList
-              cols={5}
+              cols={numberColumn}
               padding={10}
               style={styles.gridList}
             >
+            <GridTile
+              key={""}
+              title={"Create New Project"}
+              titleStyle={styles.titleStyle}
+              style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
+            >
+            <div style={{padding:'10px'}}>Create New Project</div>
+            </GridTile>
+
               {this.state.projectList.map((tile,i) => (
                 <GridTile
                   key={i}
@@ -82,7 +89,7 @@ class Project extends Component {
                   titleStyle={styles.titleStyle}
                   style={styles.styleBorder} onClick={this.handleSelectProject} data-id={tile.sid}
                 >
-                {tile.name}
+                <div style={{padding:'10px'}}>{tile.name} <br/>{tile.create_datetime}</div>
                 </GridTile>
               ))}
             </GridList>

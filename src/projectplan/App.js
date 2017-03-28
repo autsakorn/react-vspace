@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {GridList, GridTile} from 'material-ui/GridList';
+// import {GridList, GridTile} from 'material-ui/GridList';
 import NavCompoment from '../nav/NavCompoment';
 import MyApp from './MyApp';
 import get from '../config/Get.js';

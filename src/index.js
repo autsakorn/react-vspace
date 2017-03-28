@@ -6,6 +6,7 @@ import InfoGen from './config/InfoGen';
 import ProjectPlanApp from './projectplan/App';
 import Project from './project/Project';
 import Welcome from './login/Welcome';
+import ProjectCreate from './project/ProjectCreate';
 
 var formData = new FormData();
 
@@ -13,7 +14,9 @@ if(InfoGen.token){
   formData.append('token',InfoGen.token);
   formData.append('email',InfoGen.email);
   get(Url.info, formData).then(function(resInfo){
-    if(localStorage.getItem("project_sid")){
+    if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
+      ReactDOM.render(<ProjectCreate info={resInfo.data} />, document.getElementById('root'));
+    }else if(localStorage.getItem("project_sid")){
       formData.append('project_sid',localStorage.getItem("project_sid"));
       get(Url.projectDetail, formData).then(function(resPd){
         get(Url.listCaseAll, formData).then(function(resLCA){

@@ -24,6 +24,7 @@ class NavCompoment extends Component {
   }
   handlevSpace(){
     localStorage.removeItem("project_sid");
+    localStorage.removeItem("currectPage");
     location.reload();
   }
   render(){
@@ -38,12 +39,16 @@ class NavCompoment extends Component {
       },
       search: {color:'#FFFFFF'},
       toolbarGroup: {
-        width: '200px'
+        width: '33%'
       },
       toolbarGroupCenter: {
-        width: '200px',
+        width: '33%',
         display:'block', textAlign:'center', color:'#FFFFFF'
       }
+    }
+    var avatar = <Avatar style={{'marginTop':'8px'}} src={this.props.info.pic_full} />;
+    if(window.innerWidth<376){
+      avatar = <span></span>
     }
     return(
       <Toolbar style={style.toolbar}>
@@ -56,10 +61,10 @@ class NavCompoment extends Component {
           <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer','color':'#FFFFFF'}} text="vSpace">
           </ToolbarTitle>
         </ToolbarGroup>
-        <ToolbarGroup>
+        <ToolbarGroup style={{'display':'inline','width':'33%','textAlign':'right'}}>
           <ToolbarTitle style={style.title} text="">
           </ToolbarTitle>
-          <Avatar src={this.props.info.pic_full} />
+          {avatar}
           <IconMenu color={red500}
             iconButtonElement={
               <IconButton iconStyle={{color:"#FFFFFF"}} touch={true}>
