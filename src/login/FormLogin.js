@@ -3,11 +3,11 @@ import get from '../config/Get.js';
 import Url from '../config/url';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-injectTapEventPlugin();
+
 class FormLogin extends Component{
    constructor(props){
      super(props)
@@ -37,6 +37,15 @@ class FormLogin extends Component{
         }
       });
       event.preventDefault();
+    }
+    handlePage = (newPage) => {
+      this.props.onChangePage(newPage);
+    }
+    goToForgotPassword = () => {
+      this.handlePage(2);
+    }
+    goToSignUp = () => {
+      this.handlePage(3);
     }
    render(){
      const style = {
@@ -69,6 +78,11 @@ class FormLogin extends Component{
                style={styleRaisedButton.button} onClick={this.handleSubmit} label="Sign In" primary={true}>
                 <input type="submit" style={{display:'none'}} />
               </RaisedButton>
+            </div>
+            <div>
+              <small onClick={this.goToSignUp} style={{'float':'left','marginLeft':'60px','color':'rgb(0, 188, 212)','cursor':'pointer'}}>Sign Up</small>
+              <small onClick={this.goToForgotPassword} style={{'float':'right','marginRight':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}}>Forgot Password</small>
+              <div style={{'clear':'both','marginBottom':'20px'}}></div>
             </div>
           </form>
         </Card>

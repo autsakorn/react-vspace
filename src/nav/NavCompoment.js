@@ -75,5 +75,4 @@ class NavCompoment extends Component {
     )
   }
 }
-
 export default NavCompoment;
