@@ -9,21 +9,38 @@ import {
 } from 'material-ui/Stepper';
 
 class Forgot extends Component {
+
   state = {
    finished: false,
    stepIndex: 0,
    email:"",
    otp:"",
-   newPassword:""
+   newpassword:"",
+
  };
 
  handleNext = () => {
    const {stepIndex} = this.state;
-
-   this.setState({
-     stepIndex: stepIndex + 1,
-     finished: stepIndex >= 2,
-   });
+   if(stepIndex===0){
+      if(this.state.email!==""){
+        this.setState({
+          stepIndex: stepIndex + 1,
+          finished: stepIndex >= 2,
+        });
+      }
+   }else if (stepIndex==1) {
+     if(this.state.otp!=="" && this.state.newpassword!="") {
+       this.setState({
+         stepIndex: stepIndex + 1,
+         finished: stepIndex >= 2,
+       });
+     }
+   } else{
+     this.setState({
+       stepIndex: stepIndex + 1,
+       finished: stepIndex >= 2,
+     });
+   }
  };
 
  handlePrev = () => {
@@ -35,6 +52,13 @@ class Forgot extends Component {
  handleEmail = (e) => {
    this.setState({email:e.target.value});
  }
+ handleotp = (e) => {
+   this.setState({otp:e.target.value});
+ }
+ handlenewpassword = (e) => {
+   this.setState({newpassword:e.target.value});
+ }
+
 
  getStepContent(stepIndex) {
    switch (stepIndex) {
@@ -44,10 +68,18 @@ class Forgot extends Component {
       floatingLabelText=""
       floatingLabelFixed={true} />;
      case 1:
-       return <TextField
-      hintText="OTP" value=""
-      floatingLabelText=""
-      floatingLabelFixed={true} />;
+       return (
+       <div>
+           <form>
+              <div>
+                  <TextField hintText="OTP" value={this.state.otp} onChange={this.handleotp} floatingLabelText="" floatingLabelFixed={true} />
+              </div>
+              <div>
+                    <TextField hintText="NewPassword" value={this.state.newpassword} onChange={this.handlenewpassword} floatingLabelText="" floatingLabelFixed={true} />
+              </div>
+          </form>
+     </div>
+     )
      default:
        return 'finished';
    }
@@ -56,7 +88,13 @@ class Forgot extends Component {
   render(){
     const {finished, stepIndex} = this.state;
     const contentStyle = {margin: '21px 230px'};
-
+    var styleBtnBack = {
+    }
+    if(stepIndex===0){
+      styleBtnBack = {
+        visibility: 'hidden'
+      }
+    }
     return(
       <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
           <Stepper activeStep={stepIndex}>
@@ -66,7 +104,6 @@ class Forgot extends Component {
             <Step>
               <StepLabel>Reset Password</StepLabel>
             </Step>
-
           </Stepper>
           <div style={contentStyle}>
             {finished ? (
@@ -89,9 +126,9 @@ class Forgot extends Component {
                     label="Back"
                     disabled={stepIndex === 0}
                     onTouchTap={this.handlePrev}
-                    style={{marginRight: 12}}
+                    style={styleBtnBack}
                   />
-                  <RaisedButton
+                  <RaisedButton style={{marginLeft: 12}}
                     label={stepIndex === 2 ? 'Finish' : 'Next'}
                     primary={true}
                     onTouchTap={this.handleNext}
