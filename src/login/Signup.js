@@ -61,7 +61,7 @@ class Signup extends React.Component {
             <TextField style={{marginTop: 0}} floatingLabelText="Name" />
           </div>
           <div>
-            <TextField style={{marginTop: 0}} floatingLabelText="Mobile" />
+            <TextField style={{marginTop: 0}} floatingLabelText="Mobiles" />
           </div>
           </form>
 
@@ -71,7 +71,14 @@ class Signup extends React.Component {
       case 1:
         return (
           <div>
+            <form>
+          <div>
             <TextField style={{marginTop: 0}} floatingLabelText="OTP" />
+          </div>
+          <div>
+            <TextField style={{marginTop: 0}} floatingLabelText="NewPassword" />
+          </div>
+          </form>
           </div>
         );
       case 2:
