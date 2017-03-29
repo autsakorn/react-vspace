@@ -8,7 +8,14 @@ import Put from '../config/Put.js';
 class MyApp extends Component{
   constructor(props) {
     super(props);
-    this.state = {...props};
+    // this.state = {...props};
+    this.state = {
+      toggleUpdate:this.props.toggleUpdate,
+      casetype:this.props.casetype,
+      projectInfo:this.props.projectInfo,
+      listType:this.props.listType,
+      listUserCanAddProject:this.props.listUserCanAddProject
+    }
     this.onAdding = this.onAdding.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onEditChange = this.onEditChange.bind(this);
@@ -17,46 +24,32 @@ class MyApp extends Component{
     this.handleAddColumn = this.handleAddColumn.bind(this);
   }
   onAddNew(sid, data){
-    var dLength = this.props.casetype.length;
-    var that = this;
-    var indexCaseType;
-    for(var i=0; i<dLength;i++){
-        if(sid===this.props.casetype[i].sid){
-          var maxSid = 0;
-          for(var j=0;j<this.props.casetype[i].case.length;j++){
-            if(this.props.casetype[i].case[j].sid>maxSid){
-              maxSid = this.props.casetype[i].case[j].sid;
-              indexCaseType = i;
-            }
-          }
-
-          var dataForCreateCase = {
-            contract_no:this.props.projectInfo.contract_no,
-            project_owner_sid:this.props.projectInfo.project_owner_sid,
-            subject:data,
-            detail:data,
-            case_type:this.props.casetype[i].type,
-            enduser_case:this.props.projectInfo.end_user,
-            enduser_address:this.props.projectInfo.end_user_address,
-            urgency:"Normal",
-            requester: {name:"",email:"",mobile:"",phone:"",company:""},
-            enduser: {name:"",email:"",mobile:"",phone:"",company:""},
-            owner:{thainame:"",email:InfoGen.email,mobile:"",pic:""}
-          };
-          var formData = new FormData();
-          formData.append('token',InfoGen.token);
-          formData.append('email',InfoGen.email);
-          formData.append('storage',JSON.stringify(dataForCreateCase));
-          Put(Url.caseCreate, formData).then(function(res){
-            console.log('resCaseCreated', res);
-            that.props.casetype[indexCaseType].case.push({sid:res.data_res.ticket_sid,subject:data});
-            that.setState({casetype:that.props.casetype});
-          });
-        }
-    }
-    // console.log(this.props.casetype);
-
+    // var dLength = this.props.casetype.length;
+    // var that = this;
+    // var indexCaseType = 0;
+    // console.log(sid);
+    //
+    //   for(var i=0; i<dLength;i++){
+    //       if(sid===this.props.casetype[i].sid){
+    //         // var maxSid = 0;
+    //         if(this.props.casetype[i].case.length>0){
+    //           for(var j=0;j<this.props.casetype[i].case.length;j++){
+    //             // if(this.props.casetype[i].case[j].sid>maxSid){
+    //               // maxSid = this.props.casetype[i].case[j].sid;
+    //               // this.props.casetype[i].case = new Array()
+    //               indexCaseType = i;
+    //             // }
+    //           }
+    //           this.sendDataCreateCaseToServer(indexCaseType,data);
+    //         }else{
+    //           this.props.casetype[i].case = [];
+    //           this.sendDataCreateCaseToServer(indexCaseType,data);
+    //         }
+    //         //
+    //       }
+    //   }
   }
+
   onAdding(sid){
     var dLength = this.props.casetype.length;
     for(var i=0;i<dLength;i++){
@@ -153,7 +146,7 @@ class MyApp extends Component{
   render(){
     return(
       <div id="container">
-        <Column onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
+        <Column projectInfo={this.state.projectInfo} toggleUpdate={this.state.toggleUpdate} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
       </div>
       );
   }

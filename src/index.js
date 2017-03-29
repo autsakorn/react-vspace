@@ -7,7 +7,7 @@ import ProjectPlanApp from './projectplan/App';
 import Project from './project/Project';
 import Welcome from './login/Welcome';
 import ProjectCreate from './project/ProjectCreate';
-
+import './index.css';
 var formData = new FormData();
 
 if(InfoGen.token){

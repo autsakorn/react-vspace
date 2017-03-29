@@ -7,11 +7,11 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import ServiceReportCreate from './ServiceReportCreate';
 
 class ServiceReportDialog extends Component {
   constructor(props){
     super(props);
-    console.log('ServiceReportDialog',props);
     this.state = {
       open: false,
       serviceReport:this.props.serviceReport
@@ -31,20 +31,19 @@ class ServiceReportDialog extends Component {
       },
     };
     const actions = [
+
       <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-      <FlatButton
-        label="Submit"
+        label="Close"
         primary={true}
         keyboardFocused={true}
         onTouchTap={this.handleClose}
       />,
     ];
 
+    const label = "View ("+this.state.serviceReport.length+")";
+
     const serviceReport = [];
+
     for (let i = 0; i < this.state.serviceReport.length; i++) {
       serviceReport.push(
         <div key={i}>
@@ -53,7 +52,7 @@ class ServiceReportDialog extends Component {
       );
     }
 
-    const label = "View ("+this.state.serviceReport.length+")";
+
     return (
       <div>
         Service Report: <RaisedButton label={label} onTouchTap={this.handleOpen} />
@@ -65,9 +64,13 @@ class ServiceReportDialog extends Component {
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
-          <div>
+
+
+          <div style={{minHeight:'200px'}}>
+            <ServiceReportCreate serviceReport={this.props.serviceReport} />
             {serviceReport}
           </div>
+
         </Dialog>
       </div>
     );

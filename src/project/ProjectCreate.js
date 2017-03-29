@@ -104,6 +104,9 @@ class ProjectCreate extends Component {
     this.setState({project_name:''});
     this.setState({enduser_name:''});
     this.setState({enduser_address:''});
+    if(e.target.value==='None Contract'){
+      this.setState({contract_no:'None Contract'});
+    }
   }
   handleProjectName = (e) => {
     this.setState({project_name:e.target.value});
@@ -163,6 +166,8 @@ class ProjectCreate extends Component {
     formData.append('data',JSON.stringify(confirmCreateProject));
     Put(Url.projectCreate, formData).then(function(res){
         console.log(res);
+        localStorage.removeItem('currectPage');
+        location.reload();
     });
   }
   handleIHaveContract = () => {
@@ -301,9 +306,18 @@ class ProjectCreate extends Component {
       var formPostSale = findContractForm
     }
 
+    var formNoneContract = <div>
+      <div><TextField hintText="Project Name" value={this.state.project_name} onChange={this.handleProjectName} floatingLabelText="Project Name"/><br /></div>
+      <div><TextField hintText="Enduser Company" value={this.state.enduser_name} onChange={this.handleCustomerCompany} floatingLabelText="Enduser Company"/><br /></div>
+      <br/>
+    </div>;
+
+
     var formProjectInformation;
     if(this.state.projectParse==="Pre Sale"){
       formProjectInformation = formPreSale;
+    }else if(this.state.projectParse==="None Contract"){
+      formProjectInformation = formNoneContract;
     }else {
       formProjectInformation = formPostSale;
     }
@@ -324,6 +338,11 @@ class ProjectCreate extends Component {
                     <RadioButton
                       value="Post Sale"
                       label="Post-Sale"
+                      style={styles.radioButton}
+                    />
+                    <RadioButton
+                      value="None Contract"
+                      label="None Contract"
                       style={styles.radioButton}
                     />
                   </RadioButtonGroup>

@@ -1,68 +1,173 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
+import get from '../config/Get.js';
+import Url from '../config/url';
+import InfoGen from '../config/InfoGen';
+import Put from '../config/Put.js';
 import CardItem from './CardItem';
 import InputNew from './InputNew';
-
-// import MobileTearSheet from 'material-ui/MobileTearSheet';
-import {List, ListItem} from 'material-ui/List';
+import {
+    List,
+    ListItem
+} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
-import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+import {
+    grey400,
+    darkBlack,
+    lightBlack
+} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 
 class Lists extends Component {
-  constructor(props) {
-     super(props);
-     this.state = {header:this.props.header,case:this.props.item,statusAdding:this.props.item.status, status:this.props.status, sid:this.props.sid,listUserCanAddProject:props.listUserCanAddProject}
-     this.onAddNew = this.onAddNew.bind(this);
-     this.onAdding = this.onAdding.bind(this);
-     this.onEdit = this.onEdit.bind(this);
-     this.onEditChange = this.onEditChange.bind(this);
-     this.onDelete = this.onDelete.bind(this);
-  }
-  onAddNew(data){
-    this.props.onAddNew(this.state.sid, data);
-  }
-  onAdding(sid){
-    this.props.onAdding(sid);
-    this.render();
-  }
-  onEdit(sSid){
-      this.props.onEdit(this.state.sid, sSid);
-  }
-  onEditChange(sid, value){
-    this.props.onEditChange(this.state.sid, sid, value);
-  }
-  onDelete(sid){
-    this.props.onDelete(this.state.sid, sid);
-  }
-  handleChangeStaffCase = (ticketSid, emailNewOwner) => {
-      this.props.onChangeStaffCase(ticketSid, emailNewOwner);
-  };
-  render(){
-    var casetype = [];
-    this.state.case.forEach((item) => {
-      casetype.push(<CardItem onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.props.listUserCanAddProject} case={item} key={item.sid} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} />);
-    });
-    const style = {
-      header: {
-        margin: '0px 0px',
-        paddingLeft: '5px'
-      },
-      box: {
-        'width':300,'padding':'8px','margin':'0px 10px','border': '1px solid rgb(217, 217, 217)','background': '#fafbfc', 'borderRadius': '3px'
-      }
+    constructor(props) {
+        super(props);
+        console.log('Lists', props);
+        this.state = {
+            header: this.props.header,
+            case: this.props.item,
+            statusAdding: this.props.item.status,
+            status: this.props.status,
+            sid: this.props.sid,
+            type: this.props.type,
+            listUserCanAddProject: this.props.listUserCanAddProject,
+            projectInfo:this.props.projectInfo
+        }
+        this.onAddNew = this.onAddNew.bind(this);
+        this.onAdding = this.onAdding.bind(this);
+        this.onEdit = this.onEdit.bind(this);
+        this.onEditChange = this.onEditChange.bind(this);
+        this.onDelete = this.onDelete.bind(this);
     }
-    return (
-      <List style={style.box} >
-        <Subheader style={style.header}>{this.props.header}</Subheader>
-        {casetype}
-        <InputNew onAddNew={this.onAddNew} toggleTextarea={this.props.status} onAdding={this.onAdding} sid={this.props.sid} statusAdding={this.props.status} initialValue={""} />
-      </List>
-    );
-  }
-}
-export default Lists;
+    onAddNew(data) {
+        // alert(sid);
+        // alert('test');
+        // this.props.item.push({sid:10000,subject:data});
+        // this.setState({case:this.props.item});
+        // this.props.onAddNew(this.state.sid, data);
+        this.sendDataCreateCaseToServer(this.props.type, data);
+    }
+
+    sendDataCreateCaseToServer(type, data) {
+        var that = this;
+        var dataForCreateCase = {
+            contract_no: this.props.projectInfo.contract_no,
+            project_owner_sid: this.props.projectInfo.project_owner_sid,
+            subject: data,
+            detail: data,
+            case_type: type,
+            enduser_case: this.props.projectInfo.end_user,
+            enduser_address: this.props.projectInfo.end_user_address,
+            urgency: "Normal",
+            requester: {
+                name: "",
+                email: "",
+                mobile: "",
+                phone: "",
+                company: ""
+            },
+            enduser: {
+                name: "",
+                email: "",
+                mobile: "",
+                phone: "",
+                company: ""
+            },
+            owner: {
+                thainame: "",
+                email: InfoGen.email,
+                mobile: "",
+                pic: ""
+            }
+        };
+        var formData = new FormData();
+        formData.append('token', InfoGen.token);
+        formData.append('email', InfoGen.email);
+        formData.append('storage', JSON.stringify(dataForCreateCase));
+        Put(Url.caseCreate, formData).then(function(res) {
+            console.log('resCaseCreated', res);
+            that.props.item.push({sid:res.ticket_sid,subject:data});
+            that.setState({case:that.props.item});
+        });
+    }
+
+    onAdding(sid) {
+        this.props.onAdding(sid);
+        this.render();
+    }
+    onEdit(sSid) {
+        this.props.onEdit(this.state.sid, sSid);
+    }
+    onEditChange(sid, value) {
+        this.props.onEditChange(this.state.sid, sid, value);
+    }
+    onDelete(sid) {
+        this.props.onDelete(this.state.sid, sid);
+    }
+    handleChangeStaffCase = (ticketSid, emailNewOwner) => {
+        this.props.onChangeStaffCase(ticketSid, emailNewOwner);
+    };
+    render() {
+        var casetype = [];
+        this.state.case.forEach((item, k) => {
+            casetype.push(<CardItem key={k}
+                    onChangeStaffCase = {this.handleChangeStaffCase}
+                    listUserCanAddProject = {this.props.listUserCanAddProject}
+                    case = {item}
+                    onEdit = {this.onEdit}
+                    onEditChange = {this.onEditChange}
+                    onDelete = {this.onDelete} />);
+        });
+            const style = {
+                header: {
+                    margin: '0px 0px',
+                    paddingLeft: '5px'
+                },
+                box: {
+                    'width': 300,
+                    'padding': '8px',
+                    'margin': '0px 10px',
+                    'border': '1px solid rgb(217, 217, 217)',
+                    'background': '#fafbfc',
+                    'borderRadius': '3px'
+                }
+            }
+            return ( <List style = {
+                    style.box
+                } >
+                <
+                Subheader style = {
+                    style.header
+                } > {
+                    this.props.header
+                } < /Subheader> {
+                    casetype
+                } <
+                InputNew onAddNew = {
+                    this.onAddNew
+                }
+                toggleTextarea = {
+                    this.props.status
+                }
+                onAdding = {
+                    this.onAdding
+                }
+                sid = {
+                    this.props.sid
+                }
+                statusAdding = {
+                    this.props.status
+                }
+                initialValue = {
+                    ""
+                }
+                /> </List>
+            );
+        }
+    }
+    export default Lists;

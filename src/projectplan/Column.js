@@ -11,7 +11,6 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 class Column extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {...props};
     this.onAddNew = this.onAddNew.bind(this);
     this.onAdding = this.onAdding.bind(this);
@@ -21,7 +20,27 @@ class Column extends Component {
     this.handleAddColumn = this.handleAddColumn.bind(this);
   }
   onAddNew(sid, data){
-    this.props.onAddNew(sid, data);
+    var dLength = this.props.casetype.length;
+    var that = this;
+    var indexCaseType = 0;
+    console.log(this.state.casetype);
+    console.log(sid);
+    for(var i=0; i<dLength;i++){
+        if(sid===this.state.casetype[i].sid){
+            if(this.state.casetype[i].case.length>0){
+              for(var j=0;j<this.state.casetype[i].case.length;j++){
+                  indexCaseType = i;
+              }
+              // this.sendDataCreateCaseToServer(indexCaseType,data);
+            }else{
+              this.props.casetype[i].case = [];
+
+              this.sendDataCreateCaseToServer(indexCaseType,data,0);
+            }
+            //
+        }
+    }
+    this.setState({casetype:this.props.casetype});
   }
   onAdding(sid){
     this.props.onAdding(sid);
@@ -45,7 +64,7 @@ class Column extends Component {
     var lists = [];
     var that = this;
     this.props.casetype.forEach((item,k) => {
-      lists.push(<Lists onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} key={k} sid={item.sid} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
+      lists.push(<Lists key={k} projectInfo={this.state.projectInfo} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} key={k} sid={item.sid} type={item.type} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
     });
     const styles = {
       root: {
@@ -55,7 +74,7 @@ class Column extends Component {
         position: 'absolute',
         left: 0,
         right: 0,
-        top: '60px',
+        top: '110px',
         bottom: 0,
         width:'100%',
         overflow:'auto'
