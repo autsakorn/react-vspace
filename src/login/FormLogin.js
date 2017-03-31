@@ -72,6 +72,9 @@ class FormLogin extends Component{
     goToSignIn = () => {
       this.handlePage(1);
     }
+    handleRefrash = () => {
+      location.reload();
+    }
    render(){
      const style = {
       width: 380,
@@ -194,7 +197,7 @@ class FormLogin extends Component{
         <div>
           <Toolbar style={{'backgroundColor':'none','height':'100px'}}>
             <ToolbarGroup style={{'width':'33%'}}>
-              <ToolbarTitle style={{'cursor':'pointer','fontSize':'36px', 'marginLeft':'20px'}} text="vSpace">
+              <ToolbarTitle style={{'cursor':'pointer','fontSize':'36px', 'marginLeft':'20px'}} onClick={this.handleRefrash} text="vSpace">
               </ToolbarTitle>
             </ToolbarGroup>
             <ToolbarGroup>

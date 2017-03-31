@@ -47,7 +47,7 @@ class App extends Component {
         position: 'absolute',
         left: 0,
         right: 0,
-        top: '80px',
+        top: '70px',
         bottom: 0
       },
       wrapper: {

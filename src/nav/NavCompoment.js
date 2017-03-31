@@ -10,12 +10,23 @@ import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui
 import {red500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
+import FlatButton from 'material-ui/FlatButton';
+import Subheader from 'material-ui/Subheader';
+import Drawer from 'material-ui/Drawer';
+import {List, ListItem} from 'material-ui/List';
+import logo from '../icon-76.png';
+import FileCloudDownload from 'material-ui/svg-icons/file/cloud-download';
+import Dashboard from 'material-ui/svg-icons/action/dashboard';
+import ActionTimeline from 'material-ui/svg-icons/action/timeline';
+import ActionViewModule from 'material-ui/svg-icons/action/view-module';
+
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 class NavCompoment extends Component {
   constructor(props){
     super(props);
     console.log(props);
-    this.state = {...props};
+    this.state = {open: false};
   }
   handleSignOut(){
     localStorage.removeItem("case_email");
@@ -27,6 +38,10 @@ class NavCompoment extends Component {
     localStorage.removeItem("currectPage");
     location.reload();
   }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+  handleClose = () => this.setState({open: false});
+
   render(){
     const style = {
       title: {
@@ -42,7 +57,7 @@ class NavCompoment extends Component {
         width: '33%'
       },
       toolbarGroupCenter: {
-        width: '33%',
+        width: '34%',
         display:'block', textAlign:'center', color:'#FFFFFF'
       }
     }
@@ -50,15 +65,49 @@ class NavCompoment extends Component {
     if(window.innerWidth<376){
       avatar = <span></span>
     }
+    // <TextField inputStyle={style.search} hintStyle={style.search}
+    //   hintText="Search"
+    // />
+    var listMenu = [];
+    var that = this;
+    this.props.info.menus.forEach(function(item,i){
+        // console.log(item);
+        if(item.list.length>0){
+
+          listMenu.push(<ListItem key={i} primaryText={item.name} initiallyOpen={true} leftIcon={<Dashboard />}
+            // nestedItems={[
+            //         <ListItem key={1} primaryText="Drafts" />,
+            //       ]}
+          />);
+        }
+    });
+    var logo = <span>vSpace</span>;
+    var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
     return(
       <Toolbar style={style.toolbar}>
         <ToolbarGroup style={style.toolbarGroup}>
-          <TextField inputStyle={style.search} hintStyle={style.search}
-            hintText="Search"
-          />
+            <FlatButton style={{color:'#FFF','marginLeft':'-24px'}}
+              label={iconMenuLeft}
+              onTouchTap={this.handleToggle}
+            />
+            <Drawer
+              docked={false}
+
+              open={this.state.open}
+              onRequestChange={(open) => this.setState({open})}
+            >
+              <div>
+                <List>
+                  <div><Subheader>Menus</Subheader></div>
+                  {listMenu}
+                </List>
+              </div>
+            </Drawer>
         </ToolbarGroup>
         <ToolbarGroup style={style.toolbarGroupCenter}>
-          <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer','color':'#FFFFFF'}} text="vSpace">
+
+          <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer','color':'#FFFFFF',textAlign:'center',paddingRight:'0px'}} text={logo}>
+
           </ToolbarTitle>
         </ToolbarGroup>
         <ToolbarGroup style={{'display':'inline','width':'33%','textAlign':'right'}}>
@@ -67,8 +116,8 @@ class NavCompoment extends Component {
           {avatar}
           <IconMenu color={red500}
             iconButtonElement={
-              <IconButton iconStyle={{color:"#FFFFFF"}} touch={true}>
-                <NavigationExpandMoreIcon />
+              <IconButton iconStyle={{color:"#FFFFFF",width:32,height:32}} touch={true}>
+                <MoreVertIcon style={{width:32,height:32}} />
               </IconButton>
             }
           >

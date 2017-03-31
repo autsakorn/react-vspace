@@ -11,6 +11,9 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 // import Paper from 'material-ui/Paper';
 // import '../projectplan/App.css';
 // import './Project.css';
+import Avatar from 'material-ui/Avatar';
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+
 class Project extends Component {
   constructor(props){
     super(props);
@@ -47,12 +50,16 @@ class Project extends Component {
         overflowY: 'auto',
       },
       styleBorder: {
-        border: '1px solid #838383',
+        border: '1px solid #fafbf9',
+        height:120,
+        borderRadius: '3px',
         // margin:'10px 10px 0px 10px'
-        // backgroundColor: 'red'
+        backgroundColor: '#fafbfc'
       },
       styleBorderNew: {
         border: '1px dashed #838383',
+        height:120,
+        borderRadius: '3px'
       }
     };
     var numberColumn = 5;
@@ -60,6 +67,28 @@ class Project extends Component {
     if(window.innerWidth<376){
       numberColumn = 2;
     }
+
+    var boxProject = [];
+    this.state.projectList.forEach((tile,i) => {
+      var avatarOwner = [];
+      tile.owner.forEach((item,k) => {
+          avatarOwner.push(<Avatar key={k} src={item.pic_full} />);
+      });
+      boxProject.push(
+          <div
+            key={i}
+            style={styles.styleBorder} onClick={this.handleSelectProject} data-id={tile.sid}
+          >
+            <div style={{padding:'10px',height:'100%',position:'relative'}}>
+              <div>{tile.name}</div>
+              <div style={{color: lightBlack}}>{tile.contract}</div>
+              <div style={{textAlign:'right', position:'absolute',right:4,bottom:22}}>
+                {avatarOwner}
+              </div>
+            </div>
+          </div>);
+    });
+
     const GridListExampleSimple = () => (
       <Card>
         <CardHeader
@@ -68,30 +97,18 @@ class Project extends Component {
         />
         <CardText>
           <div style={styles.root}>
-            <GridList
+            <GridList cellHeight={120}
               cols={numberColumn}
               padding={10}
               style={styles.gridList}
             >
-            <GridTile
+            <div
               key={""}
-              title={"Create New Project"}
-              titleStyle={styles.titleStyle}
               style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
             >
             <div style={{padding:'10px'}}>Create New Project</div>
-            </GridTile>
-
-              {this.state.projectList.map((tile,i) => (
-                <GridTile
-                  key={i}
-                  title={tile.contract}
-                  titleStyle={styles.titleStyle}
-                  style={styles.styleBorder} onClick={this.handleSelectProject} data-id={tile.sid}
-                >
-                <div style={{padding:'10px'}}>{tile.name} <br/>{tile.create_datetime}</div>
-                </GridTile>
-              ))}
+            </div>
+            {boxProject}
             </GridList>
           </div>
         </CardText>

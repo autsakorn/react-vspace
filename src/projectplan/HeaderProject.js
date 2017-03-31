@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
 import FlatButton from 'material-ui/FlatButton';
+import ContactUser from './ContactUser';
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+
 class HeaderProject extends Component {
   constructor(props){
     super(props);
@@ -32,10 +35,6 @@ class HeaderProject extends Component {
        }
     }
 
-    var contact_user;
-    if(this.state.projectInfo){
-      
-    }
     return(
       <div className="board-header" style={styles.header}>
         <div style={styles.card}>
@@ -53,10 +52,10 @@ class HeaderProject extends Component {
                         <span >{this.props.projectInfo.end_user}</span>
                   </div>
                   <div>
-                        <span >{this.props.projectInfo.end_user_address}</span>
+                        <small style={{color:lightBlack}} >{this.props.projectInfo.end_user_address}</small>
                    </div>
                    <div >
-                         <small className>{this.props.projectInfo.create_datetime_df}</small>
+                         <small style={{color:lightBlack}} >{this.props.projectInfo.create_datetime_df}</small>
                   </div>
               </div>
 
@@ -64,11 +63,9 @@ class HeaderProject extends Component {
                     <div>
                           <span >{this.props.projectInfo.name}</span>
                     </div>
-
                  </div>
-
                  <div style={{textAlign:'right'}}>
-                    <div>Contact User <span> {contact_user}</span></div>
+                    <ContactUser projectInfo={this.props.projectInfo} projectContact={this.props.projectInfo.project_contact} />
                  </div>
             </GridList>
           </div>

@@ -10,7 +10,8 @@ var Url = {
   'caseCreate':END_POINT_2+'v1/casemanagement/createCasesProjectPlan',
   'caseRemove':END_POINT_2+'v1/casemodify/removeCase',
   'findContractInfo': END_POINT_2+'v1/contract/find_contract_info',
-  'projectCreate': END_POINT_2+'v1/project/ProjectCreate'
+  'projectCreate': END_POINT_2+'v1/project/ProjectCreate',
+  'addProjectContact': END_POINT_2+'v1/projectmodify/addProjectContact'
 }
 
 export default Url;

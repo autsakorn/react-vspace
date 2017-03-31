@@ -149,8 +149,8 @@ class ProjectCreate extends Component {
       contract_no: this.state.contract_no,
       contract_info: {
         project_name: this.state.project_name,
-        end_user_name: this.state.enduser_name,
-        end_user_address: this.state.enduser_address,
+        end_user_name: (this.state.enduser_name)?this.state.enduser_name:'',
+        end_user_address: (this.state.enduser_address)?this.state.enduser_address:'',
       },
       engineer:[
         {man_day:0,email:InfoGen.email}
