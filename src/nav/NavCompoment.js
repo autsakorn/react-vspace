@@ -14,14 +14,14 @@ import FlatButton from 'material-ui/FlatButton';
 import Subheader from 'material-ui/Subheader';
 import Drawer from 'material-ui/Drawer';
 import {List, ListItem} from 'material-ui/List';
-import logo from '../icon-76.png';
+import LogoPng from '../vspace.png';
 import FileCloudDownload from 'material-ui/svg-icons/file/cloud-download';
 import Dashboard from 'material-ui/svg-icons/action/dashboard';
 import ActionTimeline from 'material-ui/svg-icons/action/timeline';
 import ActionViewModule from 'material-ui/svg-icons/action/view-module';
-
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-
+import NavigationChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 class NavCompoment extends Component {
   constructor(props){
     super(props);
@@ -59,29 +59,42 @@ class NavCompoment extends Component {
       toolbarGroupCenter: {
         width: '34%',
         display:'block', textAlign:'center', color:'#FFFFFF'
+      },
+      link: {
+        color: lightBlack,
+        textDecoration:'none',
+        marginLeft:'5px'
       }
     }
-    var avatar = <Avatar style={{'marginTop':'8px'}} src={this.props.info.pic_full} />;
-    if(window.innerWidth<376){
-      avatar = <span></span>
+
+    var avatar;
+    if(this.props.info.pic_full){
+      avatar = <Avatar style={{'marginTop':'8px'}} src={this.props.info.pic_full} />;
+    }else{
+      avatar = <Avatar style={{'marginTop':'8px'}} >{this.props.info.name.charAt(0)}</Avatar>;
     }
+    // if(window.innerWidth<376){
+    //   avatar = <span></span>
+    // }
     // <TextField inputStyle={style.search} hintStyle={style.search}
     //   hintText="Search"
     // />
+
     var listMenu = [];
     var that = this;
     this.props.info.menus.forEach(function(item,i){
         // console.log(item);
         if(item.list.length>0){
 
-          listMenu.push(<ListItem key={i} primaryText={item.name} initiallyOpen={true} leftIcon={<Dashboard />}
+          listMenu.push(<a key={i} style={style.link} href={item.list[0].link}><ListItem initiallyOpen={true} rightIcon={<NavigationChevronRight />}
             // nestedItems={[
             //         <ListItem key={1} primaryText="Drafts" />,
             //       ]}
-          />);
+          >{item.name}</ListItem></a>);
         }
     });
-    var logo = <span>vSpace</span>;
+    console.log(LogoPng);
+    var logo = <span><img src={LogoPng} style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
     return(
       <Toolbar style={style.toolbar}>
@@ -92,7 +105,6 @@ class NavCompoment extends Component {
             />
             <Drawer
               docked={false}
-
               open={this.state.open}
               onRequestChange={(open) => this.setState({open})}
             >
@@ -107,17 +119,16 @@ class NavCompoment extends Component {
         <ToolbarGroup style={style.toolbarGroupCenter}>
 
           <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer','color':'#FFFFFF',textAlign:'center',paddingRight:'0px'}} text={logo}>
-
           </ToolbarTitle>
         </ToolbarGroup>
         <ToolbarGroup style={{'display':'inline','width':'33%','textAlign':'right'}}>
           <ToolbarTitle style={style.title} text="">
           </ToolbarTitle>
-          {avatar}
+
           <IconMenu color={red500}
             iconButtonElement={
-              <IconButton iconStyle={{color:"#FFFFFF",width:32,height:32}} touch={true}>
-                <MoreVertIcon style={{width:32,height:32}} />
+              <IconButton iconStyle={{color:"#FFFFFF"}} touch={true}>
+                {avatar}
               </IconButton>
             }
           >

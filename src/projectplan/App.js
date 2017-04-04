@@ -66,7 +66,7 @@ class App extends Component {
           <NavCompoment info={this.props.info} />
           <div id="vspace-container" style={style.container}>
             <div className="vspace-wrapper" style={style.wrapper}>
-              <MyApp toggleUpdate={"true"} onChangeStaffCase={this.handleChangeStaffCase} casetype={this.state.casetype} projectInfo={this.state.projectInfo} listType={this.state.listType} listUserCanAddProject={this.state.listUserCanAddProject} />
+              <MyApp projectOwner={this.props.projectOwner} toggleUpdate={"true"} onChangeStaffCase={this.handleChangeStaffCase} casetype={this.state.casetype} projectInfo={this.state.projectInfo} listType={this.state.listType} listUserCanAddProject={this.state.listUserCanAddProject} />
             </div>
           </div>
         </div>

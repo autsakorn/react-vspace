@@ -6,7 +6,9 @@ import TextField from 'material-ui/TextField';
 class NewTypeCase extends Component {
   constructor(props){
     super(props);
-    this.state = {openAddNewColumn:false, value:this.props.listType[0].name, listType:this.props.listType,manualAddCaseType:false};
+    // var value = (this.props.listType[0].name)?this.props.listType[0].name:"";
+    var value;
+    this.state = {openAddNewColumn:false, value:value, listType:this.props.listType,manualAddCaseType:false};
     this.handleAddNewColumn = this.handleAddNewColumn.bind(this);
     this.handleTextareaClose = this.handleTextareaClose.bind(this);
     this.handleChange = this.handleChange.bind(this);

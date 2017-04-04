@@ -64,25 +64,13 @@ class Lists extends Component {
             enduser_case: this.props.projectInfo.end_user,
             enduser_address: this.props.projectInfo.end_user_address,
             urgency: "Normal",
-            requester: {
-                name: "",
-                email: "",
-                mobile: "",
-                phone: "",
-                company: ""
+            requester: {name: "",email: "",mobile: "",phone: "",company: ""
             },
             enduser: {
-                name: "",
-                email: "",
-                mobile: "",
-                phone: "",
-                company: ""
+                name: "",email: "",mobile: "",phone: "",company: ""
             },
             owner: {
-                thainame: "",
-                email: InfoGen.email,
-                mobile: "",
-                pic: ""
+                thainame: "",email: InfoGen.email,mobile: "",pic: ""
             }
         };
         var formData = new FormData();
@@ -91,7 +79,7 @@ class Lists extends Component {
         formData.append('storage', JSON.stringify(dataForCreateCase));
         Put(Url.caseCreate, formData).then(function(res) {
             console.log('resCaseCreated', res);
-            that.props.item.push({sid:res.ticket_sid,subject:data});
+            that.props.item.push({sid:res.data_res.ticket_sid,subject:data,task:[]});
             that.setState({case:that.props.item});
         });
     }
@@ -107,7 +95,34 @@ class Lists extends Component {
         this.props.onEditChange(this.state.sid, sid, value);
     }
     onDelete(sid) {
-        this.props.onDelete(this.state.sid, sid);
+      // console.log(this.state.sid, sid);
+        // this.props.onDelete(this.state.sid, sid);
+
+        var index = -1;
+        var tmp = [];
+        for(var j=0;j<this.state.case.length;j++){
+            if(this.state.case[j].sid!==sid){
+                // index = j;
+                // break;
+                tmp.push(this.state.case[j]);
+            }
+            if((j+1)==this.state.case.length){
+              console.log(tmp);
+                this.setState({case: tmp});
+            }
+        }
+        var formData = new FormData();
+        formData.append('token',InfoGen.token);
+        formData.append('email',InfoGen.email);
+        formData.append('ticket_sid', sid);
+        Put(Url.caseRemove, formData).then(function(res){
+            console.log(res);
+            if(res.message){
+              alert(res.message);
+            }
+        });
+        // console.log('index', index);
+        // this.state.case.splice(index, 1);
     }
     handleChangeStaffCase = (ticketSid, emailNewOwner) => {
         this.props.onChangeStaffCase(ticketSid, emailNewOwner);
@@ -115,9 +130,10 @@ class Lists extends Component {
     render() {
         var casetype = [];
         this.state.case.forEach((item, k) => {
-            casetype.push(<CardItem key={k}
+            casetype.push(<CardItem key={item.sid}
                     onChangeStaffCase = {this.handleChangeStaffCase}
                     listUserCanAddProject = {this.props.listUserCanAddProject}
+                    projectContact={this.props.projectInfo.project_contact}
                     case = {item}
                     onEdit = {this.onEdit}
                     onEditChange = {this.onEditChange}
@@ -137,36 +153,15 @@ class Lists extends Component {
                     'borderRadius': '3px'
                 }
             }
-            return ( <List style = {
-                    style.box
-                } >
-                <
-                Subheader style = {
-                    style.header
-                } > {
-                    this.props.header
-                } < /Subheader> {
-                    casetype
-                } <
-                InputNew onAddNew = {
-                    this.onAddNew
-                }
-                toggleTextarea = {
-                    this.props.status
-                }
-                onAdding = {
-                    this.onAdding
-                }
-                sid = {
-                    this.props.sid
-                }
-                statusAdding = {
-                    this.props.status
-                }
-                initialValue = {
-                    ""
-                }
-                /> </List>
+            return ( <List style = {style.box}>
+                <Subheader style = {style.header}> {this.props.header} </Subheader> {casetype}
+                <InputNew onAddNew = {this.onAddNew}
+                  toggleTextarea = {this.props.status}
+                  onAdding = {this.onAdding}
+                  sid = {this.props.sid}
+                  statusAdding = {this.props.status}
+                  initialValue = {""}/>
+                </List>
             );
         }
     }

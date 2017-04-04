@@ -24,3 +24,17 @@
 }*/
 
 * { font-family: Roboto, sans-serif; }
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-border-radius: 1ex;
+    border: none;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}

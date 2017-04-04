@@ -21,7 +21,7 @@ if(InfoGen.token){
       get(Url.projectDetail, formData).then(function(resPd){
         get(Url.listCaseAll, formData).then(function(resLCA){
           ReactDOM.render(
-            <ProjectPlanApp info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>, document.getElementById('root')
+            <ProjectPlanApp projectOwner={resPd.project_detail.owner} info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>, document.getElementById('root')
           );
         });
       });

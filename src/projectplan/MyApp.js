@@ -106,30 +106,33 @@ class MyApp extends Component{
     this.setState({casetype:this.props.casetype});
   }
   onDelete(fSid, sSid){
-      var dLength = this.props.casetype.length;
-      var index = -1;
-      for(var i=0; i<dLength;i++){
-        if(fSid===this.props.casetype[i].sid){
-            for(var j=0;j<this.props.casetype[i].case.length;j++){
-                if(this.props.casetype[i].case[j].sid===sSid){
-                    index = j;
-                    break;
-                }
-            }
-            this.props.casetype[i].case.splice(index, 1);
-            this.setState( {casetype: this.props.casetype} );
-        }
-      }
-      var formData = new FormData();
-      formData.append('token',InfoGen.token);
-      formData.append('email',InfoGen.email);
-      formData.append('ticket_sid', sSid);
-      Put(Url.caseRemove, formData).then(function(res){
-          console.log(res);
-          if(res.message){
-            alert(res.message);
-          }
-      });
+      // var dLength = this.props.casetype.length;
+      // var index = -1;
+      // console.log(fSid, sSid);
+      // console.log(this.props.casetype);
+      // for(var i=0; i<dLength;i++){
+      //   if(fSid===this.props.casetype[i].sid){
+      //       for(var j=0;j<this.props.casetype[i].case.length;j++){
+      //           if(this.props.casetype[i].case[j].sid===sSid){
+      //               index = j;
+      //               break;
+      //           }
+      //       }
+      //       console.log('index', index);
+      //       this.props.casetype[i].case.splice(0, 1);
+      //       this.setState( {casetype: this.props.casetype} );
+      //   }
+      // }
+      // var formData = new FormData();
+      // formData.append('token',InfoGen.token);
+      // formData.append('email',InfoGen.email);
+      // formData.append('ticket_sid', sSid);
+      // Put(Url.caseRemove, formData).then(function(res){
+      //     console.log(res);
+      //     if(res.message){
+      //       alert(res.message);
+      //     }
+      // });
   }
   handleAddColumn(newColumn){
     this.props.casetype.push({
@@ -146,7 +149,7 @@ class MyApp extends Component{
   render(){
     return(
       <div id="container">
-        <Column projectInfo={this.state.projectInfo} toggleUpdate={this.state.toggleUpdate} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
+        <Column projectOwner={this.props.projectOwner} projectInfo={this.state.projectInfo} toggleUpdate={this.state.toggleUpdate} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
       </div>
       );
   }

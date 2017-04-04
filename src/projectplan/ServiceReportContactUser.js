@@ -16,18 +16,12 @@ import {
 } from 'material-ui/Stepper';
 import {List, ListItem} from 'material-ui/List';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
-import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
-import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
-import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
-
-class ContactUser extends Component {
+class ServiceReportContactUser extends Component {
     constructor(props){
         super(props);
         this.state = {
-          projectContact:this.props.projectContact,open: false,
-          addingContact:true,stepIndex: 0,finished: false,
-          name:"",email:"",phone:"",mobile:"",company:""
+          projectContact:this.props.projectContact,open: false, addingContact:false,stepIndex: 0,finished: false,
+          name:"",email:"",phone:"",mobile:"",company:"", selectedContactUser:false
         };
     }
     handleAddContact = () => {
@@ -35,6 +29,11 @@ class ContactUser extends Component {
         this.setState({addingContact:false});
       }else{
         this.setState({addingContact:true});
+        this.setState({name:""});
+        this.setState({email:""});
+        this.setState({mobile:""});
+        this.setState({phone:""});
+        this.setState({company:""});
       }
     }
 
@@ -46,34 +45,37 @@ class ContactUser extends Component {
       this.setState({open: false});
     };
 
-    handleNext = () => {
-      const {stepIndex} = this.state;
-      this.setState({
-        stepIndex: stepIndex + 1,
-        finished: stepIndex >= 1,
-      });
-    };
-
-    handlePrev = () => {
-      const {stepIndex} = this.state;
-      if (stepIndex > 0) {
-        this.setState({stepIndex: stepIndex - 1});
-      }
-    };
     handleName = (e) => {
       this.setState({name:e.target.value});
+      this.props.onContactUser(e.target.value, this.state.email, this.state.mobile, this.state.phone, this.state.company);
     }
     handleEmail = (e) => {
       this.setState({email:e.target.value});
+      this.props.onContactUser(this.state.name, e.target.value, this.state.mobile, this.state.phone, this.state.company);
     }
     handleMobile = (e) => {
       this.setState({mobile:e.target.value});
+      this.props.onContactUser(this.state.name, this.state.email, e.target.value, this.state.phone, this.state.company);
     }
     handlePhone = (e) => {
       this.setState({phone:e.target.value});
+      this.props.onContactUser(this.state.name, this.state.email, this.state.mobile, e.target.value, this.state.company);
     }
     handleCompany = (e) => {
       this.setState({company:e.target.value});
+      this.props.onContactUser(this.state.name, this.state.email, this.state.mobile, this.state.phone, e.target.value);
+    }
+    selectedContactUser = (name, email, mobile, phone, company) => {
+      this.setState({name:name});
+      this.setState({email:email});
+      this.setState({mobile:mobile});
+      this.setState({phone:phone});
+      this.setState({company:company});
+      this.setState({selectedContactUser:true});
+      this.props.onContactUser(name, email, mobile, phone, company);
+    }
+    updateDataToCompany = () => {
+      this.props.onContactUser(this.state.name, this.state.email, this.state.mobile, this.state.phone, this.state.company);
     }
     addContactUser = () => {
       var formData = new FormData();
@@ -103,45 +105,6 @@ class ContactUser extends Component {
         }
       });
     }
-    renderStepActions(step) {
-      const {stepIndex} = this.state;
-
-      var btnFinishNext;
-      if(stepIndex===1){
-        btnFinishNext = <RaisedButton
-          onClick={this.addContactUser}
-          label={stepIndex === 1 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
-          onTouchTap={this.handleNext}
-          style={{marginRight: 12}}
-        />
-      }else{
-        btnFinishNext = <RaisedButton
-          label={stepIndex === 1 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
-          onTouchTap={this.handleNext}
-          style={{marginRight: 12}}
-        />
-      }
-      return (
-        <div style={{margin: '12px 0'}}>
-          {step > 0 && (
-            <FlatButton
-              label="Back"
-              disabled={stepIndex === 0}
-              disableTouchRipple={true}
-              disableFocusRipple={true}
-              onTouchTap={this.handlePrev}
-            />
-          )}
-          {btnFinishNext}
-        </div>
-      );
-    }
 
     render(){
 
@@ -151,34 +114,14 @@ class ContactUser extends Component {
           },
           box: {
             margin:'2%'
-          },
-          chip: {
-            margin: 4,
           }
         }
-
-        if(window.innerWidth<376){
-          styles.wrapper = {
-            display: 'initial',
-            // flexWrap: 'wrap',
-            float:'left'
-          }
-        }else{
-          styles.wrapper = {
-            display: 'flex',
-            flexWrap: 'wrap',
-            float:'left'
-          }
-        }
-
         var contact_user_list = <RaisedButton onClick={this.handleAddContact} style={styles.style} label="List Contact" />;
         var listContact = [];
-        var listContactChip = [];
-        // listContactChip.push(<div style={styles.chip} key={0} labelColor={lightBlack}>Contact</div>);
         if(this.state.projectContact.length>0){
           this.state.projectContact.forEach((item,k) => {
             var tmp =
-                  <ListItem key={k}
+                  <ListItem key={k} style={{padding:0}} onClick={()=>this.selectedContactUser(item.name,item.email,item.mobile,item.phone,item.company)}
                     primaryText={item.name}
                     secondaryText={
                       <p>
@@ -191,33 +134,27 @@ class ContactUser extends Component {
                 ;
 
             listContact.push(tmp);
-            listContactChip.push(<Chip key={item.email} style={styles.chip} ><Avatar>{item.name.charAt(0)}</Avatar>{item.name}</Chip>);
           });
         }
-        listContactChip.push(<Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>);
-
 
         var showCheckBox = false;
         var table = <List style={{margin:'0px -16px'}}>{listContact}</List>;
 
-
         var btnAddContact;
         var stepAdd;
-        if(this.state.addingContact){
+        if(this.state.selectedContactUser){
+          btnAddContact =
+          <div>
+            <div><span style={{color:darkBlack}}>Name: </span> {this.state.name}</div>
+            <div><span style={{color:darkBlack}}>Email: </span> {this.state.email}</div>
+            <div><span style={{color:darkBlack}}>Mobile: </span> {this.state.mobile}</div>
+            <div><span style={{color:darkBlack}}>Phone: </span> {this.state.phone}</div>
+            <div><span style={{color:darkBlack}}>Company: </span> {this.state.company}</div>
+          </div>;
+        } else if(this.state.addingContact){
             const {finished, stepIndex} = this.state;
-
-            stepAdd = <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
-                  <div>{contact_user_list}</div>
-                  <Stepper
-                    activeStep={stepIndex}
-                    linear={false}
-                    orientation="vertical"
-                  >
-                    <Step>
-                      <StepButton onTouchTap={() => this.setState({stepIndex: 0})}>
-                        Input Contact Information
-                      </StepButton>
-                      <StepContent>
+            stepAdd = <div>
+                        <div>{contact_user_list}</div>
                         <div>
                           <TextField hintText="Full Name" style={{marginRight:'10px'}} value={this.state.name} onChange={this.handleName} floatingLabelText="Full Name" />
                           <TextField hintText="Email" value={this.state.email} onChange={this.handleEmail} floatingLabelText="Email" />
@@ -229,33 +166,13 @@ class ContactUser extends Component {
                         <div>
                           <TextField hintText="Company" value={this.state.company} onChange={this.handleCompany} floatingLabelText="Company" />
                         </div>
-                        {this.renderStepActions(0)}
-                      </StepContent>
-                    </Step>
-                    <Step>
-                      <StepButton onTouchTap={() => this.setState({stepIndex: 1})}>
-                        Comfirmation
-                      </StepButton>
-                      <StepContent>
-                        <div>
-                          <div>{this.state.name}</div>
-                          <div>{this.state.email}</div>
-                          <div>{this.state.mobile}</div>
-                          <div>{this.state.phone}</div>
-                          <div>{this.state.company}</div>
-                        </div>
-                        {this.renderStepActions(1)}
-                      </StepContent>
-                    </Step>
-                  </Stepper>
-                </div>
+                      </div>
         }else{
-
             btnAddContact =
             <div>
               <div>
                   {table}
-                  <RaisedButton onClick={this.handleAddContact} style={styles.style} label="Add Contact" />
+                  <RaisedButton onClick={this.handleAddContact} style={styles.style} label="Add New" />
               </div>
             </div>
         }
@@ -267,28 +184,10 @@ class ContactUser extends Component {
             onTouchTap={this.handleClose}
           />,
         ];
-
-        var labelTitle = <div>
-            <div>
-              <div style={styles.chip}><small style={{color:lightBlack}}>Contact</small></div>
-              <div style={styles.wrapper}>{listContactChip}</div>
-            </div>
-        </div>
         var dialog =
           <div>
-            <div style={{cursor:'pointer'}} onTouchTap={this.handleOpen}>{labelTitle}</div>
-            <Dialog
-              title="Contact User"
-              actions={actions}
-              modal={false}
-              open={this.state.open}
-              onRequestClose={this.handleClose}
-              autoScrollBodyContent={true}
-            >
               <div style={styles.box}>{formAddContact}</div>
-            </Dialog>
           </div>;
-
         return(
           <div>
             <div>{dialog}</div>
@@ -297,4 +196,4 @@ class ContactUser extends Component {
     }
 }
 
-export default ContactUser;
+export default ServiceReportContactUser;

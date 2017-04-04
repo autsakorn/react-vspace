@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import get from '../config/Get.js';
 import Url from '../config/url';
-import SignUp from './Signup.js';
-import Forgot from './Forgot.js';
-
+import SignupNew from './SignupNew.js';
+import ForgotNew from './ForgotNew.js';
+import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 // import FlatButton from 'material-ui/FlatButton';
@@ -23,6 +23,7 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import LogoPng from '../vspace-sky.png';
 
 import {GridList, GridTile} from 'material-ui/GridList';
 // import IconButton from 'material-ui/IconButton';
@@ -31,7 +32,7 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 class FormLogin extends Component{
    constructor(props){
      super(props)
-     this.state = {user: "",password: "",page:"1"};
+     this.state = {user: "",password: "",page:1};
       this.handleUserChange = this.handleUserChange.bind(this);
       this.handlePasswordChange = this.handlePasswordChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -90,17 +91,27 @@ class FormLogin extends Component{
         margin: 12,
       },
     }
+
+    var btnSignUpTop;
+    var btnSignUpBottom;
+
+    if(window.innerWidth<376){
+      btnSignUpBottom = <small style={{'float':'left','marginLeft':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}} onClick={this.goToSignUp}>Sign Up</small>
+    }else{
+      btnSignUpTop = <RaisedButton label="Sign Up" onClick={this.goToSignUp} primary={true} />
+    }
+
     var signUp = <div><IconButton>Sign Up</IconButton></div>;
     var starterForm;
     if(this.state.page===1){
       var formLogin = <Card style={style}>
         <form onSubmit={this.handleSubmit}>
-          <div style={{'paddingTop':'20px'}}><span>ยินดีต้อนรับสู่ vSpace </span></div>
+          <div style={{'paddingTop':'20px'}}><span style={{color:lightBlack}}>Welcome to vSpace </span></div>
           <div>
-            <TextField hintText="ตัวอย่างเช่น teerawut.p@firstlogic.co.th" floatingLabelText="Email"  onChange={this.handleUserChange}  />
+            <TextField hintText="Email..." floatingLabelText="Email"  onChange={this.handleUserChange}  />
           </div>
           <div>
-            <TextField hintText="เช่น ..."  floatingLabelText="Password"  type="password" onChange={this.handlePasswordChange} />
+            <TextField hintText="Password..."  floatingLabelText="Password"  type="password" onChange={this.handlePasswordChange} />
             <br />
           </div>
           <div>
@@ -110,6 +121,7 @@ class FormLogin extends Component{
             </RaisedButton>
           </div>
           <div>
+            {btnSignUpBottom}
             <small onClick={this.goToForgotPassword} style={{'float':'right','marginRight':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}}>Forgot Password</small>
             <div style={{'clear':'both','marginBottom':'20px'}}></div>
           </div>
@@ -118,9 +130,9 @@ class FormLogin extends Component{
 
       starterForm = formLogin;
     }else if(this.state.page===3){
-      starterForm = <div style={{minHeight:'300px'}}><SignUp /></div>;
+      starterForm = <div style={{minHeight:'300px'}}><SignupNew /></div>;
     } else if(this.state.page===2){
-      starterForm = <div style={{minHeight:'300px'}}><Forgot /></div>;
+      starterForm = <div style={{minHeight:'300px'}}><ForgotNew /></div>;
     }else{
       starterForm = <div></div>;
     }
@@ -138,39 +150,6 @@ class FormLogin extends Component{
       },
     };
 
-    const tilesData = [
-      {
-        img: 'images/grid-list/00-52-29-429_640.jpg',
-        title: 'การจัดการ Project',
-        author: 'jill111',
-      },
-      {
-        img: 'images/grid-list/burger-827309_640.jpg',
-        title: 'บันทึกงานที่ต้องทำ',
-        author: 'pashminu',
-      },
-      {
-        img: 'images/grid-list/camera-813814_640.jpg',
-        title: 'Camera',
-        author: 'Danson67',
-      },
-      {
-        img: 'images/grid-list/morning-819362_640.jpg',
-        title: 'Morning',
-        author: 'fancycrave1',
-      },
-      {
-        img: 'images/grid-list/hats-829509_640.jpg',
-        title: 'Hats',
-        author: 'Hans',
-      },
-      {
-        img: 'images/grid-list/hats-829509_641.jpg',
-        title: 'Hats',
-        author: 'Hans',
-      }
-    ];
-
     /**
      * A simple example of a scrollable `GridList` containing a [Subheader](/#/components/subheader).
      */
@@ -180,29 +159,22 @@ class FormLogin extends Component{
           cellHeight={180}
           style={styles.gridList}
         >
-          {tilesData.map((tile) => (
-            <GridTile style={{border:'1px solid #f1f1f1'}}
-              key={tile.img}
-              title={tile.title}
-              subtitle={<span></span>}
-            >
-            </GridTile>
-          ))}
+
         </GridList>
       </div>
     );
-
+    var logo = <span><img src={LogoPng} style={{height:42}} /></span>;
      const TextFieldExampleSimple = () => (
       <div>
         <div>
           <Toolbar style={{'backgroundColor':'none','height':'100px'}}>
             <ToolbarGroup style={{'width':'33%'}}>
-              <ToolbarTitle style={{'cursor':'pointer','fontSize':'36px', 'marginLeft':'20px'}} onClick={this.handleRefrash} text="vSpace">
+              <ToolbarTitle style={{'cursor':'pointer', 'marginLeft':'20px','marginTop':'22px'}} onClick={this.handleRefrash} text={logo}>
               </ToolbarTitle>
             </ToolbarGroup>
             <ToolbarGroup>
               <FlatButton label="Sign In" onClick={this.goToSignIn} primary={true} />
-              <RaisedButton label="Sign Up" onClick={this.goToSignUp} primary={true} />
+              {btnSignUpTop}
             </ToolbarGroup>
           </Toolbar>
         </div>

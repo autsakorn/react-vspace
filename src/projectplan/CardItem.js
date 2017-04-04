@@ -22,7 +22,9 @@ class CardItem extends Component {
   constructor(props) {
     super(props);
     // console.log('CardItem props', this.props.case.owner);
-    this.state = {item:this.props.case,editing:false,sid:this.props.case.sid,name:this.props.case.subject,owner_value:this.props.case.owner,listUserCanAddProject:this.props.listUserCanAddProject,open: false};
+    this.state = {item:this.props.case,editing:false,sid:this.props.case.sid,name:this.props.case.subject,
+      projectContact: this.props.projectContact,
+      owner_value:this.props.case.owner,listUserCanAddProject:this.props.listUserCanAddProject,open: false};
     this.handleEditing = this.handleEditing.bind(this);
     this.handleTxtChange = this.handleTxtChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -85,15 +87,25 @@ class CardItem extends Component {
       style: {
         margin: 4,
       },
-      owner: {'textAlign':'right'}
+      owner: {'textAlign':'right'},
+      relative: {'position':'relative'}
     }
-    var avatar = <Avatar src={this.state.item.pic_full} />;
+
+    var labelOwnerCase = (this.state.item.owner_thainame)?(this.state.item.owner_thainame):'Owner?';
+    var avatar = <div style={styles.relative}><Avatar src={this.state.item.pic_full} /> <small style={{color:lightBlack,'position':'absolute','top':'5px','left':'45px'}}>{labelOwnerCase}</small></div>;
 
     var jobData;
     if(this.state.item.task){
-      jobData = <ServiceReportDialog serviceReport={this.state.item.task} />
+      jobData = <ServiceReportDialog caseSid={this.state.sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject} serviceReport={this.state.item.task} />
     }else{
       jobData = <span></span>
+    }
+
+    var removing;
+    if(this.state.item.task && this.state.item.task.length>0){
+      removing = <span></span>
+    }else{
+      removing = <RaisedButton label="Remove" onClick={this.handleDelete} secondary={true} style={styles.style} />
     }
 
     if(this.props.case.status==="Editing"){
@@ -111,28 +123,23 @@ class CardItem extends Component {
             secondaryTextLines={2}
           />
       });
-      var removing;
-      if(this.state.item.task && this.state.item.task.length>0){
-        removing = <span></span>
-      }else{
-        removing = <RaisedButton label="Remove" onClick={this.handleDelete} secondary={true} style={styles.style} />
-      }
-      var labelOwnerCase = (this.state.item.owner_thainame)?(this.state.item.owner_thainame):'Owner?';
+
       return (
         <div style={styles.box}>
           <form onSubmit={this.handleSubmit}>
             <div className="form">
-              <div>Subject:</div>
+              <div><small style={{color:lightBlack}}>Subject:</small></div>
               <TextField hintText="Subject" value={this.state.name} onChange={this.handleTxtChange} />
               <br/>
               <div>
-                <div>Owner:</div>
+                <div><small style={{color:lightBlack}}>Owner:</small></div>
                   <div>
-                    <RaisedButton style={{'height':'50px'}}
+                    <div style={{'height':'50px'}}
                       onTouchTap={this.handleTouchTap}
-                      label={labelOwnerCase}
-                      icon={avatar}
-                    />
+                      >
+                      {avatar}
+                      <div style={{textAlign:'right'}}><small><i>Change Owner</i></small></div>
+                    </div>
                     <Popover
                       open={this.state.open}
                       anchorEl={this.state.anchorEl}
@@ -149,11 +156,16 @@ class CardItem extends Component {
               </div>
               <Divider />
               <br/>
-              <div>Man Days:</div>
+
+              <div>{jobData}</div>
               <br/>
               <Divider />
               <br/>
-              <div>{jobData}</div>
+
+              <div>
+                <div><small style={{color:lightBlack}}>Man Days:</small></div>
+                <div style={{'textAlign':'right'}}><small>1</small></div>
+              </div>
               <br/>
               <Divider />
               <br/>

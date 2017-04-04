@@ -11,7 +11,12 @@ var Url = {
   'caseRemove':END_POINT_2+'v1/casemodify/removeCase',
   'findContractInfo': END_POINT_2+'v1/contract/find_contract_info',
   'projectCreate': END_POINT_2+'v1/project/ProjectCreate',
-  'addProjectContact': END_POINT_2+'v1/projectmodify/addProjectContact'
+  'addProjectContact': END_POINT_2+'v1/projectmodify/addProjectContact',
+  'serviceReportCreate': END_POINT_2+'v1/incident/createServiceReportReact',
+  'signup':END_POINT_2+'v1/user/signupReact',
+  'signupConfirm':END_POINT_2+'v1/user/comfirmOtpReact',
+  'forgotPassword':END_POINT_2+'v1/user/forgotPasswordReact',
+  'confirmForgotPassword':END_POINT_2+'v1/user/confirmForgotPasswordReact'
 }
 
 export default Url;
