@@ -12,7 +12,9 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 // import '../projectplan/App.css';
 // import './Project.css';
 import Avatar from 'material-ui/Avatar';
+import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+import Chip from 'material-ui/Chip';
 
 class Project extends Component {
   constructor(props){
@@ -106,7 +108,7 @@ class Project extends Component {
               key={""}
               style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
             >
-            <div style={{padding:'10px'}}>Create New Project</div>
+              <div style={{padding:'10px',display:'flex'}}><ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
             </div>
             {boxProject}
             </GridList>

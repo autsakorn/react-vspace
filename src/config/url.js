@@ -16,7 +16,10 @@ var Url = {
   'signup':END_POINT_2+'v1/user/signupReact',
   'signupConfirm':END_POINT_2+'v1/user/comfirmOtpReact',
   'forgotPassword':END_POINT_2+'v1/user/forgotPasswordReact',
-  'confirmForgotPassword':END_POINT_2+'v1/user/confirmForgotPasswordReact'
+  'confirmForgotPassword':END_POINT_2+'v1/user/confirmForgotPasswordReact',
+  'projectAddStaff':END_POINT_2+'v1/projectmodify/addStaff',
+  'projectDeleteStaff':END_POINT_2+'v1/projectmodify/deleteStaff',
+  'changeMandaysCase':END_POINT_2+'v1/casemodify/mandays'
 }
 
 export default Url;

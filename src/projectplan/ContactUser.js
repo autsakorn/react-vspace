@@ -25,7 +25,8 @@ class ContactUser extends Component {
     constructor(props){
         super(props);
         this.state = {
-          projectContact:this.props.projectContact,open: false,
+          projectContact:this.props.projectContact,
+          open: false,
           addingContact:true,stepIndex: 0,finished: false,
           name:"",email:"",phone:"",mobile:"",company:""
         };
@@ -90,8 +91,10 @@ class ContactUser extends Component {
       // formData.append("")
       var that = this;
       Put(Url.addProjectContact, formData).then(function(res){
+        that.handleClose();
         console.log(res);
         if(!res.error){
+          that.props.onUpdateData();
           that.setState({addingContact:false});
           that.setState({stepIndex:0});
           that.setState({finished:false});
@@ -150,10 +153,10 @@ class ContactUser extends Component {
             textTransform:'inherit'
           },
           box: {
-            margin:'2%'
+            margin:'0%'
           },
           chip: {
-            margin: 4,
+            margin: 2,
           }
         }
 
@@ -194,12 +197,10 @@ class ContactUser extends Component {
             listContactChip.push(<Chip key={item.email} style={styles.chip} ><Avatar>{item.name.charAt(0)}</Avatar>{item.name}</Chip>);
           });
         }
-        listContactChip.push(<Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>);
-
+        listContactChip.push(<Chip onTouchTap={this.handleOpen} style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>);
 
         var showCheckBox = false;
         var table = <List style={{margin:'0px -16px'}}>{listContact}</List>;
-
 
         var btnAddContact;
         var stepAdd;
@@ -207,6 +208,7 @@ class ContactUser extends Component {
             const {finished, stepIndex} = this.state;
 
             stepAdd = <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
+                  <br/>
                   <div>{contact_user_list}</div>
                   <Stepper
                     activeStep={stepIndex}
@@ -270,13 +272,13 @@ class ContactUser extends Component {
 
         var labelTitle = <div>
             <div>
-              <div style={styles.chip}><small style={{color:lightBlack}}>Contact</small></div>
+              <div><small style={{color:lightBlack}}>Contact</small></div>
               <div style={styles.wrapper}>{listContactChip}</div>
             </div>
         </div>
         var dialog =
           <div>
-            <div style={{cursor:'pointer'}} onTouchTap={this.handleOpen}>{labelTitle}</div>
+            <div style={{cursor:'pointer'}} >{labelTitle}</div>
             <Dialog
               title="Contact User"
               actions={actions}
@@ -291,7 +293,9 @@ class ContactUser extends Component {
 
         return(
           <div>
-            <div>{dialog}</div>
+            <div>
+              {dialog}
+            </div>
           </div>
         )
     }

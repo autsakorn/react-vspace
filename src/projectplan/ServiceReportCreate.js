@@ -27,7 +27,7 @@ import Moment from 'react-moment';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import moment from 'moment';
-
+import ContentAdd from 'material-ui/svg-icons/content/add';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
@@ -39,9 +39,12 @@ class ServiceReportCreate extends Component {
     const appointment_time = new Date();
     appointment_time.setFullYear(appointment_time.getFullYear());
 
-    this.state = {serviceReport:this.props.serviceReport,createService:false,stepIndex: 0,finished: false,caseSid:this.props.caseSid,
+    this.state = {
+      serviceReport:this.props.serviceReport,
+      createService:this.props.createService,
+      stepIndex: 0,finished: false,caseSid:this.props.caseSid,
       value24: appointment_time, value12: null, openSelectStaff:false,staff:[],
-      subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"",
+      subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"8",
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
     };
   }
@@ -92,7 +95,8 @@ class ServiceReportCreate extends Component {
 
   handleServiceReportCreate = () => {
     console.log(this.state);
-
+    this.props.onCloseDialog();
+    var that = this;
     var engineer = [];
     this.state.staff.forEach((item) => {
         engineer.push(item.email);
@@ -126,6 +130,7 @@ class ServiceReportCreate extends Component {
     formData.append('data', JSON.stringify(dataCreateService));
     Put(Url.serviceReportCreate, formData).then(function(res){
         console.log(res);
+        that.props.onCreatedService();
     });
   }
 
@@ -275,8 +280,9 @@ class ServiceReportCreate extends Component {
     </div>;
 
     var createService;
+    var labelAdd = <span>Add</span>
     if(!this.state.createService){
-      createService = <RaisedButton onClick={this.handleCreateService} label="Create" style={{marginTop:'10px'}} />;
+      createService = <RaisedButton onClick={this.handleCreateService} icon={<ContentAdd />}  label={labelAdd} style={{marginTop:'10px'}} />;
     }else{
       const items = [
         <MenuItem key={1} value={"1"} primaryText="Onsite" />,
@@ -287,7 +293,10 @@ class ServiceReportCreate extends Component {
         <MenuItem key={6} value={"6"} primaryText="Pre-Install" />,
         <MenuItem key={7} value={"7"} primaryText="Testing" />,
       ];
-
+      // txt detail
+      // <div>
+      //   <TextField hintText="Detail" onChange={this.handleDetail} style={{width:"90%"}} floatingLabelText="Detail"/>
+      // </div>
       createService =
         <div style={{maxWidth: '80%', maxHeight: 400, margin: 'auto'}}>
           <Stepper activeStep={stepIndex} orientation="vertical">
@@ -296,7 +305,7 @@ class ServiceReportCreate extends Component {
               <StepContent>
                   <GridList
                       cellHeight={180}
-                      cols={2} style={{height:180}}
+                      cols={1} style={{height:180}}
                     >
                     <div>
                         <div><TextField hintText="Subject" onChange={this.handleSubject} style={{width:"90%"}} floatingLabelText="Subject"/></div>
@@ -308,11 +317,8 @@ class ServiceReportCreate extends Component {
                         >
                           {items}
                         </SelectField>
+                    </div>
 
-                    </div>
-                    <div>
-                      <TextField hintText="Detail" onChange={this.handleDetail} style={{width:"90%"}} floatingLabelText="Detail"/>
-                    </div>
                   </GridList>
                   {this.renderStepActions(0)}
               </StepContent>
@@ -320,17 +326,15 @@ class ServiceReportCreate extends Component {
             <Step>
               <StepLabel>Appointment Datatime</StepLabel>
               <StepContent>
-
-                <GridList cellHeight={150}
-                    cols={3} style={{height:150}} >
-                    <div style={{height:90}}>
+                    <div >
                       <DatePicker hintText="Date" value={this.state.appointment_date} onChange={this.handleAppointment} />
-                      <TextField type="number" value={this.state.expect_duration} onChange={this.handleExpectDuration} hintText="Expect Duration" floatingLabelText="Expect Duration (Hours.)"/>
                     </div>
-                    <div style={{height:90}}>
+                    <div >
                       <TimePicker format="24hr" hintText="Time" value={this.state.value24} onChange={this.handleChangeTimePicker24}/>
                     </div>
-                </GridList>
+                    <div>
+                      <TextField type="number" min={1} value={this.state.expect_duration} onChange={this.handleExpectDuration} hintText="Expect Duration" floatingLabelText="Expect Duration (Hours.)"/>
+                    </div>
                 <div>
                 </div>
                 {this.renderStepActions(1)}

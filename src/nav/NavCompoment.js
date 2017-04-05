@@ -86,11 +86,11 @@ class NavCompoment extends Component {
         // console.log(item);
         if(item.list.length>0){
 
-          listMenu.push(<a key={i} style={style.link} href={item.list[0].link}><ListItem initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+          listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
             // nestedItems={[
             //         <ListItem key={1} primaryText="Drafts" />,
             //       ]}
-          >{item.name}</ListItem></a>);
+          >{item.name}</ListItem>);
         }
     });
     console.log(LogoPng);

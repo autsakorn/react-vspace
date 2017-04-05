@@ -7,6 +7,9 @@ import ProjectPlanApp from './projectplan/App';
 import Project from './project/Project';
 import Welcome from './login/Welcome';
 import ProjectCreate from './project/ProjectCreate';
+import initReactFastclick from 'react-fastclick';
+initReactFastclick();
+
 import './index.css';
 var formData = new FormData();
 

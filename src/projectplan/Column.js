@@ -71,11 +71,11 @@ class Column extends Component {
         display: '-webkit-box',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: '110px',
-        bottom: 0,
+        // position: 'absolute',
+        // left: 0,
+        // right: 0,
+        // top: '110px',
+        // bottom: 0,
         width:'100%',
         overflow:'auto'
       },
@@ -91,7 +91,7 @@ class Column extends Component {
     };
     return (
       <div>
-        <HeaderProject projectOwner={this.props.projectOwner} projectInfo={this.props.projectInfo} />
+        <HeaderProject projectOwner={this.props.projectOwner} projectInfo={this.props.projectInfo} listUserCanAdd={this.props.listUserCanAddProject} />
         <div style={styles.root}>
           <List style={styles.gridList} >
             {lists}

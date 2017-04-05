@@ -3,10 +3,52 @@ import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
+import OwnerDialog from './OwnerDialog';
+import Url from '../config/url';
+import InfoGen from '../config/InfoGen';
+import Put from '../config/Put.js';
 class ProjectOwner extends Component {
   constructor(props){
     super(props);
     this.state = {...props};
+  }
+  handleSelectItem = (email, pic_employee, thainame, engname) => {
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("project_sid", this.props.projectInfo.project_sid);
+    formData.append("new_staff_email", email);
+    var that = this;
+    Put(Url.projectAddStaff, formData).then(function(res){
+      console.log(res);
+      if(res.data){
+        var tmp = that.state.projectOwner;
+        tmp.push({email:email,pic_full:pic_employee,thainame:thainame,engname:engname});
+        that.setState({projectOwner:tmp});
+      }
+    });
+  }
+  handleRequestDelete = (email) => {
+    if(confirm("Confirm Delete?")){
+      var formData = new FormData();
+      formData.append("email",InfoGen.email);
+      formData.append("token",InfoGen.token);
+      formData.append("project_sid", this.props.projectInfo.project_sid);
+      formData.append("staff_email", email);
+      var that = this;
+      Put(Url.projectDeleteStaff, formData).then(function(res){
+        console.log(res);
+        if(!res.error){
+          var tmp = [];
+          that.state.projectOwner.forEach((item)=> {
+            if(item.email!==email){
+              tmp.push(item);
+            }
+          });
+          that.setState({projectOwner:tmp});
+        }
+      });
+    }
   }
   render(){
     var styles = {
@@ -16,18 +58,19 @@ class ProjectOwner extends Component {
           float:'left'
         },
         chip: {
-          margin: 4,
+          margin: 2,
         }
     }
     var listOwner = [];
     this.state.projectOwner.forEach((item) => {
         var avatar = <Avatar src={item.pic_full} />;
-        listOwner.push(<Chip style={styles.chip} key={item.email}>{avatar} {item.engname}</Chip>);
+        listOwner.push(<Chip onRequestDelete={() => this.handleRequestDelete(item.email)} style={styles.chip} key={item.email}>{avatar} {item.engname}</Chip>);
     });
-    listOwner.push(<Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>);
+    listOwner.push(<OwnerDialog label={"Add"} icon={<SocialPersonAdd />} title={"Add Member"} onSelectItem={this.handleSelectItem} listItem={this.state.listUserCanAdd} key={0} />);
+    // <Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>
     return(<div>
-      <div style={{textAlign:'left'}}><small style={{color:lightBlack}}>Owner</small></div>
-      <div style={styles.wrapper}>{listOwner}</div>
+      <div style={{textAlign:'left'}}><small style={{color:lightBlack}}>Member</small></div>
+      <div style={styles.wrapper}>{listOwner} </div>
     </div>);
   }
 }
