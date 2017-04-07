@@ -129,7 +129,9 @@ class HeaderProject extends Component {
           //  justifyContent: 'space-around',
          },
          gridList: {
-           width: '100%',
+           width: '99%',
+          //  marginTop:'-20px',
+           zIndex: '10'
           //  height: 'initial',
           // height:' auto',
           //  overflowY: 'auto',
@@ -142,7 +144,7 @@ class HeaderProject extends Component {
         <div style={styles.root}>
           <Card>
             <CardText expandable={false} style={{overflow:'hidden'}}>
-            <div style={{float:'right','marginTop':'-10px'}}>
+            <div style={{width:'1%',float:'right','marginTop':'-10px',zIndex:'1000'}}>
               <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
             </div>
               <GridList cellHeight={cellHeight}  cols={columns} style={styles.gridList} >
