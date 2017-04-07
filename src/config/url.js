@@ -19,7 +19,8 @@ var Url = {
   'confirmForgotPassword':END_POINT_2+'v1/user/confirmForgotPasswordReact',
   'projectAddStaff':END_POINT_2+'v1/projectmodify/addStaff',
   'projectDeleteStaff':END_POINT_2+'v1/projectmodify/deleteStaff',
-  'changeMandaysCase':END_POINT_2+'v1/casemodify/mandays'
+  'changeMandaysCase':END_POINT_2+'v1/casemodify/mandays',
+  'inviteEmail':END_POINT_2+'v1/sendmail/inviteMember'
 }
 
 export default Url;

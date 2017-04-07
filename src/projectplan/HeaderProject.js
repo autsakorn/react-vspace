@@ -23,6 +23,9 @@ class HeaderProject extends Component {
       showMore:false
     };
   }
+  handleOpenShowMore = () => {
+    this.setState({showMore:true});
+  }
   handleUpdateData = () => {
     var that = this;
     var formData = new FormData();
@@ -129,7 +132,7 @@ class HeaderProject extends Component {
            width: '100%',
           //  height: 'initial',
           // height:' auto',
-           overflowY: 'auto',
+          //  overflowY: 'auto',
          },
          box: {
            textAlign: 'center'
@@ -138,7 +141,10 @@ class HeaderProject extends Component {
       projectHeader =
         <div style={styles.root}>
           <Card>
-            <CardText expandable={false}>
+            <CardText expandable={false} style={{overflow:'hidden'}}>
+            <div style={{float:'right','marginTop':'-10px'}}>
+              <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
+            </div>
               <GridList cellHeight={cellHeight}  cols={columns} style={styles.gridList} >
                   <div >
                     <div><span >{this.state.projectInfo.name}</span></div>
@@ -150,15 +156,13 @@ class HeaderProject extends Component {
                     <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
                   </div>
                   <div style={styles.box}>
-                      <div><ProjectOwner projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
+                      <div><ProjectOwner onShowMore={this.handleOpenShowMore} projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
                    </div>
                    <div>
                       <div>{contractUser}</div>
                    </div>
               </GridList>
-              <div style={{float:'right','marginTop':'-10px'}}>
-                <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
-              </div>
+
             </CardText>
           </Card>
         </div>

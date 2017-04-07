@@ -50,6 +50,9 @@ class ProjectOwner extends Component {
       });
     }
   }
+  handleShowMore = () => {
+    this.props.onShowMore();
+  }
   render(){
     var styles = {
         wrapper: {
@@ -63,10 +66,15 @@ class ProjectOwner extends Component {
     }
     var listOwner = [];
     this.state.projectOwner.forEach((item) => {
-        var avatar = <Avatar src={item.pic_full} />;
+        var avatar;
+        if(item.pic_full){
+          avatar = <Avatar src={item.pic_full} />;
+        }else{
+          avatar = <Avatar>{item.email.charAt(0)}</Avatar>;
+        }
         listOwner.push(<Chip onRequestDelete={() => this.handleRequestDelete(item.email)} style={styles.chip} key={item.email}>{avatar} {item.engname}</Chip>);
     });
-    listOwner.push(<OwnerDialog label={"Add"} icon={<SocialPersonAdd />} title={"Add Member"} onSelectItem={this.handleSelectItem} listItem={this.state.listUserCanAdd} key={0} />);
+    listOwner.push(<OwnerDialog onShowMore={this.handleShowMore} label={"Add"} icon={<SocialPersonAdd />} title={"Add Member"} onSelectItem={this.handleSelectItem} listItem={this.state.listUserCanAdd} key={0} />);
     // <Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>
     return(<div>
       <div style={{textAlign:'left'}}><small style={{color:lightBlack}}>Member</small></div>

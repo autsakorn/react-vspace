@@ -45,19 +45,21 @@ class FormLogin extends Component{
     }
     handleSubmit(event) {
       var formData = new FormData();
-      formData.append("email",this.state.user);
-      formData.append("password",this.state.password);
+      if(this.state.user && this.state.password){
+        formData.append("email",this.state.user);
+        formData.append("password",this.state.password);
 
-      get(Url.login, formData).then(function(res){
-        if(!res.error){
-          localStorage.removeItem("project_sid");
-          localStorage.setItem("case_email", res.user.email);
-          localStorage.setItem("case_token", res.token);
-          location.reload();
-        }else{
-          alert(res.message);
-        }
-      });
+        get(Url.login, formData).then(function(res){
+          if(!res.error){
+            localStorage.removeItem("project_sid");
+            localStorage.setItem("case_email", res.user.email);
+            localStorage.setItem("case_token", res.token);
+            location.reload();
+          }else{
+            alert(res.message);
+          }
+        });
+      }
       event.preventDefault();
     }
     handlePage = (newPage) => {
@@ -78,7 +80,7 @@ class FormLogin extends Component{
     }
    render(){
      const style = {
-      width: 380,
+      width: '90%',
       margin: '0px auto 20px auto',
       textAlign: 'center',
       clear:'both'
@@ -93,12 +95,12 @@ class FormLogin extends Component{
     }
 
     var btnSignUpTop;
-    var btnSignUpBottom;
+    var btnSignUpBottom = <br/>;
 
     if(window.innerWidth<376){
-      btnSignUpBottom = <small style={{'float':'left','marginLeft':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}} onClick={this.goToSignUp}>Sign Up</small>
+      btnSignUpBottom = <div><small style={{'color':'rgb(0, 188, 212)','cursor':'pointer'}} onTouchTap={this.goToSignUp}>Sign Up</small><br/><br/></div>
     }else{
-      btnSignUpTop = <RaisedButton label="Sign Up" onClick={this.goToSignUp} primary={true} />
+      btnSignUpTop = <RaisedButton label="Sign Up" onTouchTap={this.goToSignUp} primary={true} />
     }
 
     var signUp = <div><IconButton>Sign Up</IconButton></div>;
@@ -116,14 +118,15 @@ class FormLogin extends Component{
           </div>
           <div>
             <RaisedButton
-             style={styleRaisedButton.button} onClick={this.handleSubmit} label="Sign In" primary={true}>
+             style={styleRaisedButton.button} onTouchTap={this.handleSubmit} label="Sign In" primary={true}>
               <input type="submit" style={{display:'none'}} />
             </RaisedButton>
           </div>
           <div>
+
+            <small onTouchTap={this.goToForgotPassword} style={{'marginRight':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}}>Forgot Password</small>
+            <div style={{'clear':'both','marginBottom':'10px'}}></div>
             {btnSignUpBottom}
-            <small onClick={this.goToForgotPassword} style={{'float':'right','marginRight':'10px','color':'rgb(0, 188, 212)','cursor':'pointer'}}>Forgot Password</small>
-            <div style={{'clear':'both','marginBottom':'20px'}}></div>
           </div>
         </form>
       </Card>;
@@ -148,6 +151,13 @@ class FormLogin extends Component{
         height: 450,
         overflowY: 'auto',
       },
+      p1: {
+        margin:'auto',
+        padding: '10%',
+        color:'#FFFFFF',
+        textAlign:'center',
+        fontSize:'150%'
+      }
     };
 
     /**
@@ -163,24 +173,29 @@ class FormLogin extends Component{
         </GridList>
       </div>
     );
+
     var logo = <span><img src={LogoPng} style={{height:42}} /></span>;
      const TextFieldExampleSimple = () => (
       <div>
         <div>
           <Toolbar style={{'backgroundColor':'none','height':'100px'}}>
             <ToolbarGroup style={{'width':'33%'}}>
-              <ToolbarTitle style={{'cursor':'pointer', 'marginLeft':'20px','marginTop':'22px'}} onClick={this.handleRefrash} text={logo}>
+              <ToolbarTitle style={{'cursor':'pointer','marginTop':'22px'}} onTouchTap={this.handleRefrash} text={logo}>
               </ToolbarTitle>
             </ToolbarGroup>
             <ToolbarGroup>
-              <FlatButton label="Sign In" onClick={this.goToSignIn} primary={true} />
+              <FlatButton label="Sign In" onTouchTap={this.goToSignIn} primary={true} />
               {btnSignUpTop}
             </ToolbarGroup>
           </Toolbar>
         </div>
         <div>{starterForm}</div>
         <div style={{backgroundColor:'rgb(0, 188, 212)','height':'300px'}}>
-            <div></div>
+            <div>
+              <div style={styles.p1}>จัดการโครงการของคุณได้อย่างง่ายดาย ด้วย vSpace
+              <br/><br/>
+              <FlatButton onTouchTap={this.goToSignUp} backgroundColor="#a4c639" style={{color:'#ffffff'}} label="Sign Up - It's Free"  /></div>
+            </div>
         </div>
       </div>);
      return(

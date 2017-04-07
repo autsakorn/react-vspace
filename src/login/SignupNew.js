@@ -140,7 +140,7 @@ class SignupNew extends Component {
     const {finished, stepIndex} = this.state;
     var styles = {
         card: {
-         width: 380,
+         width: '90%',
          margin: '0px auto 20px auto',
          textAlign: 'center',
          clear:'both',
@@ -152,15 +152,15 @@ class SignupNew extends Component {
     return (
       <Card style={styles.card}>
         <div style={{maxWidth: '80%',  margin: 'auto'}}>
-        <div style={{'paddingTop':'20px'}}><span>Sign up vSpace </span></div>
+        <div style={{'paddingTop':'20px'}}><span style={{color:lightBlack}}>Sign Up vSpace </span></div>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
-              <StepLabel>Create Account</StepLabel>
+              <StepLabel><span  >Create Account</span></StepLabel>
               <StepContent>
                 <div>
                     <form>
                         <div>
-                          <TextField style={{marginTop: 0}} floatingLabelText="Email" value={this.state.email} onChange={this.handleEmail} />
+                          <TextField  style={{marginTop: 0}} floatingLabelText="Email" value={this.state.email} onChange={this.handleEmail} />
                         </div>
                         <div>
                           <TextField style={{marginTop: 0}} type="password" floatingLabelText="Password" value={this.state.password} onChange={this.handlepassword} />

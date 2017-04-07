@@ -55,8 +55,8 @@ class InputNew extends Component {
               <TextField value={this.state.subject} onChange={this.handleSubjectChange} hintText="Subject"/><br />
             </div>
             <div className="form-footer">
-              <RaisedButton onClick={this.handleAddNew} primary={true} label="Add" style={styles.style} />
-              <RaisedButton onClick={this.handleTextareaClose} label="Cancel" style={styles.style} />
+              <RaisedButton onTouchTap={this.handleAddNew} primary={true} label="Add" style={styles.style} />
+              <RaisedButton onTouchTap={this.handleTextareaClose} label="Cancel" style={styles.style} />
             </div>
           </form>
         </div>;

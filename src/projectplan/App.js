@@ -57,7 +57,7 @@ class App extends Component {
         top: 0,
         bottom: 0,
         width:'100%',
-        overflow:'auto'
+        // overflow:'auto'
       }
     }
     return(

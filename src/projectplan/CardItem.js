@@ -203,7 +203,7 @@ class CardItem extends Component {
                       {avatar}
                     </div>
                     <div style={{textAlign:'right'}}>
-                      <OwnerDialog icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.state.listUserCanAddProject} />
+                      <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.state.listUserCanAddProject} />
                     </div>
                   </div>
                   <br/>

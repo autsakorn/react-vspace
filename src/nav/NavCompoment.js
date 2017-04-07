@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -26,7 +31,7 @@ class NavCompoment extends Component {
   constructor(props){
     super(props);
     console.log(props);
-    this.state = {open: false};
+    this.state = {open: false,openRight:false};
   }
   handleSignOut(){
     localStorage.removeItem("case_email");
@@ -38,6 +43,8 @@ class NavCompoment extends Component {
     localStorage.removeItem("currectPage");
     location.reload();
   }
+  handleToggleRight = () => this.setState({openRight: !this.state.openRight});
+  handleCloseRight = () => this.setState({openRight: false});
 
   handleToggle = () => this.setState({open: !this.state.open});
   handleClose = () => this.setState({open: false});
@@ -69,9 +76,9 @@ class NavCompoment extends Component {
 
     var avatar;
     if(this.props.info.pic_full){
-      avatar = <Avatar style={{'marginTop':'8px'}} src={this.props.info.pic_full} />;
+      avatar = <Avatar style={{'marginTop':'6px'}} src={this.props.info.pic_full} />;
     }else{
-      avatar = <Avatar style={{'marginTop':'8px'}} >{this.props.info.name.charAt(0)}</Avatar>;
+      avatar = <Avatar style={{'marginTop':'6px'}} >{this.props.info.name.charAt(0)}</Avatar>;
     }
     // if(window.innerWidth<376){
     //   avatar = <span></span>
@@ -118,24 +125,31 @@ class NavCompoment extends Component {
         </ToolbarGroup>
         <ToolbarGroup style={style.toolbarGroupCenter}>
 
-          <ToolbarTitle onClick={this.handlevSpace} style={{'cursor':'pointer','color':'#FFFFFF',textAlign:'center',paddingRight:'0px'}} text={logo}>
-          </ToolbarTitle>
+          <Link onTouchTap={this.handlevSpace} to={"/"}>
+            <ToolbarTitle  style={{'cursor':'pointer','color':'#FFFFFF',textAlign:'center',paddingRight:'0px'}} text={logo}>
+            </ToolbarTitle>
+          </Link>
         </ToolbarGroup>
         <ToolbarGroup style={{'display':'inline','width':'33%','textAlign':'right'}}>
           <ToolbarTitle style={style.title} text="">
           </ToolbarTitle>
 
-          <IconMenu color={red500}
-            iconButtonElement={
-              <IconButton iconStyle={{color:"#FFFFFF"}} touch={true}>
-                {avatar}
-              </IconButton>
-            }
+          <span onTouchTap={this.handleToggleRight}>
+            {avatar}
+          </span>
+          <Drawer
+            docked={false} openSecondary={true}
+            width={260}
+            open={this.state.openRight}
+            onRequestChange={(openRight) => this.setState({openRight})}
           >
-            <MenuItem primaryText="More Info" />
-            <MenuItem primaryText="Sign Out" onClick={this.handleSignOut} />
-          </IconMenu>
+            <div style={{textAlign:'left'}}><Subheader>{this.props.info.email}</Subheader></div>
+            <Link to="/profile"><MenuItem style={{textAlign:'left'}} >Profile</MenuItem></Link>
+            <MenuItem style={{textAlign:'left'}} onTouchTap={this.handleSignOut}>Sign Out</MenuItem>
+          </Drawer>
+
         </ToolbarGroup>
+
       </Toolbar>
     )
   }

@@ -18,3 +18,5 @@
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
+
+a {color: initial; text-decoration: none;}

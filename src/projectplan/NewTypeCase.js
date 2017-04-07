@@ -46,7 +46,7 @@ class NewTypeCase extends Component {
 
   var ele;
    if(!this.state.openAddNewColumn){
-      ele = <div className="lists mode-add"><div onClick={this.handleAddNewColumn}>Add New Column...</div></div>
+      ele = <div className="lists mode-add"><div onTouchTap={this.handleAddNewColumn}>Add New Column...</div></div>
    }else{
 
        var formCaseType;
@@ -59,7 +59,7 @@ class NewTypeCase extends Component {
          formCaseType =
          <SelectField floatingLabelText="Type" value={this.state.value} onChange={this.handleChange}>
            {listType}
-           <MenuItem value="Other" key={"other"} onClick={this.handleNewCaseType} primaryText="Other"></MenuItem>
+           <MenuItem value="Other" key={"other"} onTouchTap={this.handleNewCaseType} primaryText="Other"></MenuItem>
          </SelectField>
        }
 
@@ -71,8 +71,8 @@ class NewTypeCase extends Component {
               <br/>
               </div>
               <div className="form-footer">
-                <RaisedButton label="Add" onClick={this.handleAddColumn} primary={true} style={styles.style} />
-                <RaisedButton label="Cancel" onClick={this.handleTextareaClose} style={style} />
+                <RaisedButton label="Add" onTouchTap={this.handleAddColumn} primary={true} style={styles.style} />
+                <RaisedButton label="Cancel" onTouchTap={this.handleTextareaClose} style={style} />
               </div>
             </form>
           </div>

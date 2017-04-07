@@ -15,7 +15,11 @@ import Avatar from 'material-ui/Avatar';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import Chip from 'material-ui/Chip';
-
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
 class Project extends Component {
   constructor(props){
     super(props);
@@ -32,11 +36,11 @@ class Project extends Component {
   }
   handleSelectProject(e){
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
-    location.reload();
+    window.location = ('./project');
   }
   handleCreateNewProject = () => {
-    localStorage.setItem("currectPage","ProjectCreate");
-    location.reload();
+    // localStorage.setItem("currectPage","ProjectCreate");
+    // location.reload();
   }
   render(){
     const styles = {
@@ -49,7 +53,7 @@ class Project extends Component {
         width: '100%',
         margin:'auto',
         // height: 450,
-        overflowY: 'auto',
+        // overflowY: 'auto',
       },
       styleBorder: {
         border: '1px solid #fafbf9',
@@ -79,7 +83,7 @@ class Project extends Component {
       boxProject.push(
           <div
             key={i}
-            style={styles.styleBorder} onClick={this.handleSelectProject} data-id={tile.sid}
+            style={styles.styleBorder} onTouchTap={this.handleSelectProject} data-id={tile.sid}
           >
             <div style={{padding:'10px',height:'100%',position:'relative'}}>
               <div>{tile.name}</div>
@@ -104,12 +108,14 @@ class Project extends Component {
               padding={10}
               style={styles.gridList}
             >
-            <div
-              key={""}
-              style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
-            >
-              <div style={{padding:'10px',display:'flex'}}><ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
-            </div>
+            <Link to="/projectcreate">
+              <div
+                key={""}
+                style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
+              >
+                <div style={{padding:'10px',display:'flex'}}><ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
+              </div>
+            </Link>
             {boxProject}
             </GridList>
           </div>

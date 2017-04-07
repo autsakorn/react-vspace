@@ -120,16 +120,18 @@ class ForgotNew extends Component {
     const {finished, stepIndex} = this.state;
     var styles = {
         card: {
-         width: 380,
+         width: '80%',
          margin: '0px auto 20px auto',
          textAlign: 'center',
          clear:'both',
         //  overflow:'auto'
        }
     }
+
     return (
       <Card style={styles.card}>
-        <div style={{maxWidth: 380, maxHeight: 400, margin: 'auto'}}>
+        <div style={{ margin: 'auto'}}>
+          <div style={{'paddingTop':'20px'}}><span style={{color:lightBlack}}>Sign up vSpace </span></div>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
               <StepLabel>Send your Email Address</StepLabel>
