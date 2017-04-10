@@ -23,7 +23,7 @@ class Profile extends Component {
         right: 0,
         top: '70px',
         bottom: 0,
-        backgroundColor:'#EDEFF0'
+        // backgroundColor:'#EDEFF0'
       },
       wrapper: {
         // position: 'absolute',
@@ -50,7 +50,7 @@ class Profile extends Component {
     var textField =
       <div>
           <div>
-            <TextField floatingLabelText="Fullname"
+            <TextField floatingLabelText="Fullname" value={this.props.info.name}
             floatingLabelFixed={true}
            />
          </div>
@@ -87,9 +87,9 @@ class Profile extends Component {
             <MediaQuery query='(min-device-width: 769px)'>
                 <div id="vspace-container" style={style.container}>
                     <div className="vspace-wrapper" style={style.wrapper}>
-                      <Card style={{border:'none',boxShadow:'none',backgroundColor:'#EDEFF0'}}>
+                      <Card style={{border:'none',boxShadow:'none'}}>
                             <div style={{float:'left', width:'40%', textAlign:'right'}}>
-                              <Avatar src="http://vspace.in.th/api/assets/images/employee/PS005506_11.jpg" style={style.profile}/>
+                              <Avatar src={this.props.info.pic_full} style={style.profile}/>
                             </div>
                             <div style={{float:'right', width:'60%', textAlign:'left'}}>
                               {textField}
@@ -106,7 +106,7 @@ class Profile extends Component {
                       <div className="vspace-wrapper" style={style.wrapper}>
                         <Card>
                               <div>
-                                <Avatar src="http://vspace.in.th/api/assets/images/employee/PS005506_11.jpg" style={style.profile}/>
+                                <Avatar src={this.props.info.pic_full} style={style.profile}/>
                               </div>
                               <div >
                                 {textField}

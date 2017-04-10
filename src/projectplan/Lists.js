@@ -130,10 +130,11 @@ class Lists extends Component {
     render() {
         var casetype = [];
         this.state.case.forEach((item, k) => {
-            casetype.push(<CardItem key={item.sid}
+            casetype.push(<CardItem info={this.props.info} key={item.sid}
                     onChangeStaffCase = {this.handleChangeStaffCase}
                     listUserCanAddProject = {this.props.listUserCanAddProject}
                     projectContact={this.props.projectInfo.project_contact}
+                    projectInfo={this.props.projectInfo} 
                     case = {item}
                     onEdit = {this.onEdit}
                     onEditChange = {this.onEditChange}

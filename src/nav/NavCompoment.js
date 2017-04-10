@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Link
+// } from 'react-router-dom'
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -49,6 +49,10 @@ class NavCompoment extends Component {
   handleToggle = () => this.setState({open: !this.state.open});
   handleClose = () => this.setState({open: false});
 
+  handleProfile = () => {
+    localStorage.setItem("currectPage","Profile");
+    location.reload();
+  }
   render(){
     const style = {
       title: {
@@ -93,14 +97,22 @@ class NavCompoment extends Component {
         // console.log(item);
         if(item.list.length>0){
 
-          listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
-            // nestedItems={[
-            //         <ListItem key={1} primaryText="Drafts" />,
-            //       ]}
-          >{item.name}</ListItem>);
+          if(item.list[0].sid==="88"){
+            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid");localStorage.setItem("currectPage","Ticket"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+            >{item.name}</ListItem>);
+          }else if(item.list[0].sid==="85"){
+            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid");localStorage.removeItem("currectPage"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+            >{item.name}</ListItem>);
+          }else{
+            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+              // nestedItems={[
+              //         <ListItem key={1} primaryText="Drafts" />,
+              //       ]}
+            >{item.name}</ListItem>);
+          }
         }
     });
-    console.log(LogoPng);
+    // console.log(LogoPng);
     var logo = <span><img src={LogoPng} style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
     return(
@@ -125,10 +137,10 @@ class NavCompoment extends Component {
         </ToolbarGroup>
         <ToolbarGroup style={style.toolbarGroupCenter}>
 
-          <Link onTouchTap={this.handlevSpace} to={"/"}>
+          <a onTouchTap={this.handlevSpace} to={"/"}>
             <ToolbarTitle  style={{'cursor':'pointer','color':'#FFFFFF',textAlign:'center',paddingRight:'0px'}} text={logo}>
             </ToolbarTitle>
-          </Link>
+          </a>
         </ToolbarGroup>
         <ToolbarGroup style={{'display':'inline','width':'33%','textAlign':'right'}}>
           <ToolbarTitle style={style.title} text="">
@@ -144,7 +156,7 @@ class NavCompoment extends Component {
             onRequestChange={(openRight) => this.setState({openRight})}
           >
             <div style={{textAlign:'left'}}><Subheader>{this.props.info.email}</Subheader></div>
-            <Link to="/profile"><MenuItem style={{textAlign:'left'}} >Profile</MenuItem></Link>
+            <MenuItem style={{textAlign:'left'}} onTouchTap={this.handleProfile} >Profile</MenuItem>
             <MenuItem style={{textAlign:'left'}} onTouchTap={this.handleSignOut}>Sign Out</MenuItem>
           </Drawer>
 

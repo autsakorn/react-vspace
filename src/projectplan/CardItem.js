@@ -38,7 +38,8 @@ class CardItem extends Component {
       listUserCanAddProject:this.props.listUserCanAddProject,
       open: false,
       status: this.props.case.status,
-      mandaysCase: this.props.case.man_days
+      mandaysCase: this.props.case.man_days,
+      projectInfo:this.props.projectInfo
     };
     this.handleEditing = this.handleEditing.bind(this);
     this.handleTxtChange = this.handleTxtChange.bind(this);
@@ -189,6 +190,34 @@ class CardItem extends Component {
       });
 
       var manDaysCase = (this.state.mandaysCase)?this.state.mandaysCase:'0';
+      // CONTROL MANDAYS
+      var control_manday;
+      var control_service_report;
+      if(this.state.projectInfo.project_permission==="1" || this.state.projectInfo.project_permission==="2"){
+        control_manday =
+        <div>
+          <div>
+            <div style={{'textAlign':'left'}}>
+                <TextField type="number" min={1} value={manDaysCase} onChange={this.handleManDaysCase} hintText="Man Days" floatingLabelText="Man Days (Days.)"/>
+            </div>
+          </div>
+          <br/>
+          <Divider />
+          <br/>
+        </div>;
+
+        control_service_report =
+        <div>
+          <div>{jobData}</div>
+          <br/>
+          <Divider />
+          <br/>
+        </div>;
+      }else{
+        control_manday = <div></div>;
+        control_service_report = <div></div>;
+      }
+
       return (
         <div style={styles.box}>
           <form onSubmit={this.handleSubmit}>
@@ -211,19 +240,9 @@ class CardItem extends Component {
               <Divider />
               <br/>
 
-              <div>{jobData}</div>
-              <br/>
-              <Divider />
-              <br/>
+              {control_service_report}
 
-              <div>
-                <div style={{'textAlign':'left'}}>
-                    <TextField type="number" min={1} value={manDaysCase} onChange={this.handleManDaysCase} hintText="Man Days" floatingLabelText="Man Days (Days.)"/>
-                </div>
-              </div>
-              <br/>
-              <Divider />
-              <br/>
+              {control_manday}
               <div style={{'textAlign':'right'}}>
                 {removing}
                 <RaisedButton label="Close" onTouchTap={this.handleTextareaClose}  style={styles.style} />

@@ -37,7 +37,7 @@ class ProjectCreate extends Component {
     maxDate.setHours(0, 0, 0, 0);
 
     this.state = {
-      projectParse: 'Pre Sale',
+      projectParse: 'None Contract',
       contract_no_filter:'',
       contract_no:'',
       project_name:'',
@@ -50,7 +50,9 @@ class ProjectCreate extends Component {
       maxDate: maxDate,
       autoOk: false,
       disableYearSelection: false,
-      contract_no_list:[]
+      contract_no_list:[],
+      info:this.props.info,
+      iHaveContractCasePostSale:true
     };
   }
   handleChangeMinDate = (event, date) => {
@@ -91,6 +93,24 @@ class ProjectCreate extends Component {
     }
   };
 
+  handleNextGeneral = () => {
+    const {stepIndex} = this.state;
+
+    if((stepIndex+1)>0){
+      if(this.state.project_name !== '' && this.state.enduser_name !== ''){
+        this.setState({
+          stepIndex: stepIndex + 1,
+          finished: stepIndex >= 1,
+        });
+      }
+    }else{
+      this.setState({
+        stepIndex: stepIndex + 1,
+        finished: stepIndex >= 1,
+      });
+    }
+
+  }
   handlePrev = () => {
     const {stepIndex} = this.state;
     if (stepIndex > 0) {
@@ -113,6 +133,10 @@ class ProjectCreate extends Component {
   }
   handleCustomerCompany = (e) => {
     this.setState({enduser_name:e.target.value});
+  }
+  handleCustomerAddress = (e) => {
+    this.setState({enduser_address:e.target.value});
+
   }
   handleContractNo = (e) => {
     this.setState({contract_no_filter:e.target.value});
@@ -216,7 +240,48 @@ class ProjectCreate extends Component {
       </div>
     );
   }
+  renderStepActionsGeneral(step) {
+    const {stepIndex} = this.state;
 
+    var nextOrFinish;
+    if(stepIndex===1){
+      nextOrFinish =
+      <RaisedButton
+        label={'Finish'}
+        disableTouchRipple={true}
+        disableFocusRipple={true}
+        primary={true}
+        onTouchTap={this.handleCreateNewProject}
+        style={{marginRight: 12}}
+      />
+    }else{
+      nextOrFinish =
+      <RaisedButton
+        label={'Next'}
+        disableTouchRipple={true}
+        disableFocusRipple={true}
+        primary={true}
+        onTouchTap={this.handleNextGeneral}
+        style={{marginRight: 12}}
+      />
+    }
+
+    return (
+      <div style={{margin: '12px 0'}}>
+        {step > 0 && (
+          <FlatButton
+            label="Back"
+            disabled={stepIndex === 0}
+            disableTouchRipple={true}
+            disableFocusRipple={true}
+            onTouchTap={this.handlePrev}
+          />
+        )}
+        {nextOrFinish}
+      </div>
+    );
+
+  }
   render(){
     var styles = {
       padding : {
@@ -234,7 +299,7 @@ class ProjectCreate extends Component {
     }
     var contract_no_list = this.state.contract_no_list.map((item,k) => (
       <List key={k}>
-        <ListItem onClick={this.handleSelectProject} data-id={item.CONTRACT_NO} data-projectname={item.PROJECT_NAME} data-endusername={item.ENDUSER_NAME} data-enduseraddress={item.ENDUSER_ADDRESS}
+        <ListItem onTouchTap={this.handleSelectProject} data-id={item.CONTRACT_NO} data-projectname={item.PROJECT_NAME} data-endusername={item.ENDUSER_NAME} data-enduseraddress={item.ENDUSER_ADDRESS}
           primaryText={item.CONTRACT_NO}
           secondaryText={
             <div>
@@ -262,35 +327,49 @@ class ProjectCreate extends Component {
                 disableTouchRipple={true}
                 disableFocusRipple={true}
                 style={{margin: 5}}
-                onClick={this.handleClearContract}
+                onTouchTap={this.handleClearContract}
               />
             </div>
           </div>;
 
+    if(this.state.iHaveContractCasePostSale){
       findContractForm =
           <div>
-            <TextField hintText="Contract No" value={this.state.contract_no_filter} onChange={this.handleContractNo} floatingLabelText="Contract No"/>
+            <TextField hintText="Input Contract No" value={this.state.contract_no_filter} onChange={this.handleContractNo} floatingLabelText="Contract No"/>
             <RaisedButton
               label={"Find"}
               disableTouchRipple={true}
               disableFocusRipple={true}
               backgroundColor="#a4c639" labelColor="#FFFFFF"
               style={{marginRight: 12}}
-              onClick={this.handleFindContract}
+              onTouchTap={this.handleFindContract}
             />
             <br />
             <div>{contract_no_list}</div>
+            <br/>
+            <div><FlatButton onTouchTap={()=>this.setState({iHaveContractCasePostSale:false})} secondary={true} label={"ฉันไม่มีเลข Contract"} /></div>
           </div>;
-
+    }else{
+      findContractForm =
+        <div>
+          <div><TextField hintText="Project Name" value={this.state.project_name} onChange={this.handleProjectName} floatingLabelText="Project Name"/><br /></div>
+          <div><TextField hintText="Enduser Company" value={this.state.enduser_name} onChange={this.handleCustomerCompany} floatingLabelText="Enduser Company"/><br /></div>
+          <div><TextField hintText="Enduser Address" value={this.state.enduser_address} onChange={this.handleCustomerAddress} floatingLabelText="Enduser Address"/><br /></div>
+          <div style={{color: darkBlack}}>กรอกข้อมูล Project Name และ Enduser Company<br/>เราจะสร้าง Dummy Contract ให้</div>
+          <br/>
+          <div><FlatButton onTouchTap={()=>this.setState({iHaveContractCasePostSale:true})} label="ฉันมีเลข Contract แล้ว" secondary={true} /></div>
+        </div>;
+    }
 
     if(!this.state.iHaveContract){
       var formPreSale =
         <div>
           <div><TextField hintText="Project Name" value={this.state.project_name} onChange={this.handleProjectName} floatingLabelText="Project Name"/><br /></div>
           <div><TextField hintText="Enduser Company" value={this.state.enduser_name} onChange={this.handleCustomerCompany} floatingLabelText="Enduser Company"/><br /></div>
+          <div><TextField hintText="Enduser Address" value={this.state.enduser_address} onChange={this.handleCustomerAddress} floatingLabelText="Enduser Address"/><br /></div>
           <div style={{color: darkBlack}}>กรอกข้อมูล Project Name และ Enduser Company<br/>เราจะสร้าง Dummy Contract ให้</div>
           <br/>
-          <div><FlatButton onClick={this.handleIHaveContract} label="ไม่, ฉันมี Contract No แล้ว" secondary={true} /></div>
+          <div><FlatButton onTouchTap={this.handleIHaveContract} label="ฉันมีเลข Contract แล้ว" secondary={true} /></div>
         </div>;
     }else{
       if(this.state.contract_no && this.state.project_name){
@@ -321,31 +400,66 @@ class ProjectCreate extends Component {
     }else {
       formProjectInformation = formPostSale;
     }
+
+    // console.log(this.state.info.project_create_able);
+    var step1;
+    if(this.state.info.project_create_able==="2"){
+      step1 = <RadioButtonGroup name="shipSpeed" onChange={this.handleProjectParse} defaultSelected={this.state.projectParse}>
+        <RadioButton
+          value="Pre Sale"
+          label="Pre-Sale"
+          style={styles.radioButton}
+        />
+        <RadioButton
+          value="Post Sale"
+          label="Post-Sale"
+          style={styles.radioButton}
+        />
+        <RadioButton
+          value="None Contract"
+          label="None Contract"
+          style={styles.radioButton}
+        />
+      </RadioButtonGroup>;
+    }else if(this.state.info.project_create_able==="1"){
+      step1 = <RadioButtonGroup name="shipSpeed" onChange={this.handleProjectParse} defaultSelected="None Contract">
+        <RadioButton
+          value="None Contract"
+          label="None Contract"
+          style={styles.radioButton}
+        />
+      </RadioButtonGroup>;
+    }else{
+      step1 = <div></div>;
+    }
+
+    var formPeriod = <div>
+        <DatePicker
+          onChange={this.handleChangeMinDate}
+          autoOk={this.state.autoOk}
+          floatingLabelText="Start Date"
+          defaultDate={this.state.minDate}
+          disableYearSelection={this.state.disableYearSelection}
+        />
+        <DatePicker
+          value={this.state.maxDate}
+          onChange={this.handleChangeMaxDate}
+          autoOk={this.state.autoOk}
+          floatingLabelText="Expect End Date"
+          defaultDate={this.state.maxDate}
+          disableYearSelection={this.state.disableYearSelection}
+        />
+    </div>;
+
     const {finished, stepIndex} = this.state;
     var displayContractNo = (this.state.contract_no)?this.state.contract_no:'-';
     var stepCreateProject =
-      <div style={{maxWidth: 580, margin: 'auto'}}>
+      <div style={{maxWidth: '90%', margin: 'auto'}}>
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
             <StepLabel>Select Project Type</StepLabel>
             <StepContent>
-                  <RadioButtonGroup name="shipSpeed" onChange={this.handleProjectParse} defaultSelected={this.state.projectParse}>
-                    <RadioButton
-                      value="Pre Sale"
-                      label="Pre-Sale"
-                      style={styles.radioButton}
-                    />
-                    <RadioButton
-                      value="Post Sale"
-                      label="Post-Sale"
-                      style={styles.radioButton}
-                    />
-                    <RadioButton
-                      value="None Contract"
-                      label="None Contract"
-                      style={styles.radioButton}
-                    />
-                  </RadioButtonGroup>
+              {step1}
               {this.renderStepActions(0)}
             </StepContent>
           </Step>
@@ -361,23 +475,7 @@ class ProjectCreate extends Component {
           <Step>
             <StepLabel>Period Project</StepLabel>
             <StepContent>
-              <div>
-                  <DatePicker
-                    onChange={this.handleChangeMinDate}
-                    autoOk={this.state.autoOk}
-                    floatingLabelText="Start Date"
-                    defaultDate={this.state.minDate}
-                    disableYearSelection={this.state.disableYearSelection}
-                  />
-                  <DatePicker
-                    value={this.state.maxDate}
-                    onChange={this.handleChangeMaxDate}
-                    autoOk={this.state.autoOk}
-                    floatingLabelText="Expect End Date"
-                    defaultDate={this.state.maxDate}
-                    disableYearSelection={this.state.disableYearSelection}
-                  />
-              </div>
+              {formPeriod}
               {this.renderStepActions(2)}
             </StepContent>
           </Step>
@@ -398,7 +496,39 @@ class ProjectCreate extends Component {
             </StepContent>
           </Step>
         </Stepper>
-      </div>
+      </div>;
+
+      var stepCreateProjectGeneral =
+
+      <div style={{maxWidth: '90%', margin: 'auto'}}>
+        <Stepper activeStep={stepIndex} orientation="vertical">
+          <Step>
+            <StepLabel>Project Information</StepLabel>
+            <StepContent>
+              {formProjectInformation}
+              {this.renderStepActionsGeneral(0)}
+            </StepContent>
+          </Step>
+          <Step>
+            <StepLabel>Period Project</StepLabel>
+            <StepContent>
+              <div>
+                {formPeriod}
+              </div>
+              {this.renderStepActionsGeneral(1)}
+            </StepContent>
+          </Step>
+        </Stepper>
+      </div>;
+
+
+      var stepCreateProjectUse;
+
+      if(this.props.info.project_create_able==="2" || this.props.info.project_create_able==="1"){
+          stepCreateProjectUse = stepCreateProject;
+      }else{
+          stepCreateProjectUse = stepCreateProjectGeneral;
+      }
       var formCreate =
         <Card style={styles.padding}>
           <div>
@@ -408,7 +538,7 @@ class ProjectCreate extends Component {
             />
             <CardText>
               <div>
-                {stepCreateProject}
+                {stepCreateProjectUse}
               </div>
             </CardText>
           </div>

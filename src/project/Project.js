@@ -36,11 +36,11 @@ class Project extends Component {
   }
   handleSelectProject(e){
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
-    window.location = ('./project');
+    location.reload();
   }
   handleCreateNewProject = () => {
-    // localStorage.setItem("currectPage","ProjectCreate");
-    // location.reload();
+    localStorage.setItem("currectPage","ProjectCreate");
+    location.reload();
   }
   render(){
     const styles = {
@@ -108,14 +108,14 @@ class Project extends Component {
               padding={10}
               style={styles.gridList}
             >
-            <Link to="/projectcreate">
+            <div onTouchTap={this.handleCreateNewProject}>
               <div
                 key={""}
-                style={styles.styleBorderNew} onClick={this.handleCreateNewProject}
+                style={styles.styleBorderNew} 
               >
                 <div style={{padding:'10px',display:'flex'}}><ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
               </div>
-            </Link>
+            </div>
             {boxProject}
             </GridList>
           </div>
