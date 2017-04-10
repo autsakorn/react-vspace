@@ -22,6 +22,24 @@ class App extends Component {
     // var formData = new FormData();
     // formData.append('token',InfoGen.token);
     // formData.append('email',InfoGen.email);
+
+  }
+  Home = () => (
+    <div>{this.state.home}</div>
+  )
+  ProjectPlan = () => (
+    <div>{this.state.project}</div>
+  )
+  ProjectCreate = () => (
+    <div>{this.state.projectCreate}</div>
+  )
+  Profile = () => (
+    <div>
+      {this.state.profile}
+    </div>
+  )
+
+  componentDidMount() {
     var that = this;
     var formData = new FormData();
     formData.append('token',InfoGen.token);
@@ -47,69 +65,37 @@ class App extends Component {
       console.log(error);
     });
   }
-  Home = () => (
-    <div>{this.state.home}</div>
-  )
-  ProjectPlan = () => (
-    <div>{this.state.project}</div>
-  )
-  ProjectCreate = () => (
-    <div>{this.state.projectCreate}</div>
-  )
-  Profile = () => (
-    <div>
-      {this.state.profile}
-    </div>
-  )
+
+  componentWillUnmount() {
+
+  }
 
   render() {
     // var container;
     //
-    // var formData = new FormData();
-    // formData.append('token',InfoGen.token);
-    // formData.append('email',InfoGen.email);
-    // get(Url.info, formData).then(function(resInfo){
-    //   if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
-    //     container = <ProjectCreate info={resInfo.data} />;
-    //     return (
-    //       <div >
-    //         {container}
-    //       </div>
-    //     );
-    //   }else if(localStorage.getItem("project_sid")){
-    //     formData.append('project_sid',localStorage.getItem("project_sid"));
-    //     get(Url.projectDetail, formData).then(function(resPd){
-    //       get(Url.listCaseAll, formData).then(function(resLCA){
-    //         container = <ProjectPlanApp projectOwner={resPd.project_detail.owner} info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>;
-    //         return (
-    //           <div >
-    //             {container}
-    //           </div>
-    //         );
-    //       });
-    //     });
-    //   }else{
-    //       container = <Project urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} />;
-    //       return (
-    //         <div >
-    //           {container}
-    //         </div>
-    //       );
-    //   }
-    // },function(error){
-    //   console.log(error);
-    // });
-    return (
-      <Router>
-        <div>
+    
+          // <Router>
+          //       </Router>
+          //       <Route exact path="/" component={this.Home}/>
+          //       <Route exact path="/project" component={this.ProjectPlan}/>
+          //       <Route exact path="/pages/projectmanagementv1" component={this.Home}/>
+          //       <Route exact path="/projectcreate" component={this.ProjectCreate}/>
+          //       <Route exact path="/profile" component={this.Profile}/>
 
-          <Route exact path="/" component={this.Home}/>
-          <Route exact path="/project" component={this.ProjectPlan}/>
-          <Route exact path="/pages/projectmanagementv1" component={this.Home}/>
-          <Route exact path="/projectcreate" component={this.ProjectCreate}/>
-          <Route exact path="/profile" component={this.Profile}/>
+    var myApp;
+    if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
+      myApp = this.ProjectCreate;
+    }else if(localStorage.getItem("project_sid")){
+      myApp = this.ProjectPlan;
+    }else{
+      myApp = this.Home;
+    }
+    console.log(this.state);
+    return (
+        <div>
+          {myApp}
         </div>
-      </Router>
+
     );
   }
 }

@@ -149,7 +149,7 @@ class MyApp extends Component{
   render(){
     return(
       <div id="container">
-        <Column projectOwner={this.props.projectOwner} projectInfo={this.state.projectInfo} toggleUpdate={this.state.toggleUpdate} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
+        <Column info={this.props.info} projectOwner={this.props.projectOwner} projectInfo={this.state.projectInfo} toggleUpdate={this.state.toggleUpdate} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} onDelete={this.onDelete} onAdding={this.onAdding} casetype={this.state.casetype} onEdit={this.onEdit} onEditChange={this.onEditChange} onAddNew={this.onAddNew} listType={this.props.listType} projectInfo={this.props.projectInfo} onAddColumn={this.handleAddColumn} />
       </div>
       );
   }

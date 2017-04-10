@@ -81,7 +81,7 @@ class ServiceReportDialog extends Component {
           iconStatusService = <SocialSentimentNeutral/>
         }
         chipServiceReport.push(
-          <Chip style={{margin:2}} key={i}><Avatar icon={iconStatusService} />{this.state.serviceReport[i].subject_service_report}</Chip>
+          <Chip style={{margin:2,overflow: 'auto',maxWidth: '270px'}} key={i}><Avatar icon={iconStatusService} />{this.state.serviceReport[i].subject_service_report}</Chip>
         );
         serviceReport.push(
           <ListItem key={i} >
