@@ -41,7 +41,8 @@ class Profile extends Component {
         width:'120px',
         height:'initial',
         cursor: 'pointer',
-        marginRight:'20%'
+        marginRight:'20%',
+        marginTop :'10%'
       }
 
     }
