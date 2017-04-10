@@ -52,7 +52,8 @@ class ProjectCreate extends Component {
       disableYearSelection: false,
       contract_no_list:[],
       info:this.props.info,
-      iHaveContractCasePostSale:true
+      iHaveContractCasePostSale:true,
+      projectForCompany:""
     };
   }
   handleChangeMinDate = (event, date) => {
@@ -181,6 +182,7 @@ class ProjectCreate extends Component {
       ],
       man_day: '0',
       man_hour: '0',
+      projectForCompany: this.state.projectForCompany
     }
 
     console.log(confirmCreateProject);
@@ -200,6 +202,11 @@ class ProjectCreate extends Component {
     }else{
       this.setState({'iHaveContract':true});
     }
+  }
+
+  handleProjectForCompany = (e) => {
+    console.log(e.target.value);
+    this.setState({projectForCompany:e.target.value});
   }
   renderStepActions(step) {
     const {stepIndex} = this.state;
@@ -332,6 +339,37 @@ class ProjectCreate extends Component {
             </div>
           </div>;
 
+    var canCreateDummyForCompany;
+
+    var radioButton: {
+      marginBottom: 16,
+    };
+    var radioCreateDummyCompany = [];
+    this.props.info.can_create_dummy_company.forEach(function(item,i){
+        console.log(item);
+        radioCreateDummyCompany.push(<RadioButton key={i}
+          value={item.COMPANY_ID}
+          label={item.COMPANY_NAME}
+          style={radioButton}
+        />);
+    });
+
+    // defaultSelected={this.props.info.can_create_dummy_company[0].COMPANY_ID}
+    var createDummyCompany =
+    <div>
+      <br/>
+      <div>Project For Company</div>
+      <div>
+        <RadioButtonGroup onChange={this.handleProjectForCompany} name="radio_dummy_for_company"
+
+        >
+          {radioCreateDummyCompany}
+        </RadioButtonGroup>
+      </div>
+      <br/>
+    </div>
+
+
     if(this.state.iHaveContractCasePostSale){
       findContractForm =
           <div>
@@ -355,7 +393,8 @@ class ProjectCreate extends Component {
           <div><TextField hintText="Project Name" value={this.state.project_name} onChange={this.handleProjectName} floatingLabelText="Project Name"/><br /></div>
           <div><TextField hintText="Enduser Company" value={this.state.enduser_name} onChange={this.handleCustomerCompany} floatingLabelText="Enduser Company"/><br /></div>
           <div><TextField hintText="Enduser Address" value={this.state.enduser_address} onChange={this.handleCustomerAddress} floatingLabelText="Enduser Address"/><br /></div>
-          <div style={{color: darkBlack}}>กรอกข้อมูล Project Name และ Enduser Company<br/>เราจะสร้าง Dummy Contract ให้</div>
+          <div>{createDummyCompany}</div>
+          <div style={{color: darkBlack}}>กรอกและเลือกข้อมูลให้ครบ<br/>เราจะสร้าง Dummy Contract ให้</div>
           <br/>
           <div><FlatButton onTouchTap={()=>this.setState({iHaveContractCasePostSale:true})} label="ฉันมีเลข Contract แล้ว" secondary={true} /></div>
         </div>;
@@ -367,7 +406,8 @@ class ProjectCreate extends Component {
           <div><TextField hintText="Project Name" value={this.state.project_name} onChange={this.handleProjectName} floatingLabelText="Project Name"/><br /></div>
           <div><TextField hintText="Enduser Company" value={this.state.enduser_name} onChange={this.handleCustomerCompany} floatingLabelText="Enduser Company"/><br /></div>
           <div><TextField hintText="Enduser Address" value={this.state.enduser_address} onChange={this.handleCustomerAddress} floatingLabelText="Enduser Address"/><br /></div>
-          <div style={{color: darkBlack}}>กรอกข้อมูล Project Name และ Enduser Company<br/>เราจะสร้าง Dummy Contract ให้</div>
+          <div>{createDummyCompany}</div>
+          <div style={{color: darkBlack}}>กรอกและเลือกข้อมูลให้ครบ<br/>เราจะสร้าง Dummy Contract ให้</div>
           <br/>
           <div><FlatButton onTouchTap={this.handleIHaveContract} label="ฉันมีเลข Contract แล้ว" secondary={true} /></div>
         </div>;
