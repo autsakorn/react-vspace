@@ -94,6 +94,7 @@ class Lists extends Component {
     onEditChange(sid, value) {
         this.props.onEditChange(this.state.sid, sid, value);
     }
+
     onDelete(sid) {
       // console.log(this.state.sid, sid);
         // this.props.onDelete(this.state.sid, sid);
@@ -131,14 +132,14 @@ class Lists extends Component {
         var casetype = [];
         this.state.case.forEach((item, k) => {
             casetype.push(<CardItem info={this.props.info} key={item.sid}
-                    onChangeStaffCase = {this.handleChangeStaffCase}
-                    listUserCanAddProject = {this.props.listUserCanAddProject}
+                    onChangeStaffCase={this.handleChangeStaffCase}
+                    listUserCanAddProject={this.props.listUserCanAddProject}
                     projectContact={this.props.projectInfo.project_contact}
-                    projectInfo={this.props.projectInfo} 
-                    case = {item}
-                    onEdit = {this.onEdit}
-                    onEditChange = {this.onEditChange}
-                    onDelete = {this.onDelete} />);
+                    projectInfo={this.props.projectInfo}
+                    case={item}
+                    onEdit={this.onEdit}
+                    onEditChange={this.onEditChange}
+                    onDelete={this.onDelete} />);
         });
             const style = {
                 header: {
@@ -154,14 +155,14 @@ class Lists extends Component {
                     'borderRadius': '3px'
                 }
             }
-            return ( <List style = {style.box}>
-                <Subheader style = {style.header}> {this.props.header} </Subheader> {casetype}
-                <InputNew onAddNew = {this.onAddNew}
-                  toggleTextarea = {this.props.status}
-                  onAdding = {this.onAdding}
-                  sid = {this.props.sid}
-                  statusAdding = {this.props.status}
-                  initialValue = {""}/>
+            return ( <List style={style.box}>
+                <Subheader style={style.header}> {this.props.header} </Subheader> {casetype}
+                <InputNew onAddNew={this.onAddNew}
+                  toggleTextarea={this.props.status}
+                  onAdding={this.onAdding}
+                  sid={this.props.sid}
+                  statusAdding={this.props.status}
+                  initialValue={""}/>
                 </List>
             );
         }

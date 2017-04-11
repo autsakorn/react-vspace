@@ -28,6 +28,9 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import OwnerDialog from '../projectplan/OwnerDialog';
+import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
+
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
@@ -130,7 +133,7 @@ class ServiceReportCreate extends Component {
     formData.append('data', JSON.stringify(dataCreateService));
     Put(Url.serviceReportCreate, formData).then(function(res){
         console.log(res);
-        that.props.onCreatedService();
+        that.props.onCreatedService(res.task);
     });
   }
 
@@ -195,8 +198,12 @@ class ServiceReportCreate extends Component {
       openSelectStaff: false,
     });
   };
-  handleSelectStaff = (e) => {
-    var tmpDet = {email:e.currentTarget.dataset.id, name:e.currentTarget.dataset.name, pic_employee:e.currentTarget.dataset.pic_employee};
+  handleSelectStaff = (email, pic_employee, thainame, engname) => {
+    var tmpDet = {
+      email:email,
+      name:engname,
+      pic_employee:pic_employee
+    };
     this.addStaff(tmpDet);
     this.setState({
       openSelectStaff: false,
@@ -247,7 +254,7 @@ class ServiceReportCreate extends Component {
         return <ListItem key={k}
           leftAvatar={<Avatar src={item.pic_employee} />}
           primaryText={item.thainame}
-          onClick={this.handleSelectStaff} data-id={item.emailaddr} data-name={item.engname} data-pic_employee={item.pic_employee}
+          onTouchTap={this.handleSelectStaff} data-id={item.emailaddr} data-name={item.engname} data-pic_employee={item.pic_employee}
           secondaryText={
             <p>
               {item.engname} <br/>
@@ -263,26 +270,28 @@ class ServiceReportCreate extends Component {
         staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
         confirmStaff.push(<Chip style={{margin:4,backgroundColor:'none'}} key={item.email} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
     });
+          // <Chip style={styles.chip} onTouchTap={this.handleTouchTap}> ADD</Chip>
     var sectionStaff = <div style={styles.wrapper}>
       {staffSelected}
-      <Chip style={styles.chip} onTouchTap={this.handleTouchTap}> ADD</Chip>
-      <Popover
-        open={this.state.openSelectStaff}
-        anchorEl={this.state.anchorEl}
-        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-        targetOrigin={{horizontal: 'left', vertical: 'top'}}
-        onRequestClose={this.handleRequestClose}
-      >
-        <Menu>
-          {staffList}
-        </Menu>
-      </Popover>
+      <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddProject} title="" label="Add" icon={<SocialPersonAdd />}  />
     </div>;
 
+    // <Popover
+    //   open={this.state.openSelectStaff}
+    //   anchorEl={this.state.anchorEl}
+    //   anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+    //   targetOrigin={{horizontal: 'left', vertical: 'top'}}
+    //   onRequestClose={this.handleRequestClose}
+    // >
+    //   <Menu>
+    //     {staffList}
+    //   </Menu>
+    // </Popover>
+    //
     var createService;
     var labelAdd = <span>Add</span>
     if(!this.state.createService){
-      createService = <RaisedButton onClick={this.handleCreateService} icon={<ContentAdd />}  label={labelAdd} style={{marginTop:'10px'}} />;
+      createService = <RaisedButton onTouchTap={this.handleCreateService} icon={<ContentAdd />}  label={labelAdd} style={{marginTop:'10px'}} />;
     }else{
       const items = [
         <MenuItem key={1} value={"1"} primaryText="Onsite" />,
@@ -298,7 +307,7 @@ class ServiceReportCreate extends Component {
       //   <TextField hintText="Detail" onChange={this.handleDetail} style={{width:"90%"}} floatingLabelText="Detail"/>
       // </div>
       createService =
-        <div style={{maxWidth: '80%', maxHeight: 400, margin: 'auto'}}>
+        <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
               <StepLabel>Subject service</StepLabel>

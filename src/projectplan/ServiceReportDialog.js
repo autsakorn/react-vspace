@@ -42,8 +42,16 @@ class ServiceReportDialog extends Component {
       this.setState({creatingService:true})
     }
   }
-  handleCreatedService = () => {
-    this.props.onCreatedService();
+  handleCreatedService = (task) => {
+    // this.props.onCreatedService();
+    // var serviceReport = this.state.serviceReport;
+    // serviceReport.push({
+    //   sid:1,
+    //   subject_service_report:"TEST",
+    //   service_type_name:"",
+    //   appointment:""
+    // });
+    this.setState({serviceReport:task});
   }
 
   render(){
@@ -66,8 +74,6 @@ class ServiceReportDialog extends Component {
     var serviceReport = [];
     var listServiceReport;
     var chipServiceReport = [];
-
-
       for (let i = 0; i < this.state.serviceReport.length; i++) {
         // serviceReport.push(
         //   <div key={i}>

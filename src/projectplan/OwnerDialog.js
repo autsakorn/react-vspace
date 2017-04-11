@@ -112,7 +112,7 @@ class OwnerDialog extends Component {
             text: item.email,
             value: (
               <MenuItem onTouchTap={()=>this.handleSelectOwner(item.email, item.pic_employee, item.thainame, item.engname)}>
-                <Chip style={{backgroundColor:'#FFF'}}>{avatar} {item.email}</Chip>
+                <Chip onTouchTap={()=>this.handleSelectOwner(item.email, item.pic_employee, item.thainame, item.engname)} style={{backgroundColor:'#FFF'}}>{avatar} {item.email}</Chip>
               </MenuItem >
             ),
           });

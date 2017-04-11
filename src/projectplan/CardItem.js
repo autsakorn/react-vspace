@@ -23,7 +23,8 @@ import Url from '../config/url';
 import get from '../config/Get';
 import Put from '../config/Put';
 import InfoGen from '../config/InfoGen';
-
+import TicketDrawer from '../ticket/TicketDrawer';
+import Drawer from 'material-ui/Drawer';
 class CardItem extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +40,8 @@ class CardItem extends Component {
       open: false,
       status: this.props.case.status,
       mandaysCase: this.props.case.man_days,
-      projectInfo:this.props.projectInfo
+      projectInfo:this.props.projectInfo,
+      openTicketDrawer:false
     };
     this.handleEditing = this.handleEditing.bind(this);
     this.handleTxtChange = this.handleTxtChange.bind(this);
@@ -49,8 +51,10 @@ class CardItem extends Component {
     // console.log(this.state.item);
   }
   handleEditing(){
+    // alert('123');
     // this.setState({status:"Editing"});
-    this.props.onEdit(this.state.sid);
+    // this.props.onEdit(this.state.sid);
+    this.setState({openTicketDrawer:!this.state.openTicketDrawer});
   }
   handleTxtChange(e){
     this.setState({name:e.target.value});
@@ -93,50 +97,47 @@ class CardItem extends Component {
   //     // this.props.case.owner_thainame = e.currentTarget.dataset.id;
   //     this.props.onChangeStaffCase(this.state.sid, e.currentTarget.dataset.id);
   // };
-  handleSelectItemOwner = (email, pic_employee, thainame, engname) => {
-    var formData = new FormData();
-    // alert(email);
-    // alert(pic_employee);
-    this.setState({open:false});
-    this.props.onChangeStaffCase(this.state.sid, email);
+  handleSelectItemOwner = (sid, email) => {
+    this.props.onChangeStaffCase(sid, email);
   }
   handleCreatedService = () => {
-    console.log(this.state);
-
-    var that = this;
-    that.props.onEdit(0);
-    var formData = new FormData();
-    formData.append('token',InfoGen.token);
-    formData.append('email',InfoGen.email);
-    formData.append('project_sid',localStorage.getItem("project_sid"));
-    get(Url.projectDetail, formData).then(function(res){
-      res.data.forEach((value1) => {
-        value1.case.forEach((value2) => {
-          if(value2.sid===that.state.sid){
-            that.setState({
-              sid:that.state.sid,
-              item:value2,
-              status:"Editing",
-              mandaysCase:that.state.mandaysCase
-            });
-            that.props.onEdit(that.state.sid);
-          }
-        });
-      });
-    });
+    // var that = this;
+    // // that.props.onEdit(0);
+    // var formData = new FormData();
+    // formData.append('token',InfoGen.token);
+    // formData.append('email',InfoGen.email);
+    // formData.append('project_sid',localStorage.getItem("project_sid"));
+    // get(Url.projectDetail, formData).then(function(res){
+    //   res.data.forEach((value1) => {
+    //     value1.case.forEach((value2) => {
+    //       if(value2.sid===that.state.sid){
+    //         that.setState({
+    //           sid:that.state.sid,
+    //           item:value2,
+    //           // status:"Editing",
+    //           mandaysCase:that.state.mandaysCase
+    //         });
+    //         // that.props.onEdit(that.state.sid);
+    //       }
+    //     });
+    //   });
+    // });
   }
-  handleManDaysCase = (e) => {
-    var that = this;
-    var newManDay = e.currentTarget.value;
-    var formData = new FormData();
-    formData.append("email", InfoGen.email);
-    formData.append("token", InfoGen.token);
-    formData.append("man_days", newManDay);
-    formData.append("ticket_sid", this.state.sid);
-
-    Put(Url.changeMandaysCase, formData).then(function(res){
-      that.setState({mandaysCase:newManDay});
-    });
+  // handleManDaysCase = (e) => {
+  //   var that = this;
+  //   var newManDay = e.currentTarget.value;
+  //   var formData = new FormData();
+  //   formData.append("email", InfoGen.email);
+  //   formData.append("token", InfoGen.token);
+  //   formData.append("man_days", newManDay);
+  //   formData.append("ticket_sid", this.state.sid);
+  //
+  //   Put(Url.changeMandaysCase, formData).then(function(res){
+  //     that.setState({mandaysCase:newManDay});
+  //   });
+  // }
+  onChangeSubject = (name) => {
+    this.setState({name:name});
   }
   render(){
     const iconStyles = {
@@ -153,15 +154,15 @@ class CardItem extends Component {
       owner: {'textAlign':'right'},
       relative: {'position':'relative'}
     }
-    if(this.state.status){
-      console.log(this.state.status);
-    }
+    // if(this.state.status){
+    //   console.log(this.state.status);
+    // }
     var labelOwnerCase = (this.state.item.owner_thainame)?(this.state.item.owner_thainame):'Owner?';
     var avatar = <div style={styles.relative}><Avatar src={this.state.item.pic_full} /> <small style={{color:lightBlack,'position':'absolute','top':'5px','left':'45px'}}>{labelOwnerCase}</small></div>;
 
     var jobData;
     if(this.state.item.task){
-      jobData = <ServiceReportDialog onCreatedService={this.handleCreatedService} caseSid={this.state.sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject} serviceReport={this.state.item.task} />
+      jobData = <ServiceReportDialog caseSid={this.state.sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject} serviceReport={this.state.item.task} />
     }else{
       jobData = <span></span>
     }
@@ -245,7 +246,7 @@ class CardItem extends Component {
               {control_manday}
               <div style={{'textAlign':'right'}}>
                 {removing}
-                <RaisedButton label="Close" onTouchTap={this.handleTextareaClose}  style={styles.style} />
+
               </div>
             </div>
           </form>
@@ -253,11 +254,28 @@ class CardItem extends Component {
       )
     }else{
       return (
-        <div data-id={this.state.sid} style={styles.box} onTouchTap={this.handleEditing}>
-            <div>
-              {this.state.item.subject}
-            </div>
-            <div>{avatar}</div>
+        <div>
+          <div data-id={this.state.sid} style={styles.box} onTouchTap={this.handleEditing}>
+              <div>
+                {this.state.name}
+              </div>
+              <div>{avatar}</div>
+          </div>
+          <Drawer onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})}
+          docked={false} width={'70%'} openSecondary={true} open={this.state.openTicketDrawer} >
+              <TicketDrawer
+                  onChangeSubject={this.onChangeSubject}
+                  onChangeStaffCase={this.handleSelectItemOwner}
+                  case={this.state.item} sid={this.props.case.sid}
+                  name={this.state.name}
+                  projectContact={this.props.projectContact}
+                  owner_value={this.props.case.owner}
+                  listUserCanAddProject={this.props.listUserCanAddProject}
+                  status={this.props.case.status}
+                  mandaysCase={this.props.case.man_days}
+                  projectInfo={this.props.projectInfo}
+              />
+          </Drawer>
         </div>
       );
     }

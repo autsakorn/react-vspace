@@ -21,7 +21,10 @@ var Url = {
   'projectDeleteStaff':END_POINT_2+'v1/projectmodify/deleteStaff',
   'changeMandaysCase':END_POINT_2+'v1/casemodify/mandays',
   'inviteEmail':END_POINT_2+'v1/sendmail/inviteMember',
-  'ticket':END_POINT_2+'v1/incident/lists'
+  'ticket':END_POINT_2+'v1/incident/lists',
+  'addChecklist':END_POINT_2+"v1/projectplan/addChecklist",
+  'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
+  'doChecklist':END_POINT_2+"v1/projectplan/doChecklist",
 }
 
 export default Url;

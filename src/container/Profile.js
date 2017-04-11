@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import NavCompoment from '../nav/NavCompoment';
 import TextField from 'material-ui/TextField';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
-import get from '../config/Get.js';
-import Url from '../config/url';
-import InfoGen from '../config/InfoGen';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
+// import get from '../config/Get.js';
+// import Url from '../config/url';
+// import InfoGen from '../config/InfoGen';
+// import List from 'material-ui/List/List';
+// import ListItem from 'material-ui/List/ListItem';
 import MediaQuery from 'react-responsive';
 class Profile extends Component {
 

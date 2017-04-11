@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import get from '../config/Get.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {GridList, GridTile} from 'material-ui/GridList';
+import {GridList} from 'material-ui/GridList';
 import NavCompoment from '../nav/NavCompoment';
 // import IconButton from 'material-ui/IconButton';
 // import Subheader from 'material-ui/Subheader';
@@ -14,12 +14,12 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import ContentAddCircle from 'material-ui/svg-icons/content/add-circle';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
-import Chip from 'material-ui/Chip';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
+// import Chip from 'material-ui/Chip';
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Link
+// } from 'react-router-dom'
 class Project extends Component {
   constructor(props){
     super(props);
@@ -111,7 +111,7 @@ class Project extends Component {
             <div onTouchTap={this.handleCreateNewProject}>
               <div
                 key={""}
-                style={styles.styleBorderNew} 
+                style={styles.styleBorderNew}
               >
                 <div style={{padding:'10px',display:'flex'}}><ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
               </div>

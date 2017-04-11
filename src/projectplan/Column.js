@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import Lists from './Lists';
 import HeaderProject from './HeaderProject';
 import NewTypeCase from './NewTypeCase';
+import get from '../config/Get.js';
+import Url from '../config/url';
+import InfoGen from '../config/InfoGen';
+import Put from '../config/Put.js';
 
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import {GridList, GridTile} from 'material-ui/GridList';
@@ -34,7 +38,6 @@ class Column extends Component {
               // this.sendDataCreateCaseToServer(indexCaseType,data);
             }else{
               this.props.casetype[i].case = [];
-
               this.sendDataCreateCaseToServer(indexCaseType,data,0);
             }
             //
@@ -60,6 +63,7 @@ class Column extends Component {
   handleChangeStaffCase = (ticketSid,emailNewOwner) => {
     this.props.onChangeStaffCase(ticketSid, emailNewOwner);
   }
+
   render() {
     var lists = [];
     var that = this;

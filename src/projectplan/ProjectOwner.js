@@ -62,6 +62,7 @@ class ProjectOwner extends Component {
         },
         chip: {
           margin: 2,
+          height:32
         }
     }
     var listOwner = [];
@@ -74,7 +75,13 @@ class ProjectOwner extends Component {
         }
         listOwner.push(<Chip onRequestDelete={() => this.handleRequestDelete(item.email)} style={styles.chip} key={item.email}>{avatar} {item.engname}</Chip>);
     });
-    listOwner.push(<OwnerDialog onShowMore={this.handleShowMore} label={"Add"} icon={<SocialPersonAdd />} title={"Add Member"} onSelectItem={this.handleSelectItem} listItem={this.state.listUserCanAdd} key={0} />);
+    listOwner.push(
+      <OwnerDialog
+        onShowMore={this.handleShowMore}
+        label={"Add"} icon={<SocialPersonAdd />}
+        title={"Add Member"} onSelectItem={this.handleSelectItem}
+        listItem={this.state.listUserCanAdd} key={0} />
+    );
     // <Chip style={styles.chip} key={0}><Avatar icon={<SocialPersonAdd />} /> Add</Chip>
     return(<div>
       <div style={{textAlign:'left'}}><small style={{color:lightBlack}}>Member</small></div>

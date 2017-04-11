@@ -85,25 +85,25 @@ class MyApp extends Component{
     this.setState({casetype:this.props.casetype});
   }
   onEditChange(fSid, sSid, value){
-    var dLength = this.props.casetype.length;
-    for(var i=0; i<dLength;i++){
-        if(fSid===this.props.casetype[i].sid){
-            for(var j=0;j<this.props.casetype[i].case.length;j++){
-                if(this.props.casetype[i].case[j].sid===sSid){
-                    this.props.casetype[i].case[j].subject = value;
-                    var formData = new FormData();
-                    formData.append('token',InfoGen.token);
-                    formData.append('email',InfoGen.email);
-                    formData.append('ticket_sid', sSid);
-                    formData.append('new_subject', value);
-                    get(Url.casemodifySubject,formData).then(function(res){
-                      console.log(res);
-                    });
-                }
-            }
-        }
-    }
-    this.setState({casetype:this.props.casetype});
+    // var dLength = this.props.casetype.length;
+    // for(var i=0; i<dLength;i++){
+    //     if(fSid===this.props.casetype[i].sid){
+    //         for(var j=0;j<this.props.casetype[i].case.length;j++){
+    //             if(this.props.casetype[i].case[j].sid===sSid){
+    //                 this.props.casetype[i].case[j].subject = value;
+    //                 var formData = new FormData();
+    //                 formData.append('token',InfoGen.token);
+    //                 formData.append('email',InfoGen.email);
+    //                 formData.append('ticket_sid', sSid);
+    //                 formData.append('new_subject', value);
+    //                 get(Url.casemodifySubject,formData).then(function(res){
+    //                   console.log(res);
+    //                 });
+    //             }
+    //         }
+    //     }
+    // }
+    // this.setState({casetype:this.props.casetype});
   }
   onDelete(fSid, sSid){
       // var dLength = this.props.casetype.length;

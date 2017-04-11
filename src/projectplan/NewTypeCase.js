@@ -59,7 +59,7 @@ class NewTypeCase extends Component {
          formCaseType =
          <SelectField floatingLabelText="Type" value={this.state.value} onChange={this.handleChange}>
            {listType}
-           <MenuItem value="Other" key={"other"} onTouchTap={this.handleNewCaseType} primaryText="Other"></MenuItem>
+           <MenuItem value="Other" key={"other"} onTouchTap={this.handleNewCaseType} primaryText="Add new item..."></MenuItem>
          </SelectField>
        }
 
