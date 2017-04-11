@@ -9,7 +9,6 @@ import NavCompoment from '../nav/NavCompoment';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Drawer from 'material-ui/Drawer';
 
-
 class Ticket extends Component {
   constructor(props){
     super(props);
