@@ -108,7 +108,7 @@ class Profile extends Component {
                               <div>
                                 <Avatar src={this.props.info.pic_full} style={style.profile}/>
                               </div>
-                              <div >
+                              <div>
                                 {textField}
                              </div>
                              <div style={{clear:'both'}}></div>

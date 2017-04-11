@@ -61,7 +61,7 @@ class Ticket extends Component {
           <div>Ticket</div>
             <Drawer
                docked={false}
-               width={500}
+               width={'80%'}
                open={this.state.open}
                openSecondary={this.state.openSecondary}
                onRequestChange={(open) => this.setState({open})}
