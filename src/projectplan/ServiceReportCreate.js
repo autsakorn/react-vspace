@@ -30,6 +30,10 @@ import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import OwnerDialog from '../projectplan/OwnerDialog';
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import MapsLocalTaxi from 'material-ui/svg-icons/maps/local-taxi';
+import ActionSchedule from 'material-ui/svg-icons/action/schedule';
+import Checkbox from 'material-ui/Checkbox';
 
 class ServiceReportCreate extends Component {
   constructor(props){
@@ -46,7 +50,8 @@ class ServiceReportCreate extends Component {
       serviceReport:this.props.serviceReport,
       createService:this.props.createService,
       stepIndex: 0,finished: false,caseSid:this.props.caseSid,
-      value24: appointment_time, value12: null, openSelectStaff:false,staff:[],
+      value24: appointment_time, value12: null, openSelectStaff:false,
+      staff:[],
       subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"8",
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
     };
@@ -83,10 +88,23 @@ class ServiceReportCreate extends Component {
 
   handleNext = () => {
     const {stepIndex} = this.state;
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 4,
-    });
+    console.log(this.state.staff);
+    if(stepIndex===2 && this.state.staff.length<1){
+      this.props.listUserCanAddProject.forEach((item,i)=>{
+        if(item.email===localStorage.getItem("case_email")){
+            var temp = [{name:item.engname, email:item.email, pic_employee:item.pic_employee}];
+            this.setState({staff:temp});
+        }
+      });
+    }
+    if(stepIndex===3 && (this.state.end_user_name==="" || this.state.end_user_email==="")){
+
+    }else{
+      this.setState({
+        stepIndex: stepIndex + 1,
+        finished: stepIndex >= 4,
+      });
+    }
   };
 
   handlePrev = () => {
@@ -175,7 +193,6 @@ class ServiceReportCreate extends Component {
     );
   }
   handleChangeTimePicker24 = (event, date) => {
-
     this.setState({value24: date});
   };
 
@@ -270,24 +287,12 @@ class ServiceReportCreate extends Component {
         staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
         confirmStaff.push(<Chip style={{margin:4,backgroundColor:'none'}} key={item.email} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
     });
-          // <Chip style={styles.chip} onTouchTap={this.handleTouchTap}> ADD</Chip>
+
     var sectionStaff = <div style={styles.wrapper}>
       {staffSelected}
       <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddProject} title="" label="Add" icon={<SocialPersonAdd />}  />
     </div>;
 
-    // <Popover
-    //   open={this.state.openSelectStaff}
-    //   anchorEl={this.state.anchorEl}
-    //   anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-    //   targetOrigin={{horizontal: 'left', vertical: 'top'}}
-    //   onRequestClose={this.handleRequestClose}
-    // >
-    //   <Menu>
-    //     {staffList}
-    //   </Menu>
-    // </Popover>
-    //
     var createService;
     var labelAdd = <span>Add</span>
     if(!this.state.createService){
@@ -302,15 +307,38 @@ class ServiceReportCreate extends Component {
         <MenuItem key={6} value={"6"} primaryText="Pre-Install" />,
         <MenuItem key={7} value={"7"} primaryText="Testing" />,
       ];
-      // txt detail
-      // <div>
-      //   <TextField hintText="Detail" onChange={this.handleDetail} style={{width:"90%"}} floatingLabelText="Detail"/>
-      // </div>
+
+
+      var transportation;
+      var transportationItem = [];
+      var iconTaxi = <span><MapsLocalTaxi /> Texi</span>
+      var iconOT = <span><ActionSchedule /> Overtime</span>;
+      this.state.staff.forEach((item,i) => {
+          transportationItem.push(
+            <div key={i} style={{display:'flex'}}>
+              <div style={{marginRight:10,display:'flex', width:'40%', overflow:'hidden'}}>
+                <Avatar src={item.pic_employee} />
+                <div>{item.name}</div>
+              </div>
+              <div>
+                <Checkbox style={{textAlign:'center'}}
+                  label={iconTaxi}
+                />
+              </div>
+              <div>
+                <Checkbox style={{textAlign:'center'}}
+                  label={iconOT}
+                  />
+              </div>
+            </div>
+          );
+      });
+      transportation = <List>{transportationItem}</List>
       createService =
         <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
-              <StepLabel>Subject service</StepLabel>
+              <StepLabel>SUBJECT</StepLabel>
               <StepContent>
                   <GridList
                       cellHeight={180}
@@ -333,7 +361,7 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Appointment Datatime</StepLabel>
+              <StepLabel>APPOINTMENT</StepLabel>
               <StepContent>
                     <div >
                       <DatePicker hintText="Date" value={this.state.appointment_date} onChange={this.handleAppointment} />
@@ -350,7 +378,7 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Staff</StepLabel>
+              <StepLabel>STAFF</StepLabel>
               <StepContent>
                 <div>
                   {sectionStaff}
@@ -359,7 +387,7 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Contact User</StepLabel>
+              <StepLabel>CONTRACT USER</StepLabel>
               <StepContent>
                 <div>
                   <ServiceReportContactUser onContactUser={this.handleContactUser} projectContact={this.props.projectContact} />
@@ -368,29 +396,10 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>Confirm Information</StepLabel>
+              <StepLabel>TRANSPORTATION</StepLabel>
               <StepContent>
                 <div>
-                        <div><small style={{color:darkBlack}}>Subject:</small> {this.state.subject}</div>
-                        <div><small style={{color:darkBlack}}>Detail:</small> {this.state.detail}</div>
-                        <div><small style={{color:darkBlack}}>Type:</small> {this.state.service_type_lable}</div>
-                        <br/>
-                        <div>
-                          <small style={{color:darkBlack}}>Appointment Date:</small> <Moment format="YYYY-MM-DD">{this.state.appointment_date}</Moment>
-                        </div>
-                        <div>
-                          <small style={{color:darkBlack}}> Time:</small> <Moment format="HH:mm">{this.state.value24}</Moment>
-                        </div>
-                        <div><small style={{color:darkBlack}}>Expect Duration:</small> {this.state.expect_duration}</div>
-                        <br/>
-                        <div><small style={{color:darkBlack}}>Staff:</small> {confirmStaff}</div>
-                        <br/>
-                        <div><small style={{color:darkBlack}}>Contact</small></div>
-                        <div> <small style={{color:darkBlack}}> Name:</small> {this.state.end_user_name}</div>
-                        <div> <small style={{color:darkBlack}}> Email:</small> {this.state.end_user_email}</div>
-                        <div> <small style={{color:darkBlack}}> Mobile:</small> {this.state.end_user_mobile}</div>
-                        <div> <small style={{color:darkBlack}}> Phone:</small> {this.state.end_user_phone}</div>
-                        <div> <small style={{color:darkBlack}}> Company:</small> {this.state.end_user_company}</div>
+                        {transportation}
                 </div>
                 {this.renderStepActions(4)}
               </StepContent>

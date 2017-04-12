@@ -25,6 +25,8 @@ var Url = {
   'addChecklist':END_POINT_2+"v1/projectplan/addChecklist",
   'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
   'doChecklist':END_POINT_2+"v1/projectplan/doChecklist",
+  'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
+  'updateChecklist':END_POINT_2+"v1/projectplan/updateChecklist"
 }
 
 export default Url;

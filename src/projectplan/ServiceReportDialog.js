@@ -62,7 +62,6 @@ class ServiceReportDialog extends Component {
       chip: {margin:2}
     };
     const actions = [
-
       <FlatButton
         label="Close"
         primary={true}
@@ -107,7 +106,7 @@ class ServiceReportDialog extends Component {
         listServiceReport =
           <div>
             <br/>
-            <RaisedButton onTouchTap={()=>{this.setState({creatingService:true}); }} icon={<ContentAdd />} label={"Add"} />
+            <RaisedButton onTouchTap={()=>{this.setState({creatingService:true}); }} icon={<ContentAdd />} label={"ADD"} />
             <List>
               <Subheader>รายการ Service Report ({this.state.serviceReport.length})</Subheader>
               {serviceReport}

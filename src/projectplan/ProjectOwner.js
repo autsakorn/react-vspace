@@ -61,7 +61,7 @@ class ProjectOwner extends Component {
           float:'left'
         },
         chip: {
-          margin: 2,
+          margin: 4,
           height:32
         }
     }

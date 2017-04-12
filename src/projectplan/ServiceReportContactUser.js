@@ -116,12 +116,12 @@ class ServiceReportContactUser extends Component {
             margin:'2%'
           }
         }
-        var contact_user_list = <RaisedButton onClick={this.handleAddContact} style={styles.style} label="List Contact" />;
+        var contact_user_list = <RaisedButton onTouchTap={this.handleAddContact} style={styles.style} label="List Contact" />;
         var listContact = [];
         if(this.state.projectContact.length>0){
           this.state.projectContact.forEach((item,k) => {
             var tmp =
-                  <ListItem key={k} style={{padding:0}} onClick={()=>this.selectedContactUser(item.name,item.email,item.mobile,item.phone,item.company)}
+                  <ListItem key={k} style={{padding:0}} onTouchTap={()=>this.selectedContactUser(item.name,item.email,item.mobile,item.phone,item.company)}
                     primaryText={item.name}
                     secondaryText={
                       <p>
@@ -145,11 +145,11 @@ class ServiceReportContactUser extends Component {
         if(this.state.selectedContactUser){
           btnAddContact =
           <div>
-            <div><span style={{color:darkBlack}}>Name: </span> {this.state.name}</div>
-            <div><span style={{color:darkBlack}}>Email: </span> {this.state.email}</div>
-            <div><span style={{color:darkBlack}}>Mobile: </span> {this.state.mobile}</div>
-            <div><span style={{color:darkBlack}}>Phone: </span> {this.state.phone}</div>
-            <div><span style={{color:darkBlack}}>Company: </span> {this.state.company}</div>
+            <div><span style={{marginRight:15, color:darkBlack}}>Name: </span> {this.state.name}</div>
+            <div><span style={{marginRight:15, color:darkBlack}}>Email: </span> {this.state.email}</div>
+            <div><span style={{marginRight:15, color:darkBlack}}>Mobile: </span> {this.state.mobile}</div>
+            <div><span style={{marginRight:15, color:darkBlack}}>Phone: </span> {this.state.phone}</div>
+            <div><span style={{marginRight:15, color:darkBlack}}>Company: </span> {this.state.company}</div>
           </div>;
         } else if(this.state.addingContact){
             const {finished, stepIndex} = this.state;
@@ -172,7 +172,7 @@ class ServiceReportContactUser extends Component {
             <div>
               <div>
                   {table}
-                  <RaisedButton onClick={this.handleAddContact} style={styles.style} label="Add New" />
+                  <RaisedButton onTouchTap={this.handleAddContact} style={styles.style} label="Add New" />
               </div>
             </div>
         }

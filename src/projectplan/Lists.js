@@ -79,7 +79,7 @@ class Lists extends Component {
         formData.append('storage', JSON.stringify(dataForCreateCase));
         Put(Url.caseCreate, formData).then(function(res) {
             console.log('resCaseCreated', res);
-            that.props.item.push({sid:res.data_res.ticket_sid,subject:data,task:[]});
+            that.props.item.push({sid:res.data_res.ticket_sid,subject:data,task:[],need_checklist:[],man_days:8});
             that.setState({case:that.props.item});
         });
     }
