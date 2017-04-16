@@ -292,7 +292,7 @@ class ProjectCreate extends Component {
   render(){
     var styles = {
       padding : {
-        padding: '50px',
+        // padding: '50px',
         maxWidth:680,
         margin: 'auto',
         marginTop: '20px'

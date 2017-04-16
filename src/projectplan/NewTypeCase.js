@@ -3,6 +3,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+
 class NewTypeCase extends Component {
   constructor(props){
     super(props);
@@ -15,7 +17,7 @@ class NewTypeCase extends Component {
     this.handleAddColumn = this.handleAddColumn.bind(this);
   }
   handleAddNewColumn(){
-    this.setState({openAddNewColumn:true});
+    this.setState({openAddNewColumn:true,manualAddCaseType:false});
   }
   handleSubmit(){
   }
@@ -40,6 +42,7 @@ class NewTypeCase extends Component {
     var styles = {
       style:{
         margin: 12,
+        borderRadius:'3px'
       }
     }
 
@@ -83,7 +86,7 @@ class NewTypeCase extends Component {
      }
    }
    return (
-     <div style={style.box}>{ele}</div>
+     <Paper zDepth={2}  style={style.box}>{ele}</Paper>
    );
   }
 }

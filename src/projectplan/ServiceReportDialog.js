@@ -17,6 +17,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Avatar from 'material-ui/Avatar';
 import SocialSentimentNeutral from 'material-ui/svg-icons/social/sentiment-neutral';
 import SocialMood from 'material-ui/svg-icons/social/mood';
+import Drawer from 'material-ui/Drawer';
 // import ContentAdd from 'material-ui/svg-icons/content/add';
 class ServiceReportDialog extends Component {
   constructor(props){
@@ -41,6 +42,9 @@ class ServiceReportDialog extends Component {
     }else{
       this.setState({creatingService:true})
     }
+  }
+  componentWillUnmount(){
+    this.setState({open:false});
   }
   handleCreatedService = (task) => {
     // this.props.onCreatedService();
@@ -104,7 +108,7 @@ class ServiceReportDialog extends Component {
     var listServiceReport;
     if(!this.state.creatingService){
         listServiceReport =
-          <div>
+          <div style={{padding:10}}>
             <br/>
             <RaisedButton onTouchTap={()=>{this.setState({creatingService:true}); }} icon={<ContentAdd />} label={"ADD"} />
             <List>
@@ -113,7 +117,8 @@ class ServiceReportDialog extends Component {
             </List>
           </div>;
     }else{
-      listServiceReport = <div>
+      listServiceReport =
+      <div style={{padding:10}}>
         <br/>
         <RaisedButton onTouchTap={()=>{this.setState({creatingService:false}); }} label={"List Service Report"} />
         <ServiceReportCreate createService={this.state.creatingService} onCloseDialog={this.handleClose}
@@ -130,22 +135,25 @@ class ServiceReportDialog extends Component {
     return (
       <div>
         <div><small style={{color:lightBlack}}>Service Report ({this.state.serviceReport.length})</small></div><div style={{textAlign:'right'}}>{label}</div>
-        <Dialog contentStyle={{width:'90%','maxWidth':'none'}}
-          title="Service Report"
-          actions={actions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-          autoScrollBodyContent={true}
-        >
 
-          <div style={{minHeight:'200px'}}>
-            {listServiceReport}
-          </div>
-        </Dialog>
+        <Drawer openSecondary={true} width={'80%'} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
+            <div style={{minHeight:'200px'}}>
+              {listServiceReport}
+            </div>
+        </Drawer>
+
       </div>
     );
   }
 }
 
+// <Dialog contentStyle={{width:'90%','maxWidth':'none'}}
+//   title="Service Report"
+//   actions={actions}
+//   modal={false}
+//   open={this.state.open}
+//   onRequestClose={this.handleClose}
+//   autoScrollBodyContent={true}
+// >
+// </Dialog>
 export default ServiceReportDialog;

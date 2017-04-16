@@ -56,6 +56,9 @@ class ServiceReportCreate extends Component {
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
     };
   }
+  componentWillUnmount(){
+
+  }
   handleContactUser = (name, email, mobile, phone, company) => {
     this.setState({end_user_name:name});
     this.setState({end_user_email:email});
@@ -141,7 +144,8 @@ class ServiceReportCreate extends Component {
         hours: this.state.expect_duration,
         minutes: "0"
       },
-      engineer: engineer
+      engineer: engineer,
+      staff:this.state.staff
     }
     console.log(dataCreateService);
     var formData = new FormData();
@@ -152,6 +156,7 @@ class ServiceReportCreate extends Component {
     Put(Url.serviceReportCreate, formData).then(function(res){
         console.log(res);
         that.props.onCreatedService(res.task);
+        that.setState({stepIndex:0,staff:[]});
     });
   }
 
@@ -255,6 +260,27 @@ class ServiceReportCreate extends Component {
     this.setState({service_type_lable:event.target.innerText});
   }
 
+  handleRequestTaxi = (email, e) => {
+    var tmp = this.state.staff;
+    tmp.forEach((item, i)=>{
+      if(item.email===email){
+        tmp[i].request_taxi = !e.target.checked;
+      }
+    });
+    this.setState({staff:tmp});
+    console.log(this.state.staff);
+  }
+  handleRequestOT = (email, e) => {
+    var tmp = this.state.staff;
+    tmp.forEach((item, i)=>{
+      if(item.email===email){
+        tmp[i].request_ot = !e.target.checked;
+      }
+    });
+    this.setState({staff:tmp});
+    console.log(this.state.staff);
+  }
+
   render(){
     const styles = {
       chip: {
@@ -309,31 +335,32 @@ class ServiceReportCreate extends Component {
       ];
 
 
-      var transportation;
+      var request_benefit;
       var transportationItem = [];
-      var iconTaxi = <span><MapsLocalTaxi /> Texi</span>
+      var iconTaxi = <span><MapsLocalTaxi /> Taxi</span>
       var iconOT = <span><ActionSchedule /> Overtime</span>;
+
       this.state.staff.forEach((item,i) => {
           transportationItem.push(
-            <div key={i} style={{display:'flex'}}>
+            <div key={i} style={{display:'initial'}}>
               <div style={{marginRight:10,display:'flex', width:'40%', overflow:'hidden'}}>
                 <Avatar src={item.pic_employee} />
                 <div>{item.name}</div>
               </div>
               <div>
-                <Checkbox style={{textAlign:'center'}}
+                <Checkbox style={{textAlign:'left'}} onTouchTap={(e)=>{this.handleRequestTaxi(item.email,e)}}
                   label={iconTaxi}
                 />
               </div>
               <div>
-                <Checkbox style={{textAlign:'center'}}
+                <Checkbox style={{textAlign:'left'}} onTouchTap={(e)=>{this.handleRequestOT(item.email,e)}}
                   label={iconOT}
                   />
               </div>
             </div>
           );
       });
-      transportation = <List>{transportationItem}</List>
+      request_benefit = <List> {transportationItem}</List>
       createService =
         <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
           <Stepper activeStep={stepIndex} orientation="vertical">
@@ -346,7 +373,6 @@ class ServiceReportCreate extends Component {
                     >
                     <div>
                         <div><TextField hintText="Subject" onChange={this.handleSubject} style={{width:"90%"}} floatingLabelText="Subject"/></div>
-
                         <SelectField
                           value={this.state.service_type}
                           onChange={this.handleChangeServiceType}
@@ -396,10 +422,10 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>TRANSPORTATION</StepLabel>
+              <StepLabel>REQUEST BENEFIT</StepLabel>
               <StepContent>
                 <div>
-                        {transportation}
+                      {request_benefit}
                 </div>
                 {this.renderStepActions(4)}
               </StepContent>
@@ -408,7 +434,7 @@ class ServiceReportCreate extends Component {
         </div>
     }
     return(
-      <div>
+      <div >
         {createService}
       </div>
     )

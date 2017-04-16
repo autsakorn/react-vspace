@@ -11,6 +11,8 @@ import InfoGen from '../config/InfoGen';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import HardwareKeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import Paper from 'material-ui/Paper';
+
 class HeaderProject extends Component {
   constructor(props){
     super(props);
@@ -141,9 +143,9 @@ class HeaderProject extends Component {
          }
       }
       projectHeader =
-        <div style={styles.root}>
-          <Card>
-            <CardText expandable={false} style={{overflow:'hidden'}}>
+        <Paper zDepth={2} style={styles.root}>
+          <div>
+            <div style={{overflow:'hidden', padding:10}}>
             <div style={{width:'1%',float:'right','marginTop':'-10px',zIndex:'1000'}}>
               <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
             </div>
@@ -165,9 +167,9 @@ class HeaderProject extends Component {
                    </div>
               </GridList>
 
-            </CardText>
-          </Card>
-        </div>
+            </div>
+          </div>
+        </Paper>
         ;
     }
 

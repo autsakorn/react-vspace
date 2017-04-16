@@ -23,6 +23,7 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import Paper from 'material-ui/Paper';
 
 class Lists extends Component {
     constructor(props) {
@@ -155,7 +156,8 @@ class Lists extends Component {
                     'borderRadius': '3px'
                 }
             }
-            return ( <List style={style.box}>
+            return (
+              <Paper zDepth={2} style={style.box}>
                 <Subheader style={style.header}> {this.props.header} </Subheader> {casetype}
                 <InputNew onAddNew={this.onAddNew}
                   toggleTextarea={this.props.status}
@@ -163,7 +165,7 @@ class Lists extends Component {
                   sid={this.props.sid}
                   statusAdding={this.props.status}
                   initialValue={""}/>
-                </List>
+              </Paper>
             );
         }
     }

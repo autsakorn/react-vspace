@@ -25,6 +25,7 @@ import Put from '../config/Put';
 import InfoGen from '../config/InfoGen';
 import TicketDrawer from '../ticket/TicketDrawer';
 import Drawer from 'material-ui/Drawer';
+import Paper from 'material-ui/Paper';
 class CardItem extends Component {
   constructor(props) {
     super(props);
@@ -262,7 +263,7 @@ class CardItem extends Component {
               <div>{avatar}</div>
           </div>
           <Drawer onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})}
-          docked={false} width={'80%'} openSecondary={true} open={this.state.openTicketDrawer} >
+          docked={false} width={'90%'} openSecondary={true} open={this.state.openTicketDrawer} >
               <TicketDrawer
                   onChangeSubject={this.onChangeSubject}
                   onChangeStaffCase={this.handleSelectItemOwner}
