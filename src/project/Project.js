@@ -31,6 +31,8 @@ const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ActionEvent from 'material-ui/svg-icons/action/event';
+import ActionAssessment from 'material-ui/svg-icons/action/assessment';
+import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 
 class Project extends Component {
   constructor(props){
@@ -42,7 +44,7 @@ class Project extends Component {
       projectList:this.props.projectList,
       listProject:<div />,
       listAppoinement:<div />,
-      selectedIndex:0,
+      selectedIndex:((localStorage.getItem("selectedIndex"))?parseInt(localStorage.getItem("selectedIndex")):0),
       appointment:[],
       showProject:1,
       showAppointment:1
@@ -118,8 +120,7 @@ class Project extends Component {
     var elementSectionProject =
     <Card style={{backgroundColor:'initial'}}>
       <CardHeader style={{padding:"20px 20px 0px 20px"}}
-        title="Project"
-        subtitle="รายการโปรเจค"
+        title={"Project ("+this.state.projectList.length+")"}
       />
       <CardText>
         <div style={styles.root}>
@@ -146,7 +147,7 @@ class Project extends Component {
     var box = [];
     that.state.appointment.forEach((item,i)=>{
       box.push(
-        <div key={i+item.tasks_sid} style={styles.styleBorder} >
+        <div key={i+item.tasks_sid} onTouchTap={()=>this.handleSelectAppointment(item.tasks_sid)} style={styles.styleBorder} >
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
             <div>{item.subject}</div>
             <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
@@ -174,14 +175,21 @@ class Project extends Component {
       </CardText>
     </Card>;
 
-
     that.setState({listProject:elementSectionProject,listAppoinement:elementSectionAppointment});
 
   }
   handleSelectProject(e){
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
+    localStorage.removeItem("tasks_sid");
     location.reload();
   }
+  handleSelectAppointment = (tasks_sid) => {
+    // alert(tasks_sid);
+    localStorage.setItem("tasks_sid",tasks_sid);
+    localStorage.removeItem("project_sid");
+    location.reload();
+  }
+
   handleCreateNewProject = () => {
     localStorage.setItem("currectPage","ProjectCreate");
     location.reload();
@@ -189,10 +197,13 @@ class Project extends Component {
   select = (index) => {
     console.log(index);
     this.setState({selectedIndex: index});
-    if(index===0){
-      this.setState({showProject:1,showAppointment:1});
-    }else{
+    localStorage.setItem("selectedIndex",index);
+    if(index===1){
+      this.setState({showProject:1,showAppointment:0});
+    }else if(index===2){
       this.setState({showProject:0,showAppointment:1});
+    }else {
+      this.setState({showProject:1,showAppointment:1});
     }
   }
 
@@ -223,13 +234,18 @@ class Project extends Component {
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
                   <BottomNavigationItem
                     label="Boards"
-                    icon={<ActionAssignment />}
+                    icon={<ActionDashboard />}
                     onTouchTap={() => this.select(0)}
+                  />
+                  <BottomNavigationItem
+                    label="Project"
+                    icon={<ActionAssignment />}
+                    onTouchTap={() => this.select(1)}
                   />
                   <BottomNavigationItem
                     label="Appointment"
                     icon={<ActionEvent />}
-                    onTouchTap={() => this.select(1)}
+                    onTouchTap={() => this.select(2)}
                   />
 
                 </BottomNavigation>

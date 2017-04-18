@@ -41,6 +41,7 @@ class NavCompoment extends Component {
   handlevSpace(){
     localStorage.removeItem("project_sid");
     localStorage.removeItem("currectPage");
+    localStorage.removeItem("tasks_sid");
     location.reload();
   }
   handleToggleRight = () => this.setState({openRight: !this.state.openRight});

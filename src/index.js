@@ -10,6 +10,7 @@ import Welcome from './login/Welcome';
 import ProjectCreate from './project/ProjectCreate';
 import initReactFastclick from 'react-fastclick';
 import Ticket from './ticket/Ticket';
+import Appointment from './appointment/Appointment';
 
 initReactFastclick();
 
@@ -35,6 +36,8 @@ if(InfoGen.token){
             );
           });
         });
+    }else if(localStorage.getItem("tasks_sid")){
+        ReactDOM.render(<Appointment tasks_sid={localStorage.getItem("tasks_sid")} info={resInfo.data} />, document.getElementById('root'));
     }else{
         ReactDOM.render(<Project urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} />, document.getElementById('root'));
     }

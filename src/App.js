@@ -56,6 +56,8 @@ class App extends Component {
             });
           });
         });
+      }else if(localStorage.getItem("tasks_sid")){
+
       }else{
         that.setState({
           home: <div><Project urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>
