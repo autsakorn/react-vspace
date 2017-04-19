@@ -30,7 +30,8 @@ var Url = {
   'appointment':END_POINT_2+"v1/servicereport/appointment",
   'checkpoint':END_POINT_2+"v1/timestampSr",
   'changeEndUserJson':END_POINT_2+"v1/enduser/ChangeEndUserJson",
-  'changeAppointment':END_POINT_2+"v1/servicereport/EditTimeAppointmentMobile1"
+  'changeAppointment':END_POINT_2+"v1/servicereport/EditTimeAppointmentMobile1",
+  'update_spare_part':END_POINT_2:"v1/ticket/update_spare_part"
 }
 
 export default Url;
