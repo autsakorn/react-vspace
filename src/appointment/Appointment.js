@@ -59,6 +59,10 @@ class ControlSparePart extends Component {
     formData.append("quantity","1");
     formData.append("sparepart_sid",0),
     formData.append("tasks_sid", this.props.tasks_sid);
+
+    Put(Url.update_spare_part,formData).then(function(res){
+      console.log(res);
+    });
   }
   render(){
     const styles = {
@@ -68,11 +72,10 @@ class ControlSparePart extends Component {
     var listPart = [];
     this.state.sparepart.forEach((item,i)=>{
       listPart.push(
-        <List style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+        <List key={item.sid} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
           <div><small>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
           <div><small>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
           <div><small>New Part Serial: </small><small>{item.part_serial}</small></div>
-
         </List>
       )
     });
