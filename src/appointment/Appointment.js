@@ -69,15 +69,15 @@ class ControlSparePart extends Component {
         sid:res.data,
         part_number_defective:that.state.old_part_number,
         part_serial_defective:that.state.old_part_serial,
-        part_serial:that.state.new_part_serial
+        part_serial:that.state.new_part_serial,
+        description:that.state.description
       });
       that.setState({
         sparepart:tmp,
         old_part_number:"",
         old_part_serial:"",
         new_part_serial:"",
-        description:"",
-        adding_spare_part:true
+        description:""
       });
     });
   }
@@ -117,7 +117,7 @@ class ControlSparePart extends Component {
           <div><small style={{color:lightBlack}}>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
           <div><small style={{color:lightBlack}}>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
           <div><small style={{color:lightBlack}}>New Part Serial: </small><small>{item.part_serial}</small></div>
-          <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>          
+          <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>
         </List>
       )
     });
@@ -125,13 +125,13 @@ class ControlSparePart extends Component {
       content =
       <div style={{color:lightBlack}}>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px'}}>
-          <div>Defective Part (พาร์ทเก่า)</div>
+          <div><small>Defective Part (พาร์ทเก่า)</small></div>
           <TextField hintText="Part Number" onChange={this.updateOldPartNumber} value={this.state.old_part_number} floatingLabelText="Part Number" fullWidth={true} />
           <TextField hintText="Part Serial" onChange={this.updateOldPartSerial} value={this.state.old_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
           <br/><br/>
         </div>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-          <div>New Part (พาร์ทใหม่)</div>
+          <div><small>New Part (พาร์ทใหม่)</small></div>
           <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
           <TextField hintText="Description" onChange={this.updateDescription} value={this.state.description} floatingLabelText="Description" fullWidth={true} />
         </div>
