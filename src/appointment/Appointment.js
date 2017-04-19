@@ -29,7 +29,7 @@ import moment from 'moment';
 class ControlSparePart extends Component {
   constructor(props){
     super(props);
-    this.state = {old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
+    this.state = {sparepart:this.props.sparepart,old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
   }
   handleAddSparePart = () => {
     this.setState({adding_spare_part:!this.state.adding_spare_part});
@@ -47,12 +47,34 @@ class ControlSparePart extends Component {
     alert(this.state.old_part_number);
     alert(this.state.old_part_serial);
     alert(this.state.new_part_serial);
+
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token", InfoGen.token);
+    formData.append("part_number_defective",this.state.old_part_number);
+    formData.append("part_serial_defective", this.state.old_part_serial);
+    formData.append("part_number", this.state.old_part_number);
+    formData.append("part_serial", this.state.new_part_serial);
+    formData.append("description"," ");
+    formData.append("quantity","1");
+    formData.append("sparepart_sid",0),
+    formData.append("tasks_sid", this.props.tasks_sid);
   }
   render(){
     const styles = {
       button: {margin: 12}
     };
     var content;
+    var listPart = [];
+    this.state.sparepart.forEach((item,i)=>{
+      listPart.push(
+        <div>
+        <div>Defective Part Number: <span>{item.part_number_defective}</span></div>
+        <div>Defective Part Serial: <span>{item.part_serial_defective}</span></div>
+        <div>New Part Serial: <span>{item.part_serial}</span></div>
+        </div>
+      )
+    });
     if(this.state.adding_spare_part){
       content =
       <div style={{color:lightBlack}}>
@@ -453,7 +475,7 @@ export default class Appointment extends Component {
         <Divider />
       </div>
     }
-    var controlSparePart = <ControlSparePart onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
+    var controlSparePart = <ControlSparePart sparepart={this.state.data.sparepart} tasks_sid={this.state.tasks_sid} onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
 
     var content;
     if(this.state.data.tasks_sid){
