@@ -27,6 +27,8 @@ if(InfoGen.token){
         ReactDOM.render(<Profile info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Ticket"){
         ReactDOM.render(<Ticket info={resInfo.data} />, document.getElementById('root'));
+    }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ApproveService"){
+        ReactDOM.render(<ApproveService info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("project_sid")){
         formData.append('project_sid',localStorage.getItem("project_sid"));
         get(Url.projectDetail, formData).then(function(resPd){

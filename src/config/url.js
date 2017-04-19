@@ -28,7 +28,9 @@ var Url = {
   'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
   'updateChecklist':END_POINT_2+"v1/projectplan/updateChecklist",
   'appointment':END_POINT_2+"v1/servicereport/appointment",
-  'checkpoint':END_POINT_2+"v1/timestampSr"
+  'checkpoint':END_POINT_2+"v1/timestampSr",
+  'changeEndUserJson':END_POINT_2+"v1/enduser/ChangeEndUserJson",
+  'changeAppointment':END_POINT_2+"v1/servicereport/EditTimeAppointmentMobile1"
 }
 
 export default Url;

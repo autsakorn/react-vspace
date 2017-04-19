@@ -18,6 +18,11 @@ import {
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+import ContentCreate from 'material-ui/svg-icons/content/create';
+import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
+// import Moment from 'react-moment';
+import moment from 'moment';
 export default class Appointment extends Component {
   constructor(props){
     super(props);
@@ -25,7 +30,9 @@ export default class Appointment extends Component {
       tasks_sid:this.props.tasks_sid, data:{},
       finished: false,
       stepIndex: 0,
-      indexFinished:2
+      indexFinished:2,
+      contact_user_editing:false,
+      appointment_editing:false
     }
     this.styles = {
       row: {padding:10}
@@ -52,7 +59,9 @@ export default class Appointment extends Component {
         }else if(res.data.status_from_log==="400"){
           that.setState({data:res.data,stepIndex:2, indexFinished:2});
         }else if(res.data.status_from_log==="500"){
-          that.setState({data:res.data,stepIndex:2, indexFinished:2});
+          that.setState({data:res.data,stepIndex:3, indexFinished:2});
+        }else{
+          that.setState({data:res.data, stepIndex:3,indexFinished:2});
         }
       }else{
         if(res.data.status_from_log==="0"){
@@ -67,6 +76,8 @@ export default class Appointment extends Component {
           that.setState({data:res.data,stepIndex:3, indexFinished:4});
         }else if(res.data.status_from_log==="500"){
           that.setState({data:res.data,stepIndex:4, indexFinished:4});
+        }else {
+          that.setState({data:res.data, stepIndex:5,indexFinished:4});
         }
       }
     });
@@ -142,11 +153,155 @@ export default class Appointment extends Component {
       </div>
     );
   }
+  handleEditingContactUser = () => {
+    this.setState({
+      contact_user_editing:!this.state.contact_user_editing,
+      appointment_editing:false
+    });
+  }
+  handleEditingAppointment = () => {
+    this.setState({
+      contact_user_editing:false,
+      appointment_editing:!this.state.appointment_editing
+    });
+  }
+  handleChangeEndUserName = (e) => {
+    var tmp = this.state.data;
+    tmp.end_user_contact_name_service_report = e.target.value;
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("tasks_sid", this.state.tasks_sid);
+    formData.append("data", JSON.stringify({
+      name:tmp.end_user_contact_name_service_report,email:tmp.end_user_email_service_report,
+      mobile:tmp.end_user_mobile_service_report,phone:tmp.end_user_phone_service_report,
+      company:tmp.end_user_company_name_service_report
+    }));
+    Put(Url.changeEndUserJson, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
+  handleChangeEndUserEmail = (e) => {
+    var tmp = this.state.data;
+    tmp.end_user_email_service_report = e.target.value;
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("tasks_sid", this.state.tasks_sid);
+    formData.append("data", JSON.stringify({
+      name:tmp.end_user_contact_name_service_report,email:tmp.end_user_email_service_report,
+      mobile:tmp.end_user_mobile_service_report,phone:tmp.end_user_phone_service_report,
+      company:tmp.end_user_company_name_service_report
+    }));
+    Put(Url.changeEndUserJson, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
+  handleChangeEndUserMobile = (e) => {
+    var tmp = this.state.data;
+    tmp.end_user_mobile_service_report = e.target.value;
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("tasks_sid", this.state.tasks_sid);
+    formData.append("data", JSON.stringify({
+      name:tmp.end_user_contact_name_service_report,email:tmp.end_user_email_service_report,
+      mobile:tmp.end_user_mobile_service_report,phone:tmp.end_user_phone_service_report,
+      company:tmp.end_user_company_name_service_report
+    }));
+    Put(Url.changeEndUserJson, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
+  handleChangeEndUserPhone = (e) => {
+    var tmp = this.state.data;
+    tmp.end_user_phone_service_report = e.target.value;
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("tasks_sid", this.state.tasks_sid);
+    formData.append("data", JSON.stringify({
+      name:tmp.end_user_contact_name_service_report,email:tmp.end_user_email_service_report,
+      mobile:tmp.end_user_mobile_service_report,phone:tmp.end_user_phone_service_report,
+      company:tmp.end_user_company_name_service_report
+    }));
+    Put(Url.changeEndUserJson, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
+  handleChangeEndUserCompany = (e) => {
+    var tmp = this.state.data;
+    tmp.end_user_company_name_service_report = e.target.value;
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("tasks_sid", this.state.tasks_sid);
+    formData.append("data", JSON.stringify({
+      name:tmp.end_user_contact_name_service_report,email:tmp.end_user_email_service_report,
+      mobile:tmp.end_user_mobile_service_report,phone:tmp.end_user_phone_service_report,
+      company:tmp.end_user_company_name_service_report
+    }));
+    Put(Url.changeEndUserJson, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
   render(){
     const styles = {
       button: {margin: 12}
     };
     const {finished, stepIndex} = this.state;
+
+    var contact_user_element;
+    if(this.state.contact_user_editing){
+      contact_user_element =
+      <div>
+        <TextField onChange={this.handleChangeEndUserName} value={this.state.data.end_user_contact_name_service_report} hintText="Name" floatingLabelText="Name" fullWidth={true} floatingLabelFixed={true} />
+        <TextField onChange={this.handleChangeEndUserEmail} value={this.state.data.end_user_email_service_report} hintText="Email" floatingLabelText="Mail" fullWidth={true} floatingLabelFixed={true} />
+        <TextField onChange={this.handleChangeEndUserMobile} value={this.state.data.end_user_mobile_service_report} hintText="Mobile" floatingLabelText="Mobile" fullWidth={true} floatingLabelFixed={true} />
+        <TextField onChange={this.handleChangeEndUserPhone} value={this.state.data.end_user_phone_service_report} hintText="Phone" floatingLabelText="Phone" fullWidth={true} floatingLabelFixed={true} />
+        <TextField onChange={this.handleChangeEndUserCompany} value={this.state.data.end_user_company_name_service_report} hintText="Company" floatingLabelText="Company" fullWidth={true} floatingLabelFixed={true} />
+      </div>
+    }else{
+      contact_user_element =
+      <div>
+        {this.state.data.end_user_contact_name_service_report}<br/>
+        {this.state.data.end_user_email_service_report}<br/>
+        {this.state.data.end_user_mobile_service_report+ " / "+ this.state.data.end_user_phone_service_report}<br/>
+        {this.state.data.end_user_company_name_service_report}
+      </div>
+    }
+
+    var appointment_element;
+    if(this.state.appointment_editing){
+      appointment_element = <div>
+          <div style={{padding:10}}>
+            <div><span>Appointment: <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} /></span></div>
+            <div>
+              <DatePicker
+                onChange={this.handleChangeMinDate}
+                autoOk={this.state.autoOk}
+                floatingLabelText="Appointment Date"
+                defaultDate={moment(this.state.data.appointment_YmdHi)}
+                disableYearSelection={this.state.disableYearSelection}
+              />
+            </div>
+          </div>
+          <Divider />
+        </div>
+    }else{
+      appointment_element = <div>
+        <div style={{padding:10}}><span>Appointment: </span>
+        <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.appointment +" ("+this.state.data.expect_duration+")"}</span> <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} /></div>
+        <Divider />
+        <div style={{padding:10}}><span>Expect Finish: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.expect_finish}</span></div>
+        <Divider />
+      </div>
+    }
     var content;
     if(this.state.data.tasks_sid){
       var stepper;
@@ -239,11 +394,17 @@ export default class Appointment extends Component {
           <Divider />
           <div style={{padding:10}}><span>Site: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_end_user_site}</span></div>
           <Divider />
+          {appointment_element}
+          <div style={{padding:10}}>
+            <div><span>Contact User: </span><ContentCreate onTouchTap={this.handleEditingContactUser} style={{color:lightBlack}} /></div>
+            <div>
+              <span style={{color:lightBlack,marginLeft:10}}>
+              <div>{contact_user_element}</div>
+              </span>
+            </div>
+          </div>
+          <Divider />
 
-          <div style={{padding:10}}><span>Appointment: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.appointment}</span></div>
-          <Divider />
-          <div style={{padding:10}}><span>Expect Finish: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.expect_finish}</span></div>
-          <Divider />
           <br />
           <div style={{padding:10}}>
             <div>CHECK POINT</div>
