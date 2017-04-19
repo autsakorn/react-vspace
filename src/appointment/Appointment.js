@@ -22,7 +22,7 @@ import ContentCreate from 'material-ui/svg-icons/content/create';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
-
+import {List, ListItem} from 'material-ui/List';
 // import Moment from 'react-moment';
 import moment from 'moment';
 
@@ -68,25 +68,27 @@ class ControlSparePart extends Component {
     var listPart = [];
     this.state.sparepart.forEach((item,i)=>{
       listPart.push(
-        <div>
-        <div>Defective Part Number: <span>{item.part_number_defective}</span></div>
-        <div>Defective Part Serial: <span>{item.part_serial_defective}</span></div>
-        <div>New Part Serial: <span>{item.part_serial}</span></div>
-        </div>
+        <List style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+          <div><small>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
+          <div><small>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
+          <div><small>New Part Serial: </small><small>{item.part_serial}</small></div>
+
+        </List>
       )
     });
     if(this.state.adding_spare_part){
       content =
       <div style={{color:lightBlack}}>
-        <div>Defective Part (พาร์ทเก่า)</div>
-        <TextField hintText="Part Number" onChange={this.updateOldPartNumber} value={this.state.old_part_number} floatingLabelText="Part Number" fullWidth={true} />
-        <TextField hintText="Part Serial" onChange={this.updateOldPartSerial} value={this.state.old_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
-        <br/><br/>
-        <Divider />
-        <br/><br/>
-        <div>New Part (พาร์ทใหม่)</div>
-        <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
-
+        <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px'}}>
+          <div>Defective Part (พาร์ทเก่า)</div>
+          <TextField hintText="Part Number" onChange={this.updateOldPartNumber} value={this.state.old_part_number} floatingLabelText="Part Number" fullWidth={true} />
+          <TextField hintText="Part Serial" onChange={this.updateOldPartSerial} value={this.state.old_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+          <br/><br/>
+        </div>
+        <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+          <div>New Part (พาร์ทใหม่)</div>
+          <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+        </div>
         <RaisedButton label="Add" primary={true} style={styles.button} onTouchTap={this.addPart}/>
         <RaisedButton label="Close" style={styles.button} onTouchTap={this.handleAddSparePart} /><br/>
       </div>;
@@ -94,7 +96,10 @@ class ControlSparePart extends Component {
       content = <div onTouchTap={this.handleAddSparePart} style={{color:lightBlack}}>Add Spare Part . . .</div>;
     }
     return(
-      <div>{content}</div>
+      <div>
+        <div>Spare Part<br/><br/></div>
+        {listPart}<br/>{content}
+      </div>
     )
   }
 }
