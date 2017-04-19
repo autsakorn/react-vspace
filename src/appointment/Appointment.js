@@ -29,7 +29,8 @@ import moment from 'moment';
 class ControlSparePart extends Component {
   constructor(props){
     super(props);
-    this.state = {sparepart:this.props.sparepart,old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
+    this.state = {sparepart:this.props.sparepart,
+      old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
   }
   handleAddSparePart = () => {
     this.setState({adding_spare_part:!this.state.adding_spare_part});
@@ -44,11 +45,8 @@ class ControlSparePart extends Component {
     this.setState({new_part_serial:e.target.value});
   }
   addPart = () => {
-    alert(this.state.old_part_number);
-    alert(this.state.old_part_serial);
-    alert(this.state.new_part_serial);
-
     var formData = new FormData();
+    this.setState({adding_spare_part:false});
     formData.append("email", InfoGen.email);
     formData.append("token", InfoGen.token);
     formData.append("part_number_defective",this.state.old_part_number);
@@ -59,9 +57,23 @@ class ControlSparePart extends Component {
     formData.append("quantity","1");
     formData.append("sparepart_sid",0),
     formData.append("tasks_sid", this.props.tasks_sid);
-
+    var that = this;
     Put(Url.update_spare_part,formData).then(function(res){
       console.log(res);
+      var tmp = that.state.sparepart;
+      tmp.push({
+        sid:res.data,
+        part_number_defective:that.state.old_part_number,
+        part_serial_defective:that.state.old_part_serial,
+        part_serial:that.state.new_part_serial
+      });
+      that.setState({
+        sparepart:tmp,
+        old_part_number:"",
+        old_part_serial:"",
+        new_part_serial:"",
+        adding_spare_part:true
+      });
     });
   }
   render(){
