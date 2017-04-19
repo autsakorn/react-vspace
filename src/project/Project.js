@@ -93,7 +93,9 @@ class Project extends Component {
     };
     var that = this;
     var numberColumn = 5;
-    if(window.innerWidth<376){
+    if(window.innerWidth<768){
+      numberColumn = 2;
+    }else if(window.innerWidth<376){
       numberColumn = 1;
     }
     var boxProject = [];

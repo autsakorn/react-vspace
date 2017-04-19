@@ -25,12 +25,13 @@ import TimePicker from 'material-ui/TimePicker';
 import {List, ListItem} from 'material-ui/List';
 // import Moment from 'react-moment';
 import moment from 'moment';
+import ActionDelete from 'material-ui/svg-icons/action/delete';
 
 class ControlSparePart extends Component {
   constructor(props){
     super(props);
     this.state = {sparepart:this.props.sparepart,
-      old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
+      old_part_number:"",old_part_serial:"",new_part_serial:"",description:"",adding_spare_part:this.props.adding_spare_part};
   }
   handleAddSparePart = () => {
     this.setState({adding_spare_part:!this.state.adding_spare_part});
@@ -44,6 +45,9 @@ class ControlSparePart extends Component {
   updateNewPartNumber = (e) => {
     this.setState({new_part_serial:e.target.value});
   }
+  updateDescription = (e) => {
+    this.setState({description:e.target.value});
+  }
   addPart = () => {
     var formData = new FormData();
     this.setState({adding_spare_part:false});
@@ -53,7 +57,7 @@ class ControlSparePart extends Component {
     formData.append("part_serial_defective", this.state.old_part_serial);
     formData.append("part_number", this.state.old_part_number);
     formData.append("part_serial", this.state.new_part_serial);
-    formData.append("description"," ");
+    formData.append("description",this.state.description);
     formData.append("quantity","1");
     formData.append("sparepart_sid",0),
     formData.append("tasks_sid", this.props.tasks_sid);
@@ -72,9 +76,33 @@ class ControlSparePart extends Component {
         old_part_number:"",
         old_part_serial:"",
         new_part_serial:"",
+        description:"",
         adding_spare_part:true
       });
     });
+  }
+  deletePart = (sparepart_sid) => {
+    if(confirm("Are you sure Delete?")){
+      var formData = new FormData();
+      formData.append("email", InfoGen.email);
+      formData.append("token", InfoGen.token);
+      formData.append("sparepart_sid", sparepart_sid);
+      var that = this;
+      var tmp = this.state.sparepart;
+      Put(Url.delete_spare_part, formData).then(function(res){
+        if(!res.error){
+          var tmpNew = [];
+          tmp.forEach((item,i)=>{
+            if(item.sid!==sparepart_sid){
+              tmpNew.push(item);
+            }
+            if((i+1)===that.state.sparepart.length){
+              that.setState({sparepart:tmpNew});
+            }
+          });
+        }
+      });
+    }
   }
   render(){
     const styles = {
@@ -85,9 +113,11 @@ class ControlSparePart extends Component {
     this.state.sparepart.forEach((item,i)=>{
       listPart.push(
         <List key={item.sid} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-          <div><small>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
-          <div><small>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
-          <div><small>New Part Serial: </small><small>{item.part_serial}</small></div>
+          <div>{"#"+(i+1)} <span style={{float:'right'}}><ActionDelete onTouchTap={()=>this.deletePart(item.sid)} style={{color:lightBlack}} /></span></div>
+          <div><small style={{color:lightBlack}}>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
+          <div><small style={{color:lightBlack}}>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
+          <div><small style={{color:lightBlack}}>New Part Serial: </small><small>{item.part_serial}</small></div>
+          <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>          
         </List>
       )
     });
@@ -103,12 +133,13 @@ class ControlSparePart extends Component {
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
           <div>New Part (พาร์ทใหม่)</div>
           <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+          <TextField hintText="Description" onChange={this.updateDescription} value={this.state.description} floatingLabelText="Description" fullWidth={true} />
         </div>
         <RaisedButton label="Add" primary={true} style={styles.button} onTouchTap={this.addPart}/>
         <RaisedButton label="Close" style={styles.button} onTouchTap={this.handleAddSparePart} /><br/>
       </div>;
     }else{
-      content = <div onTouchTap={this.handleAddSparePart} style={{color:lightBlack}}>Add Spare Part . . .</div>;
+      content = <div onTouchTap={this.handleAddSparePart} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px',color:lightBlack}}><small>Add Spare Part . . .</small> <small style={{color:lightBlack}}>หากมีการเปลี่ยน Spare ทำการกรอกในส่วนนี้</small></div>;
     }
     return(
       <div>
@@ -134,7 +165,9 @@ export default class Appointment extends Component {
       contact_user_editing:false,
       appointment_editing:false,
       currentData:minDate,
-      adding_spare_part:false
+      adding_spare_part:false,
+      wait_update_action: false,
+      taxi_fare:0
     }
     this.styles = {
       row: {padding:10}
@@ -190,10 +223,10 @@ export default class Appointment extends Component {
   handleNext = () => {
     // alert(nextStatus);
     const {stepIndex} = this.state;
-    var task_status = this.state.data.status_from_log;
+    var tmp = this.state.data;
     if(this.state.data.request_taxi==="0"){
-      if(task_status<200){
-        task_status = 200;
+      if(tmp.status_from_log<200){
+        tmp.status_from_log = 200;
       }
     }
     var that = this;
@@ -201,17 +234,23 @@ export default class Appointment extends Component {
     formData.append("tasks_sid", this.state.tasks_sid);
     formData.append("email", InfoGen.email);
     formData.append("token", InfoGen.token);
-    formData.append("task_status", task_status);
-    formData.append("taxi_fare",'0');
+    formData.append("task_status", tmp.status_from_log);
+    formData.append("taxi_fare",this.state.taxi_fare);
     formData.append("taxi_fare_stang",'0');
     formData.append("lat",0);
     formData.append("lng",0);
     Put(Url.checkpoint, formData).then(function(res){
       console.log(res);
-      that.setState({
-        stepIndex: stepIndex + 1,
-        finished: stepIndex >= that.state.indexFinished,
-      });
+      if(res.error){
+        alert('Error While Check Point');
+      }else{
+        tmp.status_from_log = parseInt(tmp.status_from_log)+100;
+        that.setState({
+          stepIndex: stepIndex + 1,
+          finished: stepIndex >= that.state.indexFinished,
+          data:tmp
+        });
+      }
     });
   };
 
@@ -423,6 +462,33 @@ export default class Appointment extends Component {
     });
     this.setState({data:tmp});
   }
+  handleUpdateAction = (e) => {
+    var tmp = this.state.data;
+    tmp.input_action.solution = e.target.value;
+    this.setState({data:tmp,wait_update_action:true});
+
+  }
+  handleUpdateActionToServer = () => {
+    var that = this;
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token", InfoGen.token);
+    formData.append("task_sid",this.state.tasks_sid);
+    formData.append("solution",this.state.data.input_action.solution);
+    formData.append("problem","");
+    formData.append("recommend","");
+    Put(Url.input_action, formData).then(function(res){
+      console.log(res);
+      if(res.error){
+        alert("Error");
+      }else{
+        that.setState({wait_update_action:false});
+      }
+    });
+  }
+  handleUpdateTaxi = (e) => {
+    this.setState({taxi_fare:e.target.value});
+  }
   render(){
     const styles = {
       button: {margin: 12}
@@ -495,61 +561,78 @@ export default class Appointment extends Component {
         <Divider />
       </div>
     }
+
+    // CALL TO CLASS SPARE PART
     var controlSparePart = <ControlSparePart sparepart={this.state.data.sparepart} tasks_sid={this.state.tasks_sid} onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
+
+    // EACH STEP
+    var step_start_the_task =
+    <div>
+      <div><small style={{color:lightBlack}}>กดปุ่ม Next ระบบจะบันทึกเวลาเริ่มงาน</small></div>
+      <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+    </div>;
+
+    var step_end_user_signature =
+    <div>
+      <RaisedButton label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
+    </div>;
 
     var content;
     if(this.state.data.tasks_sid){
+      var btnCloseService;
+      if(this.state.data && this.state.data.input_action && this.state.data.input_action.solution && !this.state.wait_update_action){
+        btnCloseService = <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+      }
+
+      var step_input_action =
+        <div>
+          <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
+            <div><br/><br/><small style={{color:lightBlack}}>กรอกสิ่งที่คุณทำในช่อง Action</small></div>
+            <span style={{color:lightBlack}}>
+              <TextField value={this.state.data.input_action.solution} onChange={this.handleUpdateAction}
+                hintText="Input Action"
+                errorText="This field is required."
+                floatingLabelText="Action"
+                multiLine={true}
+                rows={2} fullWidth={true}
+              />
+              <RaisedButton label={"UPDATE ACTION"} primary={this.state.wait_update_action} onTouchTap={this.handleUpdateActionToServer} />
+            </span>
+          </div>
+          <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+            {controlSparePart}
+          </div>
+          <br/>
+          {btnCloseService}
+        </div>;
+      var txtTaxi = <TextField type="number" min={0} value={this.state.taxi_fare} hintText="Taxi (Baht)?" onChange={this.handleUpdateTaxi} floatingLabelText="Taxi (Baht)?" floatingLabelFixed={true} fullWidth={true}/>;
+      var step_arrived =
+      <div>
+        {txtTaxi}
+        <RaisedButton label="Finish" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+      </div>;
+
       var stepper;
+      // CHECK CONDITION FOR GEN CHECK POINT 0 is not require taxi
       if(this.state.data.request_taxi==="0"){
         stepper =
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
               <StepLabel>START THE TASK</StepLabel>
               <StepContent>
-                <div>
-                  <div><span style={{color:lightBlack}}>กดปุ่ม Next ระบบจะบันทึกเวลาเริ่มงาน</span></div>
-                  <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
-                </div>
-                {
-                  // this.renderStepActions(0)
-                }
+                {step_start_the_task}
               </StepContent>
           </Step>
           <Step>
             <StepLabel>ACTION</StepLabel>
             <StepContent>
-              <div>
-                <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
-                  <span style={{color:lightBlack}}>
-                    <TextField
-                      hintText="Input Action"
-                      errorText="This field is required."
-                      floatingLabelText="Input Action"
-                      multiLine={true}
-                      rows={2} fullWidth={true}
-                    />
-                  </span>
-                </div>
-                <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-                  {controlSparePart}
-                </div>
-                <br/>
-                <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
-              </div>
-              {
-                //this.renderStepActions(1)
-              }
+              {step_input_action}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>END USER SIGNATURE</StepLabel>
             <StepContent>
-              <div>
-                <RaisedButton label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
-              </div>
-              {
-                //this.renderStepActions(2)
-              }
+              {step_end_user_signature}
             </StepContent>
           </Step>
         </Stepper>
@@ -561,42 +644,34 @@ export default class Appointment extends Component {
               <StepLabel>START THE JOURNEY</StepLabel>
               <StepContent>
                 <div>
-                  <RaisedButton label="CHECK POINT" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+                  <div><small style={{color:lightBlack}}>กดปุ่ม Next ระบบจะบันทึกเวลาออกเดินทาง</small></div>
+                  <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
                 </div>
-                {
-                  // this.renderStepActions(0)
-                }
               </StepContent>
           </Step>
           <Step>
             <StepLabel>START THE TASK</StepLabel>
             <StepContent>
-              <p>An ad group contains one or more ads which target a shared set of keywords.</p>
-              {this.renderStepActions(1)}
+              {txtTaxi}
+              {step_start_the_task}
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>ACTION</StepLabel>
+            <StepLabel>ACTION & SPARE</StepLabel>
             <StepContent>
-              <p>
-              </p>
-              {this.renderStepActions(2)}
+              {step_input_action}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>END USER SIGNATURE</StepLabel>
             <StepContent>
-              <p>
-              </p>
-              {this.renderStepActions(3)}
+              {step_end_user_signature}
             </StepContent>
           </Step>
           <Step>
             <StepLabel>ARRIVED WHEN REACHING DESTINATION</StepLabel>
             <StepContent>
-              <p>
-              </p>
-              {this.renderStepActions(4)}
+              {step_arrived}
             </StepContent>
           </Step>
         </Stepper>
@@ -629,6 +704,7 @@ export default class Appointment extends Component {
             <div></div>
           </div>
           {stepper}
+          <br/><br/>
         </div>
       </Paper>
     }else{
