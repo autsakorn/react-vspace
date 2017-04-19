@@ -11,7 +11,7 @@ import ProjectCreate from './project/ProjectCreate';
 import initReactFastclick from 'react-fastclick';
 import Ticket from './ticket/Ticket';
 import Appointment from './appointment/Appointment';
-import ApproveService from './approval/ApproveTaxi';
+import ApproveService from './approval/ApproveService';
 
 initReactFastclick();
 
