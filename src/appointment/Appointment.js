@@ -423,6 +423,24 @@ export default class Appointment extends Component {
     });
     this.setState({data:tmp});
   }
+  handleUpdateAction = (e) => {
+    var tmp = this.state.data;
+    tmp.input_action.solution = e.target.value;
+    var that = this;
+    var formData = new FormData();
+    formData.app("email", InfoGen.email);
+    formData.app("token", InfoGen.token);
+    formData.app("task_sid",this.state.tasks_sid);
+    formData.app("solution",e.target.value);
+    formData.app("problem","");
+    formData.app("recommend","");
+    Put(Url.input_action, formData).then(function(res){
+      console.log(res);
+      if(!res.error){
+        that.setState({data:tmp});
+      }
+    });
+  }
   render(){
     const styles = {
       button: {margin: 12}
@@ -497,6 +515,10 @@ export default class Appointment extends Component {
     }
     var controlSparePart = <ControlSparePart sparepart={this.state.data.sparepart} tasks_sid={this.state.tasks_sid} onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
 
+    var btnCloseService;
+    if(this.state.data && this.state.data.input_action){
+      btnCloseService = <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+    }
     var content;
     if(this.state.data.tasks_sid){
       var stepper;
@@ -521,7 +543,7 @@ export default class Appointment extends Component {
               <div>
                 <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
                   <span style={{color:lightBlack}}>
-                    <TextField
+                    <TextField value={this.state.data.input_action.solution} onChange={this.handleUpdateAction}
                       hintText="Input Action"
                       errorText="This field is required."
                       floatingLabelText="Input Action"
@@ -534,7 +556,7 @@ export default class Appointment extends Component {
                   {controlSparePart}
                 </div>
                 <br/>
-                <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+                {btnCloseService}
               </div>
               {
                 //this.renderStepActions(1)
