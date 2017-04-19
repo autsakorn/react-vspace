@@ -25,6 +25,58 @@ import TimePicker from 'material-ui/TimePicker';
 
 // import Moment from 'react-moment';
 import moment from 'moment';
+
+class ControlSparePart extends Component {
+  constructor(props){
+    super(props);
+    this.state = {old_part_number:"",old_part_serial:"",new_part_serial:"",adding_spare_part:this.props.adding_spare_part};
+  }
+  handleAddSparePart = () => {
+    this.setState({adding_spare_part:!this.state.adding_spare_part});
+  }
+  updateOldPartNumber = (e) => {
+    this.setState({old_part_number:e.target.value});
+  }
+  updateOldPartSerial = (e) => {
+    this.setState({old_part_serial:e.target.value});
+  }
+  updateNewPartNumber = (e) => {
+    this.setState({new_part_serial:e.target.value});
+  }
+  addPart = () => {
+    alert(this.state.old_part_number);
+    alert(this.state.old_part_serial);
+    alert(this.state.new_part_serial);
+  }
+  render(){
+    const styles = {
+      button: {margin: 12}
+    };
+    var content;
+    if(this.state.adding_spare_part){
+      content =
+      <div style={{color:lightBlack}}>
+        <div>Defective Part (พาร์ทเก่า)</div>
+        <TextField hintText="Part Number" onChange={this.updateOldPartNumber} value={this.state.old_part_number} floatingLabelText="Part Number" fullWidth={true} />
+        <TextField hintText="Part Serial" onChange={this.updateOldPartSerial} value={this.state.old_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+        <br/><br/>
+        <Divider />
+        <br/><br/>
+        <div>New Part (พาร์ทใหม่)</div>
+        <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+
+        <RaisedButton label="Add" primary={true} style={styles.button} onTouchTap={this.addPart}/>
+        <RaisedButton label="Close" style={styles.button} onTouchTap={this.handleAddSparePart} /><br/>
+      </div>;
+    }else{
+      content = <div onTouchTap={this.handleAddSparePart} style={{color:lightBlack}}>Add Spare Part . . .</div>;
+    }
+    return(
+      <div>{content}</div>
+    )
+  }
+}
+
 export default class Appointment extends Component {
   constructor(props){
     super(props);
@@ -39,7 +91,8 @@ export default class Appointment extends Component {
       indexFinished:2,
       contact_user_editing:false,
       appointment_editing:false,
-      currentData:minDate
+      currentData:minDate,
+      adding_spare_part:false
     }
     this.styles = {
       row: {padding:10}
@@ -95,13 +148,18 @@ export default class Appointment extends Component {
   handleNext = () => {
     // alert(nextStatus);
     const {stepIndex} = this.state;
-
+    var task_status = this.state.data.status_from_log;
+    if(this.state.data.request_taxi==="0"){
+      if(task_status<200){
+        task_status = 200;
+      }
+    }
     var that = this;
     var formData = new FormData();
     formData.append("tasks_sid", this.state.tasks_sid);
     formData.append("email", InfoGen.email);
     formData.append("token", InfoGen.token);
-    formData.append("task_status", this.state.data.status_from_log);
+    formData.append("task_status", task_status);
     formData.append("taxi_fare",'0');
     formData.append("taxi_fare_stang",'0');
     formData.append("lat",0);
@@ -395,6 +453,8 @@ export default class Appointment extends Component {
         <Divider />
       </div>
     }
+    var controlSparePart = <ControlSparePart onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
+
     var content;
     if(this.state.data.tasks_sid){
       var stepper;
@@ -405,6 +465,7 @@ export default class Appointment extends Component {
               <StepLabel>START THE TASK</StepLabel>
               <StepContent>
                 <div>
+                  <div><span style={{color:lightBlack}}>กดปุ่ม Next ระบบจะบันทึกเวลาเริ่มงาน</span></div>
                   <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
                 </div>
                 {
@@ -415,8 +476,27 @@ export default class Appointment extends Component {
           <Step>
             <StepLabel>ACTION</StepLabel>
             <StepContent>
-              <p>Input Action</p>
-              {this.renderStepActions(1)}
+              <div>
+                <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
+                  <span style={{color:lightBlack}}>
+                    <TextField
+                      hintText="Input Action"
+                      errorText="This field is required."
+                      floatingLabelText="Input Action"
+                      multiLine={true}
+                      rows={2} fullWidth={true}
+                    />
+                  </span>
+                </div>
+                <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+                  {controlSparePart}
+                </div>
+                <br/>
+                <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+              </div>
+              {
+                //this.renderStepActions(1)
+              }
             </StepContent>
           </Step>
           <Step>
