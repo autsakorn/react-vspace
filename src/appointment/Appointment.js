@@ -21,18 +21,25 @@ import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import ContentCreate from 'material-ui/svg-icons/content/create';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+
 // import Moment from 'react-moment';
 import moment from 'moment';
 export default class Appointment extends Component {
   constructor(props){
     super(props);
+    const minDate = new Date();
+    minDate.setFullYear(minDate.getFullYear() - 1);
+    minDate.setHours(0, 0, 0, 0);
+
     this.state = {
       tasks_sid:this.props.tasks_sid, data:{},
       finished: false,
       stepIndex: 0,
       indexFinished:2,
       contact_user_editing:false,
-      appointment_editing:false
+      appointment_editing:false,
+      currentData:minDate
     }
     this.styles = {
       row: {padding:10}
@@ -250,6 +257,72 @@ export default class Appointment extends Component {
     });
     this.setState({data:tmp});
   }
+  handleExpectDuration = (e) => {
+    var tmp = this.state.data;
+    tmp.expect_duration = e.target.value;
+
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("task_sid",this.state.tasks_sid);
+    formData.append("datetime",tmp.appointment_YmdHi);
+    formData.append("expect_duration",tmp.expect_duration);
+
+    Put(Url.changeAppointment, formData).then(function(res){
+      console.log(res);
+    });
+
+    this.setState({data:tmp});
+  }
+  handleAppointmentDate = (event, date) => {
+    var tmp = this.state.data;
+    tmp.appointment_date = date;
+    var appointmentOld = tmp.appointment;
+    var appointmentOldArray = appointmentOld.split(" ");
+    //
+    tmp.appointment = moment(date).format('DD.MM.YYYY')+" "+appointmentOldArray[1];
+    tmp.appointment_YmdHi = moment(date).format('YYYY-MM-DD')+" "+appointmentOldArray[1]+":00";
+    //
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("task_sid",this.state.tasks_sid);
+    formData.append("datetime",tmp.appointment_YmdHi);
+    formData.append("expect_duration",tmp.expect_duration);
+
+    Put(Url.changeAppointment, formData).then(function(res){
+      console.log(res);
+    });
+
+    console.log(tmp.appointment);
+    this.setState({data:tmp});
+  }
+  handleAppointmentTime = (event, date) => {
+    var tmp = this.state.data;
+    tmp.appointment_time = date;
+    ///
+    var appointmentOld = tmp.appointment;
+    var appointmentOldArray = appointmentOld.split(" ");
+    var newTime = moment(date).format('HH:mm');
+    ///
+    var appointment_YmdHi = tmp.appointment_YmdHi;
+    var appointment_YmdHiArray = appointment_YmdHi.split(" ");
+    //
+    tmp.appointment_YmdHi = appointment_YmdHiArray[0]+" "+newTime+":00";
+    tmp.appointment = appointmentOldArray[0]+" "+newTime;
+
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("task_sid",this.state.tasks_sid);
+    formData.append("datetime",tmp.appointment_YmdHi);
+    formData.append("expect_duration",tmp.expect_duration);
+
+    Put(Url.changeAppointment, formData).then(function(res){
+      console.log(res);
+    });
+    this.setState({data:tmp});
+  }
   render(){
     const styles = {
       button: {margin: 12}
@@ -278,17 +351,39 @@ export default class Appointment extends Component {
 
     var appointment_element;
     if(this.state.appointment_editing){
+      var dateRawF = this.state.data.appointment_YmdHi.split(" ");
+      var dateRaw = dateRawF[0].split("-");
+      var minDate = new Date(dateRaw[0], dateRaw[1]-1, dateRaw[2], 0,0,0,0);
+      // minDate.setFullYear(minDate.getFullYear() - 1);
+      minDate.setHours(0, 0, 0, 0);
+
+      var minHour = dateRawF[1].split(":");
+      console.log(minHour);
+      minHour = new Date(dateRaw[0], dateRaw[1]-1, dateRaw[2], minHour[0], minHour[1], minHour[2],0);
+      // minHour.setFullYear(minHour.getFullYear()-1);
+      console.log(minHour);
       appointment_element = <div>
           <div style={{padding:10}}>
             <div><span>Appointment: <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} /></span></div>
             <div>
               <DatePicker
-                onChange={this.handleChangeMinDate}
+                onChange={this.handleAppointmentDate}
                 autoOk={this.state.autoOk}
                 floatingLabelText="Appointment Date"
-                defaultDate={moment(this.state.data.appointment_YmdHi)}
+                defaultDate={minDate}
                 disableYearSelection={this.state.disableYearSelection}
               />
+
+              <TimePicker
+                format="24hr" floatingLabelText="Appointment Time"
+                hintText="Appointment Time" defaultTime={minHour}
+                value={this.state.value24}
+                onChange={this.handleAppointmentTime}
+              />
+
+              <div>
+                <TextField type="number" min={1} value={this.state.data.expect_duration} onChange={this.handleExpectDuration} hintText="Expect Duration" floatingLabelText="Expect Duration (Hours.)"/>
+              </div>
             </div>
           </div>
           <Divider />
@@ -297,8 +392,6 @@ export default class Appointment extends Component {
       appointment_element = <div>
         <div style={{padding:10}}><span>Appointment: </span>
         <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.appointment +" ("+this.state.data.expect_duration+")"}</span> <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} /></div>
-        <Divider />
-        <div style={{padding:10}}><span>Expect Finish: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.expect_finish}</span></div>
         <Divider />
       </div>
     }
@@ -311,10 +404,12 @@ export default class Appointment extends Component {
           <Step>
               <StepLabel>START THE TASK</StepLabel>
               <StepContent>
-                <p>
-                  Start the task
-                </p>
-                {this.renderStepActions(0)}
+                <div>
+                  <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+                </div>
+                {
+                  // this.renderStepActions(0)
+                }
               </StepContent>
           </Step>
           <Step>
@@ -343,9 +438,12 @@ export default class Appointment extends Component {
           <Step>
               <StepLabel>START THE JOURNEY</StepLabel>
               <StepContent>
-                <p>
-                </p>
-                {this.renderStepActions(0)}
+                <div>
+                  <RaisedButton label="CHECK POINT" onTouchTap={this.handleNext} primary={true} style={styles.button} />
+                </div>
+                {
+                  // this.renderStepActions(0)
+                }
               </StepContent>
           </Step>
           <Step>
@@ -384,7 +482,6 @@ export default class Appointment extends Component {
 
       content =
       <Paper zDepth={2} >
-
         <div >
           <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject}</span></div>
           <Divider />
@@ -404,7 +501,6 @@ export default class Appointment extends Component {
             </div>
           </div>
           <Divider />
-
           <br />
           <div style={{padding:10}}>
             <div>CHECK POINT</div>
