@@ -97,8 +97,11 @@ class NavCompoment extends Component {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       listMenu.push(
         <ListItem onTouchTap={
-          ()=>{localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");}
-        } key={1} style={{color:lightBlack,marginLeft:'5px'}} href={"/"} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+          ()=>{
+            localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
+            location.reload();
+          }
+        } key={1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
         >{"Boards"}</ListItem>
       );
 

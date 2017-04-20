@@ -34,8 +34,9 @@ var Url = {
   'update_spare_part':END_POINT_2+"v1/ticket/update_spare_part",
   'taxiService': END_POINT_2+"v1/moresystem/templateRequestTaxi",
   'input_action':END_POINT_2+"v1/insert/input_action",
-  'delete_spare_part': END_POINT_2+"v1/ticket/deleteSparePart"
-  
+  'delete_spare_part': END_POINT_2+"v1/ticket/deleteSparePart",
+  'updateProfile': END_POINT_2+"v1/user/updateProfile"
+
 }
 
 export default Url;

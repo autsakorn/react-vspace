@@ -251,9 +251,9 @@ export default class Appointment extends Component {
         that.setState({
           stepIndex: stepIndex + 1,
           finished: stepIndex >= that.state.indexFinished,
-          data:tmp
+          data:tmp,
+          openSnackbar:true
         });
-
       }
     });
   };
@@ -289,7 +289,6 @@ export default class Appointment extends Component {
     }
     return (
       <div style={{margin: '12px 0'}}>
-
         {step > 0 && (
           <FlatButton
             label="Back"
@@ -643,7 +642,6 @@ export default class Appointment extends Component {
       }else{
         stepper =
         <Stepper activeStep={stepIndex} orientation="vertical">
-
           <Step>
               <StepLabel>START THE JOURNEY</StepLabel>
               <StepContent>
@@ -708,7 +706,13 @@ export default class Appointment extends Component {
             <div></div>
           </div>
           {stepper}
-          <br/><br/>
+          <br/>
+          {finished && (
+            <p style={{margin: '20px 0', textAlign: 'center'}}>
+              This appointment is finished
+            </p>
+          )}
+          <br/>
         </div>
       </Paper>
     }else{
