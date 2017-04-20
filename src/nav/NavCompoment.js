@@ -94,25 +94,44 @@ class NavCompoment extends Component {
 
     var listMenu = [];
     var that = this;
-    this.props.info.menus.forEach(function(item,i){
-        // console.log(item);
-        if(item.list.length>0){
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      listMenu.push(
+        <ListItem onTouchTap={
+          ()=>{localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");}
+        } key={1} style={{color:lightBlack,marginLeft:'5px'}} href={"/"} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+        >{"Boards"}</ListItem>
+      );
 
-          if(item.list[0].sid==="88"){
-            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid");localStorage.setItem("currectPage","Ticket"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
-            >{item.name}</ListItem>);
-          }else if(item.list[0].sid==="85"){
-            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid");localStorage.removeItem("currectPage"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
-            >{item.name}</ListItem>);
-          }else{
-            listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
-              // nestedItems={[
-              //         <ListItem key={1} primaryText="Drafts" />,
-              //       ]}
-            >{item.name}</ListItem>);
-          }
-        }
-    });
+    } else {
+        this.props.info.menus.forEach(function(item,i){
+            // console.log(item);
+            if(item.list.length>0){
+              if(item.list[0].sid==="88"){
+                listMenu.push(<ListItem onTouchTap={()=>{
+                  localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");
+                  localStorage.setItem("currectPage","Ticket"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                >{item.name}</ListItem>);
+              }else if(item.list[0].sid==="85"){
+                listMenu.push(<ListItem onTouchTap={()=>{
+                  localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");
+                  localStorage.removeItem("currectPage"); }} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                >{item.name}</ListItem>);
+              }else if(item.list[0].sid==="76"){
+                listMenu.push(<ListItem onTouchTap={()=>{
+                  localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");
+                  localStorage.setItem("currectPage","ApproveService"); }
+                } key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                >{item.name}</ListItem>);
+              }else{
+                listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                  // nestedItems={[
+                  //         <ListItem key={1} primaryText="Drafts" />,
+                  //       ]}
+                >{item.name}</ListItem>);
+              }
+            }
+        });
+    }
     // console.log(LogoPng);
     var logo = <span><img src={LogoPng} style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
