@@ -133,7 +133,7 @@ class NavCompoment extends Component {
         });
     }
     // console.log(LogoPng);
-    var logo = <span><img src={LogoPng} style={{height:48}} /></span>;
+    var logo = <span><img alt="vSpace" src="http://vspace.in.th/img/vspace.png" style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
     return(
       <Toolbar style={style.toolbar}>
