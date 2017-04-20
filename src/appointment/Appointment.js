@@ -23,6 +23,8 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import {List, ListItem} from 'material-ui/List';
+import Snackbar from 'material-ui/Snackbar';
+
 // import Moment from 'react-moment';
 import moment from 'moment';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
@@ -167,7 +169,8 @@ export default class Appointment extends Component {
       currentData:minDate,
       adding_spare_part:false,
       wait_update_action: false,
-      taxi_fare:0
+      taxi_fare:0,
+      openSnackbar:false
     }
     this.styles = {
       row: {padding:10}
@@ -250,6 +253,7 @@ export default class Appointment extends Component {
           finished: stepIndex >= that.state.indexFinished,
           data:tmp
         });
+
       }
     });
   };
@@ -482,7 +486,7 @@ export default class Appointment extends Component {
       if(res.error){
         alert("Error");
       }else{
-        that.setState({wait_update_action:false});
+        that.setState({wait_update_action:false,openSnackbar:true});
       }
     });
   }
@@ -680,7 +684,7 @@ export default class Appointment extends Component {
       content =
       <Paper zDepth={2} >
         <div >
-          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject}</span></div>
+          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
           <Divider />
           <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
           <Divider />
@@ -720,6 +724,11 @@ export default class Appointment extends Component {
           <div style={{margin:10}}>
               {content}
           </div>
+          <Snackbar
+            open={this.state.openSnackbar}
+            message="vSpace Added"
+            autoHideDuration={4000} onRequestClose={()=>{this.setState({openSnackbar:false})}}
+          />
         </div>
       </MuiThemeProvider>
     )

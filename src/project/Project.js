@@ -33,6 +33,7 @@ import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import ActionEvent from 'material-ui/svg-icons/action/event';
 import ActionAssessment from 'material-ui/svg-icons/action/assessment';
 import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class Project extends Component {
   constructor(props){
@@ -59,7 +60,6 @@ class Project extends Component {
         that.setState({
           projectList:pl.data,appointment:pl.a
         });
-
         that.generateBoxProject();
     });
   }
@@ -228,6 +228,19 @@ class Project extends Component {
       </div>
     }
 
+    var content;
+    if(this.state.projectList.length>0){
+      content =
+        <div>
+          {showAppointment}
+          {showProject}
+        </div>;
+    }else{
+      content = <div style={{textAlign:'center'}}>
+        <CircularProgress size={80} thickness={5} />
+      </div>;
+    }
+
     return(
         <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
           <div>
@@ -252,8 +265,7 @@ class Project extends Component {
 
                 </BottomNavigation>
             </Paper>
-            {showAppointment}
-            {showProject}
+            {content}
           </div>
         </MuiThemeProvider>
     )
