@@ -183,7 +183,6 @@ class ApproveService extends Component {
               </Drawer>
 
               {elementSectionApprove}
-
         </div>
       </MuiThemeProvider>
     )
