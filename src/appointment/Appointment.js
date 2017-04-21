@@ -23,6 +23,8 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import {List, ListItem} from 'material-ui/List';
+import Snackbar from 'material-ui/Snackbar';
+
 // import Moment from 'react-moment';
 import moment from 'moment';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
@@ -69,15 +71,15 @@ class ControlSparePart extends Component {
         sid:res.data,
         part_number_defective:that.state.old_part_number,
         part_serial_defective:that.state.old_part_serial,
-        part_serial:that.state.new_part_serial
+        part_serial:that.state.new_part_serial,
+        description:that.state.description
       });
       that.setState({
         sparepart:tmp,
         old_part_number:"",
         old_part_serial:"",
         new_part_serial:"",
-        description:"",
-        adding_spare_part:true
+        description:""
       });
     });
   }
@@ -117,7 +119,7 @@ class ControlSparePart extends Component {
           <div><small style={{color:lightBlack}}>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
           <div><small style={{color:lightBlack}}>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
           <div><small style={{color:lightBlack}}>New Part Serial: </small><small>{item.part_serial}</small></div>
-          <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>          
+          <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>
         </List>
       )
     });
@@ -125,13 +127,13 @@ class ControlSparePart extends Component {
       content =
       <div style={{color:lightBlack}}>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px'}}>
-          <div>Defective Part (พาร์ทเก่า)</div>
+          <div><small>Defective Part (พาร์ทเก่า)</small></div>
           <TextField hintText="Part Number" onChange={this.updateOldPartNumber} value={this.state.old_part_number} floatingLabelText="Part Number" fullWidth={true} />
           <TextField hintText="Part Serial" onChange={this.updateOldPartSerial} value={this.state.old_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
           <br/><br/>
         </div>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-          <div>New Part (พาร์ทใหม่)</div>
+          <div><small>New Part (พาร์ทใหม่)</small></div>
           <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
           <TextField hintText="Description" onChange={this.updateDescription} value={this.state.description} floatingLabelText="Description" fullWidth={true} />
         </div>
@@ -167,7 +169,8 @@ export default class Appointment extends Component {
       currentData:minDate,
       adding_spare_part:false,
       wait_update_action: false,
-      taxi_fare:0
+      taxi_fare:0,
+      openSnackbar:false
     }
     this.styles = {
       row: {padding:10}
@@ -248,7 +251,8 @@ export default class Appointment extends Component {
         that.setState({
           stepIndex: stepIndex + 1,
           finished: stepIndex >= that.state.indexFinished,
-          data:tmp
+          data:tmp,
+          openSnackbar:true
         });
       }
     });
@@ -285,7 +289,6 @@ export default class Appointment extends Component {
     }
     return (
       <div style={{margin: '12px 0'}}>
-
         {step > 0 && (
           <FlatButton
             label="Back"
@@ -482,7 +485,7 @@ export default class Appointment extends Component {
       if(res.error){
         alert("Error");
       }else{
-        that.setState({wait_update_action:false});
+        that.setState({wait_update_action:false,openSnackbar:true});
       }
     });
   }
@@ -639,7 +642,6 @@ export default class Appointment extends Component {
       }else{
         stepper =
         <Stepper activeStep={stepIndex} orientation="vertical">
-
           <Step>
               <StepLabel>START THE JOURNEY</StepLabel>
               <StepContent>
@@ -680,7 +682,7 @@ export default class Appointment extends Component {
       content =
       <Paper zDepth={2} >
         <div >
-          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject}</span></div>
+          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
           <Divider />
           <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
           <Divider />
@@ -704,7 +706,13 @@ export default class Appointment extends Component {
             <div></div>
           </div>
           {stepper}
-          <br/><br/>
+          <br/>
+          {finished && (
+            <p style={{margin: '20px 0', textAlign: 'center'}}>
+              This appointment is finished
+            </p>
+          )}
+          <br/>
         </div>
       </Paper>
     }else{
@@ -720,6 +728,11 @@ export default class Appointment extends Component {
           <div style={{margin:10}}>
               {content}
           </div>
+          <Snackbar
+            open={this.state.openSnackbar}
+            message="vSpace Added"
+            autoHideDuration={4000} onRequestClose={()=>{this.setState({openSnackbar:false})}}
+          />
         </div>
       </MuiThemeProvider>
     )

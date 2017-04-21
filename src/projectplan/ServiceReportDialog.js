@@ -112,7 +112,7 @@ class ServiceReportDialog extends Component {
             <br/>
             <RaisedButton onTouchTap={()=>{this.setState({creatingService:true}); }} icon={<ContentAdd />} label={"ADD"} />
             <List>
-              <Subheader>รายการ Service Report ({this.state.serviceReport.length})</Subheader>
+              <Subheader>Appointment List ({this.state.serviceReport.length})</Subheader>
               {serviceReport}
             </List>
           </div>;
@@ -120,7 +120,7 @@ class ServiceReportDialog extends Component {
       listServiceReport =
       <div style={{padding:10}}>
         <br/>
-        <RaisedButton onTouchTap={()=>{this.setState({creatingService:false}); }} label={"List Service Report"} />
+        <RaisedButton onTouchTap={()=>{this.setState({creatingService:false}); }} label={"Appointment List"} />
         <ServiceReportCreate createService={this.state.creatingService} onCloseDialog={this.handleClose}
           onCreatedService={this.handleCreatedService} onStatusCreating={this.handleStatusCreating}
           caseSid={this.props.caseSid} projectContact={this.props.projectContact} serviceReport={this.props.serviceReport}
@@ -128,13 +128,12 @@ class ServiceReportDialog extends Component {
       </div>
     }
 
-
     chipServiceReport.push(<Chip key={-1} onTouchTap={this.handleOpen} style={styles.chip}><Avatar color="#fff" icon={<ContentAdd />} />Add</Chip>);
     //<i> จำนวน {this.state.serviceReport.length}</i>
     const label = <div><div style={{display:'flex',flexWrap:'wrap',float:'left'}}>{chipServiceReport}</div><div style={{clear:'both'}}></div></div>;
     return (
       <div>
-        <div><small style={{color:lightBlack}}>Service Report ({this.state.serviceReport.length})</small></div><div style={{textAlign:'right'}}>{label}</div>
+        <div><small style={{color:lightBlack}}>Appointment ({this.state.serviceReport.length})</small></div><div style={{textAlign:'right'}}>{label}</div>
 
         <Drawer openSecondary={true} width={'80%'} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
             <div style={{minHeight:'200px'}}>
