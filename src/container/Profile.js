@@ -18,11 +18,13 @@ import Url from '../config/url';
 import get from '../config/Get';
 import Put from '../config/Put';
 import InfoGen from '../config/InfoGen';
+import SignatureCanvas from 'react-signature-canvas'
+import Divider from 'material-ui/Divider';
 class Profile extends Component {
 
   constructor(props){
     super(props);
-    this.state = {info:this.props.info,is_update:false,openSnackbar:false,file:'',imagePreviewUrl:'',file_picture_profile:''};
+    this.state = {info:this.props.info,is_update:false,openSnackbar:false,file:'',imagePreviewUrl:'',file_picture_profile:'',trimmedDataURL:'',signing:false};
   }
   handleChangeFullname = (e) => {
     var tmp = this.state.info;
@@ -89,6 +91,28 @@ class Profile extends Component {
 
     reader.readAsDataURL(file)
   }
+  sigPad = {}
+  clear = () => {
+    this.sigPad.clear()
+  }
+  trim = () => {
+    try{
+      if(this.sigPad.getTrimmedCanvas){
+        this.setState({trimmedDataURL: this.sigPad.getTrimmedCanvas().toDataURL('image/png')});
+
+        var formData = new FormData();
+        formData.append("email", InfoGen.email);
+        formData.append("token", InfoGen.token);
+        formData.append("base64", this.sigPad.getTrimmedCanvas().toDataURL('image/png'));
+        Put(Url.savesignature_member, formData).then(function(res){
+            console.log(res);
+            location.reload();
+        });
+      }
+    }catch(e){
+      console.log(e);
+    }
+  }
   render(){
     var style = {
         container: {
@@ -119,6 +143,13 @@ class Profile extends Component {
         cursor: 'pointer',
         // marginRight:'20%',
         marginTop :'10%'
+      },
+      profile_web:{
+        width:'220px',
+        height:'initial',
+        cursor: 'pointer',
+        // marginRight:'20%',
+        marginTop :'5%'
       }
 
     }
@@ -126,6 +157,25 @@ class Profile extends Component {
     var eleCompanyLogo;
     if(this.state.info.company_logo){
       eleCompanyLogo = <div><br/><img src={this.state.info.company_logo} style={{width:'160px'}} /></div>;
+    }
+
+    var eleSignature;
+    if(this.state.info.path_signature && !this.state.signing){
+      eleSignature = <div>
+      <br/><img src={this.state.info.path_signature} style={{width:'160px'}} />
+      <div style={{position:'relative'}}>
+        <div><RaisedButton onTouchTap={()=>this.setState({signing:true})} label="New Signature" style={{marginRight:'35px'}} /></div>
+      </div>
+      </div>;
+    }else{
+      eleSignature = <div>
+        <div><SignatureCanvas ref={(ref) => { this.sigPad = ref }} penColor='black' clearButton="true" style={{border:'1px solid #eaeaea'}} canvasProps={{width: 500, height: 200, className: 'sigCanvas'}} /></div>
+        <div>
+          <RaisedButton onTouchTap={this.trim} label="Update New Signature" style={{margin:4}} primary={true}  />
+          <RaisedButton onTouchTap={this.clear} secondary={true} label="Clear" style={{margin:4}}  />
+          <RaisedButton onTouchTap={()=>this.setState({signing:false})} style={{margin:4}} label="Cancel"  />
+        </div>
+      </div>
     }
     var textField =
       <div>
@@ -153,11 +203,19 @@ class Profile extends Component {
               floatingLabelFixed={true}
              />
          </div>
+
          <div>
-            {eleCompanyLogo}
+            <br/>
             <div><small style={{color:grey400}}>Logo Company</small></div>
-            <TextField onChange={this.uploadLogoCompany} type="file" hintText="" name="logo_company" />
+            {eleCompanyLogo}
+            <div style={{position:'relative'}}>
+              <RaisedButton label="New Logo" style={{marginRight:'35px'}} />
+              <TextField style={{position:'absolute',top:0,opacity:0,zIndex:100,left:0}} onChange={this.uploadLogoCompany} type="file" hintText="" name="logo_company" />
+            </div>
+            <br/>
          </div>
+
+
          <div>
           <br/>
           <RaisedButton label="Update Profile" onTouchTap={this.updateProfile} primary={this.state.is_update} />
@@ -168,6 +226,7 @@ class Profile extends Component {
           autoHideDuration={4000}
           onRequestClose={()=>{this.setState({openSnackbar:false})}}
         />
+        <br/><br/>
       </div>;
     return(
 
@@ -180,14 +239,26 @@ class Profile extends Component {
                 <div id="vspace-container" style={style.container}>
                     <div className="vspace-wrapper" style={style.wrapper}>
                       <Card style={{border:'none',boxShadow:'none'}}>
-                            <div style={{float:'left', width:'40%', textAlign:'right'}}>
-                              <div style={{marginRight: '40px'}}><Avatar src={this.props.info.pic_full} style={style.profile}/></div>
-                              <div style={{'textAlign':'right',marginRight:'50px'}}><TextField style={{width:'90px'}} onChange={this.changePicture_profile} type="file" hintText="" name="picture_profile" /></div>
+                            <div style={{float:'left', width:'40%', textAlign:'right',position:'relative'}}>
+                              <div style={{marginRight: '40px'}}><Avatar src={this.props.info.pic_full} style={style.profile_web}/></div>
+                              <div style={{'textAlign':'right',marginRight:'50px',position:'relative'}}>
+                                <RaisedButton label="New picture" style={{marginRight:'35px'}} />
+                                <TextField style={{zIndex:100,opacity:0, width:'200px',position:'absolute',top:0,right:0}} onChange={this.changePicture_profile} type="file" hintText="" name="picture_profile" />
+                              </div>
 
                             </div>
                             <div style={{float:'right', width:'60%', textAlign:'left'}}>
                               {textField}
                            </div>
+
+                           <Divider />
+                           <div>
+                              <br/>
+                              <div><small style={{color:grey400}}>Signature</small></div>
+                              {eleSignature}
+                              <br/>
+                           </div>
+
                            <div style={{clear:'both'}}></div>
                         <br/>
                       </Card>
@@ -201,11 +272,22 @@ class Profile extends Component {
                         <Card>
                               <div>
                                 <div><Avatar src={this.props.info.pic_full} style={style.profile}/></div>
-                                <div style={{'textAlign':'center'}}><TextField style={{width:'85px'}} onChange={this.changePicture_profile} type="file" hintText="" name="picture_profile" /></div>
+                                <div style={{'textAlign':'center', position:'relative'}}>
+                                  <RaisedButton label="New picture" style={style} />
+                                  <TextField style={{zIndex:100,opacity:0, position:'absolute',top:0,left:0}} onChange={this.changePicture_profile} type="file" hintText="" name="picture_profile" /></div>
                               </div>
                               <div >
                                 {textField}
                              </div>
+
+                            <Divider />
+                             <div>
+                                <br/>
+                                <div><small style={{color:grey400}}>Signature</small></div>
+                                {eleSignature}
+                                <br/>
+                             </div>
+
                              <div style={{clear:'both'}}></div>
                           <br/>
                         </Card>

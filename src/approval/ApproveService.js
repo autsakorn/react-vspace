@@ -116,6 +116,7 @@ class ApproveService extends Component {
                    openSecondary={this.state.openSecondary}
                    onRequestChange={(open) => this.setState({open})}
                  >
+                 
                  </Drawer>
                  <Card style={styles.root}>
                    <CardText>
