@@ -37,7 +37,8 @@ var Url = {
   'updateProfile': END_POINT_2+"v1/user/updateProfile",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
   'ticketDetail':END_POINT_2+"v1/moresystem/templateCaseDetail"
-
+  'approveServiceDetail' : END_POINT_2+"v1/moresystem/templateRequestTaxiDetail",
+  'savesignature_member':END_POINT_2+"v1/moresystem/savesignature"
 }
 
 export default Url;
