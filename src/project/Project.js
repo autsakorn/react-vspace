@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import get from '../config/Get.js';
+import Url from '../config/url';
+import get from '../config/Get';
+import Put from '../config/Put';
+import InfoGen from '../config/InfoGen';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {GridList} from 'material-ui/GridList';
 import NavCompoment from '../nav/NavCompoment';
@@ -20,7 +23,7 @@ import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 //   Route,
 //   Link
 // } from 'react-router-dom'
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+// import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
@@ -34,21 +37,57 @@ import ActionEvent from 'material-ui/svg-icons/action/event';
 import ActionAssessment from 'material-ui/svg-icons/action/assessment';
 import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import CircularProgress from 'material-ui/CircularProgress';
+import Badge from 'material-ui/Badge';
+import TicketDrawer from '../ticket/TicketDrawer';
+import TicketDetail from '../ticket/TicketDetail';
+
+import Drawer from 'material-ui/Drawer';
+
 
 class Project extends Component {
   constructor(props){
+    var showProject,showAppointment,showTask;
+
+    if(localStorage.getItem("selectedIndex")){
+      if(localStorage.getItem("selectedIndex")==="1"){
+        showProject = 1;
+        showAppointment = 0;
+        showTask = 0;
+      }else if(localStorage.getItem("selectedIndex")==="2"){
+        showProject = 0;
+        showAppointment = 0;
+        showTask = 1;
+      }else if(localStorage.getItem("selectedIndex")==="3"){
+        showProject = 0;
+        showAppointment = 1;
+        showTask = 0;
+      }else{
+        showProject = 1;
+        showAppointment = 1;
+        showTask = 1;
+      }
+    }
+
     super(props);
     this.state = {
       urlProject:this.props.urlProject,
       formData:this.props.formData,
       info:this.props.info,
-      projectList:this.props.projectList,
+      projectList:[],
       listProject:<div />,
       listAppoinement:<div />,
+      listTask:<div />,
       selectedIndex:((localStorage.getItem("selectedIndex"))?parseInt(localStorage.getItem("selectedIndex")):0),
       appointment:[],
-      showProject:1,
-      showAppointment:1
+      task:[],
+      showProject:showProject,
+      showAppointment:showAppointment,
+      showTask:showTask,
+      started:0,
+      listUserCanAddProject:[],
+      openTicketDrawer:false,
+      ticket_sid:((this.props.ticket_sid)?this.props.ticket_sid:null),
+      data_ticket_detail:null
     };
 
   }
@@ -58,10 +97,28 @@ class Project extends Component {
     this.props.formData.append("search",search);
     get(this.props.urlProject,this.props.formData).then(function(pl){
         that.setState({
-          projectList:pl.data,appointment:pl.a
+          projectList:pl.data,appointment:pl.a,task:pl.t,started:1,listUserCanAddProject:pl.canAssignTo
         });
         that.generateBoxProject();
     });
+  }
+
+  handleOpenTicketDrawer = (ticket_sid) => {
+    this.callDataTicket(ticket_sid);
+
+  }
+  callDataTicket(ticket_sid){
+    if(this.props.ticket_sid!==null){
+      var formData = new FormData();
+      formData.append("email", InfoGen.email);
+      formData.append("token", InfoGen.token);
+      formData.append("ticket_sid", ticket_sid);
+      var that = this;
+      get(Url.ticketDetail,formData).then(function(res){
+        console.log(res);
+        that.setState({openTicketDrawer:!that.state.openTicketDrawer,ticket_sid:ticket_sid, data_ticket_detail:res.data});
+      });
+    }
   }
 
   generateBoxProject(){
@@ -98,7 +155,20 @@ class Project extends Component {
     }else if(window.innerWidth<768){
       numberColumn = 2;
     }
+
+    var elementCreateProject =
+    <div onTouchTap={that.handleCreateNewProject} key={0}>
+      <Paper zDepth={2}
+        key={""}
+        style={styles.styleBorderNew}
+      >
+        <div style={{padding:'10px',display:'flex'}}>
+        <ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
+      </Paper>
+    </div>;
+
     var boxProject = [];
+    boxProject.push(elementCreateProject);
     that.state.projectList.forEach((tile,i) => {
       var avatarOwner = [];
       tile.owner.forEach((item,k) => {
@@ -106,7 +176,7 @@ class Project extends Component {
       });
       boxProject.push(
           <div
-            key={i}
+            key={i+"-"+tile.sid}
             style={styles.styleBorder} onTouchTap={that.handleSelectProject} data-id={tile.sid}
           >
             <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
@@ -119,32 +189,7 @@ class Project extends Component {
           </div>);
     });
 
-    var elementSectionProject =
-    <Card style={{backgroundColor:'initial'}}>
-      <CardHeader style={{padding:"20px 20px 0px 20px"}}
-        title={"Project ("+this.state.projectList.length+")"}
-      />
-      <CardText>
-        <div style={styles.root}>
-          <GridList cellHeight={120}
-            cols={numberColumn}
-            padding={10}
-            style={styles.gridList}
-          >
-          <div onTouchTap={that.handleCreateNewProject}>
-            <Paper zDepth={2}
-              key={""}
-              style={styles.styleBorderNew}
-            >
-              <div style={{padding:'10px',display:'flex'}}>
-              <ContentAddCircle style={{marginTop:'6px', color:lightBlack}} /> <span style={{marginTop:'10px'}}>Create New Project</span></div>
-            </Paper>
-          </div>
-          {boxProject}
-          </GridList>
-        </div>
-      </CardText>
-    </Card>;
+    var elementSectionProject = <SectionElement title="Project" data={this.state.projectList} box={boxProject} numberColumn={numberColumn} styles={styles} />;
 
     var box = [];
     that.state.appointment.forEach((item,i)=>{
@@ -158,26 +203,28 @@ class Project extends Component {
         </div>
       );
     });
-    var elementSectionAppointment =
-    <Card style={{backgroundColor:'initial'}}>
-      <CardHeader style={{padding:"20px 20px 0px 20px"}}
-        title={"Appointment ("+that.state.appointment.length+")"}
-        subtitle=""
-      />
-      <CardText>
-        <div style={styles.root}>
-          <GridList cellHeight={120}
-            cols={numberColumn}
-            padding={10}
-            style={styles.gridList}
-          >
-            {box}
-          </GridList>
-        </div>
-      </CardText>
-    </Card>;
+    var elementSectionAppointment = <SectionElement title="Appointment" data={this.state.appointment} box={box} numberColumn={numberColumn} styles={styles}/>;
 
-    that.setState({listProject:elementSectionProject,listAppoinement:elementSectionAppointment});
+
+    var task = [];
+    this.state.task.forEach((item,i)=>{
+      task.push(
+        <div key={i+item.sid} onTouchTap={()=>{this.handleOpenTicketDrawer(item.sid)}} style={styles.styleBorder}>
+          <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
+            <div>{item.subject}</div>
+            <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
+            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small></small></div>
+
+          </Paper>
+        </div>
+      )
+    });
+    var elementSectionTask =
+    <div><SectionElement title="Task" data={this.state.task} box={task} numberColumn={numberColumn} styles={styles} />
+
+    </div>;
+
+    that.setState({listProject:elementSectionProject,listAppoinement:elementSectionAppointment,listTask:elementSectionTask});
 
   }
   handleSelectProject(e){
@@ -200,15 +247,20 @@ class Project extends Component {
     console.log(index);
     this.setState({selectedIndex: index});
     localStorage.setItem("selectedIndex",index);
-    if(index===1){
-      this.setState({showProject:1,showAppointment:0});
-    }else if(index===2){
-      this.setState({showProject:0,showAppointment:1});
-    }else {
-      this.setState({showProject:1,showAppointment:1});
-    }
+    this.setShow(index);
   }
 
+  setShow = (index) => {
+    if(index===1){
+      this.setState({showProject:1,showTask:0,showAppointment:0});
+    }else if(index===2){
+      this.setState({showProject:0,showTask:1,showAppointment:0});
+    }else if(index===3){
+      this.setState({showProject:0,showTask:0,showAppointment:1});
+    }else {
+      this.setState({showProject:1,showTask:1,showAppointment:1});
+    }
+  }
   componentDidMount(){
     this.callProjectList("");
   }
@@ -227,12 +279,19 @@ class Project extends Component {
         {this.state.listProject}
       </div>
     }
-
+    var showTask;
+    if(this.state.showTask){
+      showTask =
+      <div style={{'overflow':'auto','width':'100%','top':100,'bottom':'0'}}>
+        {this.state.listTask}
+      </div>
+    }
     var content;
-    if(this.state.projectList.length>0){
+    if(this.state.started===1){
       content =
         <div>
           {showAppointment}
+          {showTask}
           {showProject}
         </div>;
     }else{
@@ -248,26 +307,59 @@ class Project extends Component {
             <Paper zDepth={2} >
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
                   <BottomNavigationItem
-                    label="Boards"
+                    label={"Boards"}
                     icon={<ActionDashboard />}
                     onTouchTap={() => this.select(0)}
                   />
                   <BottomNavigationItem
-                    label="Project"
-                    icon={<ActionAssignment />}
+                    label={"Project"}
+                    icon={<ActionAssessment />}
                     onTouchTap={() => this.select(1)}
                   />
                   <BottomNavigationItem
-                    label="Appointment"
-                    icon={<ActionEvent />}
+                    label={"Task"}
+                    icon={<ActionAssignment />}
                     onTouchTap={() => this.select(2)}
+                  />
+                  <BottomNavigationItem
+                    label={"Appointment"}
+                    icon={<ActionEvent />}
+                    onTouchTap={() => this.select(3)}
                   />
 
                 </BottomNavigation>
             </Paper>
             {content}
+            <Drawer width={"90%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
+              <TicketDetail ticket_sid={this.state.ticket_sid} data={this.state.data_ticket_detail} />
+            </Drawer>
           </div>
+
         </MuiThemeProvider>
+    )
+  }
+}
+
+class SectionElement extends Component {
+  render(){
+    return(
+      <Card style={{backgroundColor:'initial'}}>
+        <CardHeader style={{padding:"20px 20px 0px 20px"}}
+          title={this.props.title+" ("+this.props.data.length+")"}
+          subtitle=""
+        />
+        <CardText>
+          <div style={this.props.styles.root}>
+            <GridList cellHeight={120}
+              cols={this.props.numberColumn}
+              padding={10}
+              style={this.props.styles.gridList}
+            >
+                {this.props.box}
+            </GridList>
+          </div>
+        </CardText>
+      </Card>
     )
   }
 }

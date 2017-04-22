@@ -25,7 +25,6 @@ var Url = {
   'addChecklist':END_POINT_2+"v1/projectplan/addChecklist",
   'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
   'doChecklist':END_POINT_2+"v1/projectplan/doChecklist",
-  'removeChecklist':END_POINT_2+"v1/projectplan/removeChecklist",
   'updateChecklist':END_POINT_2+"v1/projectplan/updateChecklist",
   'appointment':END_POINT_2+"v1/servicereport/appointment",
   'checkpoint':END_POINT_2+"v1/timestampSr",
@@ -36,9 +35,10 @@ var Url = {
   'input_action':END_POINT_2+"v1/insert/input_action",
   'delete_spare_part': END_POINT_2+"v1/ticket/deleteSparePart",
   'updateProfile': END_POINT_2+"v1/user/updateProfile",
+  'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
+  'ticketDetail':END_POINT_2+"v1/moresystem/templateCaseDetail",
   'approveServiceDetail' : END_POINT_2+"v1/moresystem/templateRequestTaxiDetail",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature"
-
 }
 
 export default Url;

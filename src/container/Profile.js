@@ -249,15 +249,18 @@ class Profile extends Component {
                             </div>
                             <div style={{float:'right', width:'60%', textAlign:'left'}}>
                               {textField}
+
+                              <Divider />
+                              <div>
+                                 <br/>
+                                 <div><small style={{color:grey400}}>Signature</small></div>
+                                 {eleSignature}
+                                 <br/>
+                              </div>
+                              
                            </div>
 
-                           <Divider />
-                           <div>
-                              <br/>
-                              <div><small style={{color:grey400}}>Signature</small></div>
-                              {eleSignature}
-                              <br/>
-                           </div>
+
 
                            <div style={{clear:'both'}}></div>
                         <br/>
