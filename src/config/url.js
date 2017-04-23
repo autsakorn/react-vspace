@@ -36,7 +36,7 @@ var Url = {
   'delete_spare_part': END_POINT_2+"v1/ticket/deleteSparePart",
   'updateProfile': END_POINT_2+"v1/user/updateProfile",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
-  'ticketDetail':END_POINT_2+"v1/moresystem/templateCaseDetail",
+  'ticketDetail':END_POINT_2+"v1/projectplan/ticketDetail",
   'approveServiceDetail' : END_POINT_2+"v1/moresystem/templateRequestTaxiDetail",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature"
 }

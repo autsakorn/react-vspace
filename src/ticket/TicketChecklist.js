@@ -28,6 +28,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import Checkbox from 'material-ui/Checkbox';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
 
 class TicketChecklist extends Component {
   constructor(props){
@@ -222,14 +223,22 @@ class TicketChecklist extends Component {
     });
     return(
       <div>
-        <div><small style={{color:lightBlack}}>Check List</small></div>
+        <Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <small style={{color:lightBlack}}>Check List</small>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <List>
+                {checkListItem}
+              </List>
+              <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>{addAnItemChecklist}</div>
+            </Content>
+          </CardContent>
+        </Card>
         <br/>
-        <List>
-          {checkListItem}
-        </List>
-        <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>{addAnItemChecklist}</div>
-        <br/>
-        <Divider /><br/>
       </div>
     )
   }

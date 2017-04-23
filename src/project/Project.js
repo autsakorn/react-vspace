@@ -116,7 +116,7 @@ class Project extends Component {
       var that = this;
       get(Url.ticketDetail,formData).then(function(res){
         console.log(res);
-        that.setState({openTicketDrawer:!that.state.openTicketDrawer,ticket_sid:ticket_sid, data_ticket_detail:res.data});
+        that.setState({openTicketDrawer:!that.state.openTicketDrawer,ticket_sid:ticket_sid, data_ticket_detail:res.data,listUserCanAddProject:res.canAssignTo});
       });
     }
   }
@@ -299,7 +299,15 @@ class Project extends Component {
         <CircularProgress size={80} thickness={5} />
       </div>;
     }
-
+    var ticketDetail;
+    if(this.state.openTicketDrawer){
+      ticketDetail =
+      <Drawer width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
+        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{this.setState({openTicketDrawer:false})}} ticket_sid={this.state.ticket_sid} data={this.state.data_ticket_detail} />
+      </Drawer>
+    }else{
+      ticketDetail = <div />;
+    }
     return(
         <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
           <div>
@@ -330,9 +338,7 @@ class Project extends Component {
                 </BottomNavigation>
             </Paper>
             {content}
-            <Drawer width={"90%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
-              <TicketDetail ticket_sid={this.state.ticket_sid} data={this.state.data_ticket_detail} />
-            </Drawer>
+            {ticketDetail}
           </div>
 
         </MuiThemeProvider>

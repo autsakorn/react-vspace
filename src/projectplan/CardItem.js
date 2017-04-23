@@ -263,8 +263,9 @@ class CardItem extends Component {
               <div>{avatar}</div>
           </div>
           <Drawer onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})}
-          docked={false} width={'90%'} openSecondary={true} open={this.state.openTicketDrawer} >
+          docked={false} width={'100%'} openSecondary={true} open={this.state.openTicketDrawer} >
               <TicketDrawer
+                  onOpenTicketDrawer={()=>this.setState({openTicketDrawer:false})}
                   onChangeSubject={this.onChangeSubject}
                   onChangeStaffCase={this.handleSelectItemOwner}
                   case={this.state.item} sid={this.props.case.sid}

@@ -30,6 +30,13 @@ import Checkbox from 'material-ui/Checkbox';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import TicketChecklist from '../ticket/TicketChecklist';
 
+import AppBar from 'material-ui/AppBar';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+
+import { Columns } from 're-bulma';
+import { Column } from 're-bulma';
+import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
+
 class TicketDrawer extends Component {
   constructor(props){
       super(props);
@@ -87,7 +94,7 @@ class TicketDrawer extends Component {
   }
 
   render(){
-
+    const style = { padding: '10px' };
     const iconStyles = {
       marginRight: 24,
     };
@@ -99,6 +106,9 @@ class TicketDrawer extends Component {
       },
       style: {
         margin: 4,
+      },
+      title: {
+        cursor: 'pointer',
       },
       owner: {'textAlign':'right'},
       relative: {'position':'relative'}
@@ -147,59 +157,98 @@ class TicketDrawer extends Component {
       var control_service_report;
 
         control_manday =
-        <div>
-          <div>
-            <div><small style={{color:lightBlack}}>Estimate Man-Hours (Hours.)</small></div>
-            <div style={{'textAlign':'left'}}>
-                <TextField type="number" min={1} value={manDaysCase} onChange={this.handleManDaysCase} hintText="Man Hours" />
-            </div>
-          </div>
-          <br/>
-          <Divider />
-          <br/>
-        </div>;
+        <div><Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <div><small style={{color:lightBlack}}>Estimate Man-Hours (Hours.)</small></div>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <div style={{'textAlign':'left'}}>
+                  <TextField type="number" min={1} value={manDaysCase} onChange={this.handleManDaysCase} hintText="Man Hours" />
+              </div>
+            </Content>
+          </CardContent>
+        </Card><br/></div>;
+
 
         control_service_report =
         <div>
           <div>{jobData}</div>
-          <br/>
-          <Divider />
+        </div>;
+
+
+        var subjectControl =
+        <div>
+          <Card isFullwidth>
+            <CardHeader>
+              <CardHeaderTitle>
+                <div><small style={{color:lightBlack}}>Subject</small></div>
+              </CardHeaderTitle>
+            </CardHeader>
+            <CardContent>
+              <Content>
+                <form onSubmit={this.handleSubmit}>
+                <TextField fullWidth={true}  hintText="Subject" value={this.state.name} onChange={this.handleTxtChange} />
+                </form>
+              </Content>
+            </CardContent>
+          </Card>
           <br/>
         </div>;
-      
+
+
+      var ownerControl =
+      <div>
+        <Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <div><small style={{color:lightBlack}}>Owner</small></div>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <div style={{'height':'50px'}}>
+                {avatar}
+              </div>
+              <div style={{textAlign:'left'}}>
+                <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.state.listUserCanAddProject} />
+              </div>
+            </Content>
+          </CardContent>
+        </Card>
+      </div>
       return(
-        <div style={styles.box}>
+        <div >
+        <AppBar
+          title={<span style={styles.title}>{this.state.name}</span>}
+          iconElementLeft={<IconButton onTouchTap={()=>{this.props.onOpenTicketDrawer()}}><NavigationClose /></IconButton>}
+          />
+            <div style={styles.box}>
 
-            <div>
-              <div><small style={{color:lightBlack}}>Subject</small></div>
-              <form onSubmit={this.handleSubmit}>
-              <TextField fullWidth={true}  hintText="Subject" value={this.state.name} onChange={this.handleTxtChange} />
-              </form>
-              <br/>
-              <div>
-                <div><small style={{color:lightBlack}}>Owner</small></div>
-                  <div>
-                    <div style={{'height':'50px'}}>
-                      {avatar}
-                    </div>
-                    <div style={{textAlign:'left'}}>
-                      <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.state.listUserCanAddProject} />
-                    </div>
+            <Columns>
+              <Column size="isOneThird" style={style}>
+                  {subjectControl}
+
+                  {ownerControl}
+
+              </Column>
+              <Column style={style}>
+
+                  {control_service_report}
+
+                  {control_manday}
+
+                  {checkList}
+                  <div style={{'textAlign':'right'}}>
+                    {removing}
                   </div>
-                  <br/>
-              </div>
-              <Divider />
-              <br/>
+                  <div style={{'textAlign':'right'}}><small>Created {this.state.item.create_datetime}</small></div>
 
-              {control_service_report}
+              </Column>
+            </Columns>
 
-              {control_manday}
-
-              {checkList}
-              <div style={{'textAlign':'right'}}>
-                {removing}
-              </div>
-              <div style={{'textAlign':'right'}}><small>Created {this.state.item.create_datetime}</small></div>
             </div>
         </div>
       );
