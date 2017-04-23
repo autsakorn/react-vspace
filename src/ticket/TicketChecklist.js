@@ -234,7 +234,7 @@ class TicketChecklist extends Component {
               <List>
                 {checkListItem}
               </List>
-              <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>{addAnItemChecklist}</div>
+              <div >{addAnItemChecklist}</div>
             </Content>
           </CardContent>
         </Card>
@@ -243,4 +243,5 @@ class TicketChecklist extends Component {
     )
   }
 }
+// style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}
 export default TicketChecklist;
