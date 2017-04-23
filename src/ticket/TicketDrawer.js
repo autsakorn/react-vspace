@@ -160,7 +160,7 @@ class TicketDrawer extends Component {
         <div><Card isFullwidth>
           <CardHeader>
             <CardHeaderTitle>
-              <div><small style={{color:lightBlack}}>Estimate Man-Hours (Hours.)</small></div>
+              <small style={{color:lightBlack}}>Estimate Man-Hours (Hours.)</small>
             </CardHeaderTitle>
           </CardHeader>
           <CardContent>
@@ -184,7 +184,7 @@ class TicketDrawer extends Component {
           <Card isFullwidth>
             <CardHeader>
               <CardHeaderTitle>
-                <div><small style={{color:lightBlack}}>Subject</small></div>
+                <small style={{color:lightBlack}}>Subject</small>
               </CardHeaderTitle>
             </CardHeader>
             <CardContent>
@@ -204,7 +204,7 @@ class TicketDrawer extends Component {
         <Card isFullwidth>
           <CardHeader>
             <CardHeaderTitle>
-              <div><small style={{color:lightBlack}}>Owner</small></div>
+              <small style={{color:lightBlack}}>Owner</small>
             </CardHeaderTitle>
           </CardHeader>
           <CardContent>
