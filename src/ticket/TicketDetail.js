@@ -34,8 +34,7 @@ import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 
-import { Columns } from 're-bulma';
-import { Column } from 're-bulma';
+import { Columns,Column } from 're-bulma';
 import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
 
 class TicketDetail extends Component {
