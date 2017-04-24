@@ -61,7 +61,7 @@ class InputNew extends Component {
           </form>
         </div>;
     }else{
-      textarea = <FlatButton onClick={this.handleTextarea} label={this.state.btnName} fullWidth={true} />
+      textarea = <FlatButton onTouchTap={this.handleTextarea} label={this.state.btnName} fullWidth={true} />
     }
     return(
       <div>
