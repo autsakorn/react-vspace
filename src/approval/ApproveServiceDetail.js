@@ -54,6 +54,11 @@ class ApproveServiceDetail extends Component {
       data: this.props.data
     }
   }
+
+  handleApprove = () => {
+    console.log(this.props.data[0].tasks_sid)
+  }
+
   render(){
 
     var detailBody = [];
@@ -63,10 +68,11 @@ class ApproveServiceDetail extends Component {
         var rightIcon, dataSecondary;
         if(item.status==="300" || item.status==="600"){
           rightIcon = <ActionTaxi/>;
-          dataSecondary = item.create_datetime + "     Taxi Fare : " + item.taxi_fare
+          dataSecondary = "     Taxi Fare : " + item.taxi_fare
 
         }else{
           rightIcon = <div/>
+          dataSecondary = "";
         }
         if(item.status==="600"){
           item.service_status_name = "กลับถึงปลายทาง";
@@ -74,8 +80,8 @@ class ApproveServiceDetail extends Component {
         detailBody.push(
           <div key={i} data-id={item.sid}>
             <ListItem
-               primaryText={item.engineer_thainame+ " "+ item.service_status_name}
-               secondaryText={dataSecondary}
+               primaryText={item.engineer_thainame+ " "+ item.service_status_name }
+               secondaryText={" ( " +item.create_datetime +" ) " + dataSecondary}
                leftIcon={<ActionAlarm/>}
                rightIcon={rightIcon}
              />
@@ -89,7 +95,7 @@ class ApproveServiceDetail extends Component {
           <List>
             <Subheader>Activity log</Subheader>
             {detailBody}
-            <RaisedButton label="Approve" primary={true}  style={styles.style}/>
+            <RaisedButton label="Approve" primary={true}  style={styles.style} onTouchTap={this.handleApprove}/>
             <RaisedButton label="Pending" style={styles.style}/>
 
           </List>

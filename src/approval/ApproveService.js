@@ -18,7 +18,12 @@ import Paper from 'material-ui/Paper';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import {GridList} from 'material-ui/GridList';
 import ApproveServiceDetail from '../approval/ApproveServiceDetail';
-
+import { Columns, Column , Notification} from 're-bulma';
+import RaisedButton from 'material-ui/RaisedButton';
+import ActionSearch from 'material-ui/svg-icons/action/search';
+import IconButton from 'material-ui/IconButton';
+import moment from 'moment';
+import Chip from 'material-ui/Chip';
 
 const styles = {
   root: {
@@ -45,12 +50,24 @@ const styles = {
     height:120,
     borderRadius: '3px',
     backgroundColor:'#fff'
+  },
+
+  styleDatePickers: {
+    marginLeft:'2%',
   }
 };
 
 class ApproveService extends Component {
   constructor(props){
     super(props);
+
+    const minDate = new Date();
+    const maxDate = new Date();
+    minDate.setFullYear(minDate.getFullYear());
+    minDate.setDate(1);
+    minDate.setHours(0, 0, 0, 0);
+    maxDate.setFullYear(maxDate.getFullYear());
+    maxDate.setHours(0, 0, 0, 0);
 
     this.state = {
       // state for tabel
@@ -65,18 +82,21 @@ class ApproveService extends Component {
        showCheckboxes: false,
 
       //  state for drawer
-        open: false,
-        openSecondary:true,
+      open: false,
+      openSecondary:true,
 
+      // for DatePicker
+      minDate: minDate,
+      maxDate: maxDate,
 
-        requestTaxi:[],
+      requestTaxi:[],
 
       //state for select dropdown
-        values: [],
-        valueOwner:1,
-        valueStatus:1,
-        tasks_sid:null,
-        data_detail:[]
+      values: [],
+      valueOwner:1,
+      valueStatus:1,
+      tasks_sid:null,
+      data_detail:[]
      };
 
   }
@@ -101,12 +121,17 @@ class ApproveService extends Component {
   }
 
   componentDidMount() {
+    this.loadData();
+  }
+  loadData = () =>{
     var formData = new FormData();
     formData.append('email', InfoGen.email);
     formData.append('token', InfoGen.token);
     formData.append('type_view','active');
     formData.append('status_view','active');
     formData.append('owner','myself');
+    formData.append('start', moment(this.state.minDate).format('YYYY-MM-DD'));
+    formData.append('end',  moment(this.state.maxDate).format('YYYY-MM-DD'));
     var that = this;
     get(Url.taxiService, formData).then(function(res){
       console.log(res);
@@ -114,6 +139,35 @@ class ApproveService extends Component {
     });
   }
 
+    // handle for DatePicker
+    handleChangeMinDate = (event, date) => {
+      this.setState({
+        minDate: date,
+      });
+      this.handleSearchByDate();
+    };
+
+    handleChangeMaxDate = (event, date) => {
+      this.setState({
+        maxDate: date,
+      });
+      this.handleSearchByDate();
+    };
+
+    handleSearchByDate = () => {
+      var maxdate = moment(this.state.maxDate).format('YYYY-MM-DD');
+      var mindate = moment(this.state.minDate).format('YYYY-MM-DD');
+      this.loadData();
+      // console.log(mindate + " : " + maxdate);
+      // var tableBody = [];
+      // this.state.requestTaxi.forEach((item, i) => {
+      //
+      //   if( moment(item.create_datetime).format('YYYY-MM-DD') >= mindate || moment(item.create_datetime).format('YYYY-MM-DD')  <= maxdate);{
+      //
+      //
+      //   }
+      // });
+    };
 
 
 // handle for Drawer
@@ -139,9 +193,14 @@ class ApproveService extends Component {
           } data-id={item.sid}
         >
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
-            <div>{item.no_task}</div>
-            <div style={{color: lightBlack}}> OT : {item.overtime_expect} hr.  </div>
-            <div style={{color: lightBlack}}>Taxi Fare : {item.taxi_fare_total} BAHT</div>
+            <div>{item.no_task}<small>  ({item.appointment})</small></div>
+
+               <Chip style={styles.chip}>
+                 OT : {item.overtime_expect} hr.
+               </Chip>
+               <Chip style={styles.chip}>
+                 Taxi : {item.taxi_fare_total} BAHT.
+               </Chip>
             <div style={{color: lightBlack}}>{item.end_user_site}</div>
             <div style={{textAlign:'right', position:'absolute',right:4,bottom:22}}>
             </div>
@@ -173,6 +232,7 @@ class ApproveService extends Component {
       <MuiThemeProvider>
         <div>
               <NavCompoment info={this.props.info} />
+
               <Drawer
                   docked={false} width={'50%'}
                   open={this.state.open}
@@ -181,6 +241,30 @@ class ApproveService extends Component {
                 >
                 <ApproveServiceDetail tasks_sid={this.state.tasks_sid} data={this.state.data_detail} />
               </Drawer>
+
+              <Columns>
+                <Column size="is2" style={styles.styleDatePickers}>
+                  <DatePicker
+                      onChange={this.handleChangeMinDate}
+                      floatingLabelText="Start Date"
+                      defaultDate={this.state.minDate}
+                      style={styles.styleDatePickers}
+                      autoOk={true}
+                      maxDate={this.state.maxDate}
+                  />
+                </Column>
+                <Column size="is2" style={styles.styleDatePickers}>
+                  <DatePicker
+                      onChange={this.handleChangeMaxDate}
+                      floatingLabelText="End Date"
+                      defaultDate={this.state.maxDate}
+                      minDate={this.state.minDate}
+                      style={styles.styleDatePickers}
+                      autoOk={true}
+                  />
+                </Column>
+              </Columns>
+
 
               {elementSectionApprove}
         </div>
