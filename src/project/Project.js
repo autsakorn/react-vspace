@@ -101,8 +101,6 @@ class Project extends Component {
     });
   }
 
-
-
   generateBoxProject(){
     const styles = {
       root: {
@@ -154,7 +152,7 @@ class Project extends Component {
     that.state.projectList.forEach((tile,i) => {
       var avatarOwner = [];
       tile.owner.forEach((item,k) => {
-          avatarOwner.push(<Avatar key={k} src={item.pic_full} />);
+          avatarOwner.push(<Avatar key={item.pic_full} src={item.pic_full} />);
       });
       boxProject.push(
           <div

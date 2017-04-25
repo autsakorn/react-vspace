@@ -34,7 +34,7 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import MapsLocalTaxi from 'material-ui/svg-icons/maps/local-taxi';
 import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 import Checkbox from 'material-ui/Checkbox';
-
+import Snackbar from 'material-ui/Snackbar';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
@@ -54,6 +54,8 @@ class ServiceReportCreate extends Component {
       staff:[],
       subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"8",
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
+      openSnackbar:false,
+      messageSnackbar:''
     };
   }
   componentWillUnmount(){
@@ -92,23 +94,32 @@ class ServiceReportCreate extends Component {
   handleNext = () => {
     const {stepIndex} = this.state;
     console.log(this.state.staff);
-    if(stepIndex===2 && this.state.staff.length<1){
+    if(stepIndex===0){
+      console.log(this.state.subject);
+      if(this.state.subject.trim()!==""){
+          this.goToNext();
+      }
+    }else if(stepIndex===2 && this.state.staff.length<1){
       this.props.listUserCanAddProject.forEach((item,i)=>{
         if(item.email===localStorage.getItem("case_email")){
             var temp = [{name:item.engname, email:item.email, pic_employee:item.pic_employee}];
             this.setState({staff:temp});
         }
       });
-    }
-    if(stepIndex===3 && (this.state.end_user_name==="" || this.state.end_user_email==="")){
+    } else if(stepIndex===3 && (this.state.end_user_name==="" || this.state.end_user_email==="")){
 
     }else{
-      this.setState({
-        stepIndex: stepIndex + 1,
-        finished: stepIndex >= 4,
-      });
+      this.goToNext();
     }
   };
+
+  goToNext = () => {
+    const {stepIndex} = this.state;
+    this.setState({
+      stepIndex: stepIndex + 1,
+      finished: stepIndex >= 4,
+    });
+  }
 
   handlePrev = () => {
     const {stepIndex} = this.state;
@@ -119,6 +130,7 @@ class ServiceReportCreate extends Component {
 
   handleServiceReportCreate = () => {
     console.log(this.state);
+    this.setState({openSnackbar:true,messageSnackbar:'Appointment Creating...'});
     this.props.onCloseDialog();
     var that = this;
     var engineer = [];
@@ -156,7 +168,7 @@ class ServiceReportCreate extends Component {
     Put(Url.serviceReportCreate, formData).then(function(res){
         console.log(res);
         that.props.onCreatedService(res.task);
-        that.setState({stepIndex:0,staff:[]});
+        that.setState({stepIndex:0,staff:[],openSnackbar:false,messageSnackbar:'Appointment Created'});
     });
   }
 
@@ -362,7 +374,7 @@ class ServiceReportCreate extends Component {
       });
       request_benefit = <List> {transportationItem}</List>
       createService =
-        <div style={{maxWidth: '100%', maxHeight: 400, margin: 'auto'}}>
+        <div style={{maxWidth: '100%', margin: 'auto'}}>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
               <StepLabel>SUBJECT</StepLabel>
@@ -431,6 +443,11 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
           </Stepper>
+          <Snackbar
+            open={this.state.openSnackbar}
+            message={this.state.messageSnackbar}
+            onRequestClose={()=>{this.setState({openSnackbar:false})}}
+          />
         </div>
     }
     return(
