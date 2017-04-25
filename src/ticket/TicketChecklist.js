@@ -28,7 +28,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import Checkbox from 'material-ui/Checkbox';
 import ContentClear from 'material-ui/svg-icons/content/clear';
-import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
+import { Columns,Column,Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
 import Snackbar from 'material-ui/Snackbar';
 
 class TicketChecklist extends Component {
@@ -49,31 +49,38 @@ class TicketChecklist extends Component {
     };
   }
   handleAddNewItem = (e) => {
-    var formData = new FormData();
-    formData.append("email", InfoGen.email);
-    formData.append("token",InfoGen.token);
-    formData.append("new_checklist", this.state.newItemChecklist);
-    formData.append("ticket_sid", this.state.sid);
-    formData.append("unit", this.state.unitTime);
-    formData.append("within", this.state.newItemWithIn);
-
-    var item = this.state.item;
     var that = this;
-    Put(Url.addChecklist, formData).then(function(res){
-      if(res.checklist.result){
-        item.need_checklist = res.checklist.data;
-        that.setState({item:item,
-          newItemChecklist:"",
-          newItemWithIn:'',
-          unitTime:'Minute',
-          messageSnackbar:res.checklist.message, openSnackbar:true
-        });
-      }else{
-        that.setState({
-          messageSnackbar:res.checklist.message, openSnackbar:true
-        });
-      }
-    });
+    if(!this.state.newItemChecklist.trim()){
+      that.setState({
+        messageSnackbar:"Name Can not be null..", openSnackbar:true
+      });
+    }else{
+      var formData = new FormData();
+      formData.append("email", InfoGen.email);
+      formData.append("token",InfoGen.token);
+      formData.append("new_checklist", this.state.newItemChecklist);
+      formData.append("ticket_sid", this.state.sid);
+      formData.append("unit", this.state.unitTime);
+      formData.append("within", this.state.newItemWithIn);
+
+      var item = this.state.item;
+
+      Put(Url.addChecklist, formData).then(function(res){
+        if(res.checklist.result){
+          item.need_checklist = res.checklist.data;
+          that.setState({item:item,
+            newItemChecklist:"",
+            newItemWithIn:'',
+            unitTime:'Minute',
+            messageSnackbar:res.checklist.message, openSnackbar:true
+          });
+        }else{
+          that.setState({
+            messageSnackbar:res.checklist.message, openSnackbar:true
+          });
+        }
+      });
+    }
     e.preventDefault();
   }
   onChangeNewItemChecklist = (e) => {
@@ -166,6 +173,7 @@ class TicketChecklist extends Component {
     unitControl =
       <span>
         <CardFooter style={{marginBottom:'10px', maxWidth:'300px'}}>
+          <CardFooterItem><span style={{margin:'0px 10px'}}>Unit: </span></CardFooterItem>
           <CardFooterItem><RaisedButton label={"Minute"} onTouchTap={ ()=>{this.setState({unitTime:"Minute"})} } primary={(this.state.unitTime==="Minute")?true:false} /></CardFooterItem>
           <CardFooterItem><RaisedButton label={"Hour"} onTouchTap={ ()=>{this.setState({unitTime:"Hour"})} } primary={(this.state.unitTime==="Hour")?true:false} /></CardFooterItem>
           <CardFooterItem><RaisedButton label={"Day"} onTouchTap={ ()=>{this.setState({unitTime:"Day"})} } primary={(this.state.unitTime==="Day")?true:false} /></CardFooterItem>
@@ -177,16 +185,19 @@ class TicketChecklist extends Component {
       addAnItemChecklist =
         <div>
           <form onSubmit={this.handleAddNewItem}>
-            <div>
-              <TextField floatingLabelText="Checklist Name" onChange={this.onChangeNewItemChecklist} hintText="Add an item..." value={this.state.newItemChecklist}  />
-            </div>
-            <div>
-              <br/>
-              <div><span style={{color:lightBlack}}>Optional: Target Datetime</span></div>
-              <TextField type="number" min="0" onChange={this.onChangeNewItemWithIn} hintText="within ... from create task" value={this.state.newItemWithIn}  />
-              <span style={{margin:'0px 10px'}}>Unit: </span>
-                {unitControl}
-            </div>
+            <Columns>
+              <Column>
+                <div>
+                  <TextField floatingLabelText="Checklist Name" onChange={this.onChangeNewItemChecklist} hintText="Add an item..." value={this.state.newItemChecklist}  />
+                </div>
+              </Column>
+              <Column>
+                <div>
+                  <TextField fullWidth={true} floatingLabelText="Target Datetime" type="number" min="0" onChange={this.onChangeNewItemWithIn} hintText="Optional: ... from create task" value={this.state.newItemWithIn}  />
+                    {unitControl}
+                </div>
+              </Column>
+            </Columns>
             <div>
               <RaisedButton onTouchTap={this.handleAddNewItem} primary={true} label='Sumbit' />
               <FlatButton onTouchTap={()=>{this.setState({openAddChecklist:!this.state.openAddChecklist})} }  label={<ContentClear />}  />
@@ -207,27 +218,36 @@ class TicketChecklist extends Component {
         if(this.state.editing_sid===item.sid){
             checkListItem.push(
               <div style={{padding:0,marginTop:5}} key={i}>
-                <div style={{display:'flex'}} >
-                  <Checkbox  onTouchTap={this.handleDoChecklist} defaultChecked={defaultChecked}
-                    label={""} value={item.sid}
-                    style={{color: lightBlack, width:'initial'}}
-                  />
-                  <div style={{color:lightBlack}}>
-                    <div>
-                        <TextField onChange={this.handleChangeEditItem} hintText="Edit item..." value={this.state.editing_name} />
-                        <FlatButton secondary={true} onTouchTap={this.handleDeleteItem} >Delete</FlatButton>
+              <Columns>
+                <Column>
+                    <div  >
+                      <div style={{color:lightBlack}}>
+                        <Checkbox  onTouchTap={this.handleDoChecklist} defaultChecked={defaultChecked}
+                          label={""} value={item.sid}
+                          style={{color: lightBlack, width:'initial'}}
+                        />
+                          <TextField onChange={this.handleChangeEditItem} hintText="Edit item..." value={this.state.editing_name} />
+                          <FlatButton secondary={true} onTouchTap={this.handleDeleteItem} >Delete</FlatButton>
+                      </div>
                     </div>
+                </Column>
+                <Column>
                     <div>
-                        <TextField type="number" min="0" onChange={this.onChangeNewItemWithIn} hintText="within ... from create task" value={this.state.newItemWithIn}  />
-                        <span style={{margin:'0px 10px'}}>Unit: </span>
-                          {unitControl}
+                      <div>
+                        <div>
+                            <TextField type="number" min="0" onChange={this.onChangeNewItemWithIn} hintText="within ... from create task" value={this.state.newItemWithIn}  />
+                            <span style={{margin:'0px 10px'}}>Unit: </span>
+                              {unitControl}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div style={{marginLeft:40}}>
-                  <RaisedButton onTouchTap={this.handleUpdateEdit} primary={true} label='Sumbit' />
-                  <FlatButton onTouchTap={()=>{this.setState({openAddChecklist:false,editing_sid:''})} }  label={<ContentClear />}  />
-                </div>
+                </Column>
+              </Columns>
+
+                    <div style={{marginLeft:40}}>
+                      <RaisedButton onTouchTap={this.handleUpdateEdit} primary={true} label='Sumbit' />
+                      <FlatButton onTouchTap={()=>{this.setState({openAddChecklist:false,editing_sid:''})} }  label={<ContentClear />}  />
+                    </div>
               </div>
             )
         }else{

@@ -52,15 +52,49 @@ class TicketCreateDrawer extends Component {
       contact_user_phone:'',
       contact_user_company:'',
       staff_email:'',
+      staff_pic:'',
+      staff_thainame:'',
+      staff_engname:''
     };
+  }
+  ticketCreateToServer(){
+    var that = this;
+    var dataForCreateCase = {
+        contract_no: this.state.contract,
+        project_owner_sid: 0,
+        subject: this.state.subject,
+        detail: this.state.subject,
+        case_type: this.state.caseType,
+        enduser_case: this.state.endUserCompany,
+        enduser_address: this.state.endUserAddress,
+        urgency: this.state.urgency,
+        requester: {name: this.state.requester_name,email: this.state.requester_email,mobile: this.state.requester_mobile,phone: this.state.requester_phone,company: this.state.requester_company
+        },
+        enduser: {
+            name: this.state.contact_user_name,email: this.state.contact_user_email,mobile: this.state.contact_user_mobile,phone: this.state.contact_user_phone,company: this.state.contact_user_company
+        },
+        owner: {
+            thainame: this.state.staff_thainame,email: this.state.staff_email,mobile: "",pic: this.state.staff_pic
+        },
+        site_area: this.state.siteArea
+    };
+    var formData = new FormData();
+    formData.append('token', InfoGen.token);
+    formData.append('email', InfoGen.email);
+    formData.append('storage', JSON.stringify(dataForCreateCase));
+    Put(Url.caseCreate, formData).then(function(res) {
+        console.log('resCaseCreated', res);
+        if(res.data_res.ticket_sid){
+          that.setState({openSnackbar:true,messageSnackbar:res.message});
+          location.reload();
+        }
+    });
   }
   handleSelectItemOwner = (email, pic_employee, thainame, engname) => {
     this.setState({staff_email:email, staff_pic:pic_employee, staff_thainame:thainame, staff_engname:engname});
   }
-
   handleNext = () => {
     const {stepIndex} = this.state;
-
     if(stepIndex===0){
       if(this.state.subject){
         this.goToNext();
@@ -73,6 +107,7 @@ class TicketCreateDrawer extends Component {
       if(this.state.staff_email){
         // this.goToNext();
         console.log(this.state);
+        this.ticketCreateToServer();
       }
     }else{
       this.goToNext();
@@ -92,6 +127,7 @@ class TicketCreateDrawer extends Component {
       this.setState({stepIndex: stepIndex - 1});
     }
   };
+
   handleFindContract = () => {
     var that = this;
     if(this.state.contract.length>4){
@@ -148,12 +184,22 @@ class TicketCreateDrawer extends Component {
     this.setState({contract:e.target.value});
   }
   handleSelectProject = (contract_no,project_name,end_user_name, end_user_site) => {
-      this.setState({
-        contract:contract_no,
-        project_name:project_name,
-        endUserCompany:end_user_name,
-        endUserAddress:end_user_site
-      })
+      if(end_user_name && end_user_site){
+        this.setState({
+          contract:contract_no,
+          project_name:project_name,
+          endUserCompany:end_user_name,
+          endUserAddress:project_name,
+          openFormContractInfoManual:false
+        });
+      }else{
+        this.setState({
+          contract:contract_no,
+          project_name:project_name,
+          openFormContractInfoManual:true
+        });
+      }
+
   }
   endUserCompany = (e) => {
     this.setState({endUserCompany:e.target.value});
@@ -246,24 +292,24 @@ class TicketCreateDrawer extends Component {
       contract_no_list = <List key={"not_found_contract"}>
         <FlatButton label="Not Found" secondary={true} />
         <FlatButton label="ยืนยันใช้เลข Contract นี้" onTouchTap={()=>{this.setState({openFormContractInfoManual:!this.state.openFormContractInfoManual}) }} primary={true} />
-        <div>{formContractInfoManual}</div>
+
       </List>
     }else{
-      contract_no_list = this.state.contract_no_list.map((item,k) => (
-        <List key={k}>
-          <ListItem onTouchTap={()=>{this.handleSelectProject(item.CONTRACT_NO,item.PROJECT_NAME, item.ENDUSER_NAME, item.ENDUSER_ADDRESS)}} data-id={item.CONTRACT_NO} data-projectname={item.PROJECT_NAME} data-endusername={item.ENDUSER_NAME} data-enduseraddress={item.ENDUSER_ADDRESS}
-            primaryText={item.CONTRACT_NO}
-            secondaryText={
-              <div>
-                <div>{item.PROJECT_NAME}</div>
-                <div style={{color: darkBlack}}>{item.ENDUSER_NAME}</div>
-                <div>{item.ENDUSER_ADDRESS}</div>
-              </div>
-            }
-            secondaryTextLines={2}
-          />
-        </List>
-      ));
+        contract_no_list = this.state.contract_no_list.map((item,k) => (
+          <List key={k}>
+            <ListItem onTouchTap={()=>{this.handleSelectProject(item.CONTRACT_NO,item.PROJECT_NAME, item.ENDUSER_NAME, item.ENDUSER_ADDRESS)}} data-id={item.CONTRACT_NO} data-projectname={item.PROJECT_NAME} data-endusername={item.ENDUSER_NAME} data-enduseraddress={item.ENDUSER_ADDRESS}
+              primaryText={item.CONTRACT_NO}
+              secondaryText={
+                <div>
+                  <div>{item.PROJECT_NAME}</div>
+                  <div style={{color: darkBlack}}>{item.ENDUSER_NAME}</div>
+                  <div>{item.ENDUSER_ADDRESS}</div>
+                </div>
+              }
+              secondaryTextLines={2}
+            />
+          </List>
+        ));
     }
 
     var subjectInformation;
@@ -326,6 +372,7 @@ class TicketCreateDrawer extends Component {
         onTouchTap={this.handleFindContract}
       />
       <div>{contract_no_list}</div>
+      <div>{formContractInfoManual}</div>
     </div>
 
     var requesterContactUser;
