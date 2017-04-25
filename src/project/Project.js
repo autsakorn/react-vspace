@@ -64,15 +64,15 @@ class Project extends Component {
         showAppointment = 1;
         showTask = 1;
       }
+    }else{
+      showProject = 1;
+      showAppointment = 1;
+      showTask = 1;
     }
 
-    var data_board;
+    var data_board = {data:[],a:[],t:[]};
     if(localStorage.getItem("data_board")){
       data_board = JSON.parse(localStorage.getItem("data_board"));
-    }else{
-      data_board.data = [];
-      data_board.a = [];
-      data_board.t = [];
     }
     var listUserCanAddProject;
     if(localStorage.getItem("listUserCanAddProject")){
@@ -234,18 +234,18 @@ class Project extends Component {
   handleSelectProject(e){
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
     localStorage.removeItem("tasks_sid");
-    window.location.assign('/');
+    window.location.reload(true);
   }
   handleSelectAppointment = (tasks_sid) => {
     // alert(tasks_sid);
     localStorage.setItem("tasks_sid",tasks_sid);
     localStorage.removeItem("project_sid");
-    window.location.assign('/');
+    window.location.reload(true);
   }
 
   handleCreateNewProject = () => {
     localStorage.setItem("currectPage","ProjectCreate");
-    window.location.assign('/');
+    window.location.reload(true);
   }
   select = (index) => {
     // console.log(index);

@@ -34,7 +34,8 @@ class ControlSparePart extends Component {
     super(props);
     this.state = {sparepart:this.props.sparepart,
       old_part_number:"",old_part_serial:"",new_part_serial:"",description:"",adding_spare_part:this.props.adding_spare_part,
-      openSnackbar:false,messageSnackbar:'',will_delete_part_sid:0,willDeletePart:false
+      openSnackbar:false,messageSnackbar:'',will_delete_part_sid:0,willDeletePart:false,
+      is_number_one:this.props.is_number_one
     };
   }
   handleAddSparePart = () => {
@@ -116,6 +117,7 @@ class ControlSparePart extends Component {
     };
     var content;
     var listPart = [];
+
     this.state.sparepart.forEach((item,i)=>{
       var confirmDeletePart;
       if(item.sid===this.state.will_delete_part_sid && this.state.willDeletePart){
@@ -124,9 +126,17 @@ class ControlSparePart extends Component {
             <RaisedButton label="Close" onTouchTap={()=>{this.setState({will_delete_part_sid:0,willDeletePart:false})}} />
           </div>
       }
+      var iconDelete;
+      if(this.props.is_number_one){
+        iconDelete = <ActionDelete onTouchTap={()=>this.willDeletePart(item.sid)} style={{color:lightBlack}} />;
+      }
       listPart.push(
         <List key={item.sid} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-          <div>{"#"+(i+1)} <span style={{float:'right'}}><ActionDelete onTouchTap={()=>this.willDeletePart(item.sid)} style={{color:lightBlack}} /></span></div>
+          <div>{"#"+(i+1)}
+            <span style={{float:'right'}}>
+              {iconDelete}
+            </span>
+          </div>
           <div><small style={{color:lightBlack}}>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
           <div><small style={{color:lightBlack}}>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
           <div><small style={{color:lightBlack}}>New Part Serial: </small><small>{item.part_serial}</small></div>
@@ -135,7 +145,7 @@ class ControlSparePart extends Component {
         </List>
       )
     });
-    if(this.state.adding_spare_part){
+    if(this.state.adding_spare_part && this.props.is_number_one){
       content =
       <div style={{color:lightBlack}}>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px'}}>
@@ -610,15 +620,17 @@ export default class Appointment extends Component {
       </div>
     }
 
-    // CALL TO CLASS SPARE PART
-    var controlSparePart = <ControlSparePart sparepart={this.state.data.sparepart} tasks_sid={this.state.tasks_sid} onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
-
     // EACH STEP
     var step_start_the_task =
     <div>
       <div><small style={{color:lightBlack}}>กดปุ่ม Next ระบบจะบันทึกเวลาเริ่มงาน</small></div>
       <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
     </div>;
+
+    var warningTxt;
+    if(!this.state.data.is_number_one){
+      warningTxt = <div><small style={{color:lightBlack}}>ขั้นตอนนี้สำหรับผู้ปฎิบัติงานหลัก</small></div>;
+    }
 
     // var signNow;
     var step_end_user_signature;
@@ -627,22 +639,28 @@ export default class Appointment extends Component {
       if(this.state.btnSendSignatureToServer){
         btnSendSignatureToServer = <div><RaisedButton primary={this.state.btnSendSignatureToServer} label="Next" style={{margin:4}} onTouchTap={this.handleNext} /></div>;
       }
-      step_end_user_signature = <div style={{overflow: 'hidden',borderRight: '1px solid #eaeaea'}}>
-        <RaisedButton label="Back" onTouchTap={()=>{this.setState({openSignNow:false})}} style={{margin:4}} />
+      step_end_user_signature =
+      <div style={{overflow: 'hidden',borderRight: '1px solid #eaeaea'}}>
+        <div><RaisedButton label="Back" onTouchTap={()=>{this.setState({openSignNow:false})}} style={{margin:4}} /></div>
         <SignatureCanvas ref={(ref) => { this.sigPad = ref }} penColor='black'
         clearButton="true" style={{border:'1px solid #eaeaea'}} canvasProps={{width: 500, height: 200, className: 'sigCanvas'}} />
-        {btnSendSignatureToServer}
-        <RaisedButton label="Save" onTouchTap={this.trim} primary={!this.state.btnSendSignatureToServer} style={{margin:4}} />
-        <RaisedButton label="Clear" onTouchTap={this.clear} secondary={true} style={{margin:4}} />
-
+        <div>
+          {btnSendSignatureToServer}
+          <RaisedButton label="Save" onTouchTap={this.trim} primary={!this.state.btnSendSignatureToServer} style={{margin:4}} />
+          <RaisedButton label="Clear" onTouchTap={this.clear} secondary={true} style={{margin:4}} />
+        </div>
       </div>
     }else{
       step_end_user_signature =
        <div>
-          <RaisedButton label="SIGN NOW" onTouchTap={this.openSignNow} primary={true} style={styles.button} />
-          <RaisedButton label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
+          <div>{warningTxt}</div>
+          <RaisedButton disabled={!this.state.data.is_number_one} label="SIGN NOW" onTouchTap={this.openSignNow} primary={true} style={styles.button} />
+          <RaisedButton disabled={!this.state.data.is_number_one} label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
        </div>;
     }
+
+    // CALL TO CLASS SPARE PART
+    var controlSparePart = <ControlSparePart is_number_one={this.state.data.is_number_one} sparepart={this.state.data.sparepart} tasks_sid={this.state.tasks_sid} onAddingSparePart={this.handleAddSparePart} adding_spare_part={this.state.adding_spare_part} />;
 
     var content;
     if(this.state.data.tasks_sid){
@@ -651,24 +669,30 @@ export default class Appointment extends Component {
         btnCloseService = <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
       }
 
+      var form_input_action;
+        form_input_action =
+          <div>
+            <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
+              <div><br/>{warningTxt}<br/><small style={{color:lightBlack}}>กรอกสิ่งที่คุณทำในช่อง Action</small></div>
+              <span style={{color:lightBlack}}>
+                <TextField value={this.state.data.input_action.solution} onChange={this.handleUpdateAction}
+                  hintText="Input Action"
+                  errorText="This field is required."
+                  floatingLabelText="Action"
+                  multiLine={true}
+                  rows={2} fullWidth={true} disabled={!this.state.data.is_number_one}
+                />
+                <RaisedButton disabled={!this.state.data.is_number_one} label={"UPDATE ACTION"} primary={this.state.wait_update_action} onTouchTap={this.handleUpdateActionToServer} />
+              </span>
+            </div>
+            <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
+              {controlSparePart}
+            </div>
+          </div>;
+
       var step_input_action =
         <div>
-          <div style={{backgroundColor:'#fafbfc',padding:'0px 10px 10px 10px',marginBottom:'10px', border:'1px solid #eeeeee'}}>
-            <div><br/><br/><small style={{color:lightBlack}}>กรอกสิ่งที่คุณทำในช่อง Action</small></div>
-            <span style={{color:lightBlack}}>
-              <TextField value={this.state.data.input_action.solution} onChange={this.handleUpdateAction}
-                hintText="Input Action"
-                errorText="This field is required."
-                floatingLabelText="Action"
-                multiLine={true}
-                rows={2} fullWidth={true}
-              />
-              <RaisedButton label={"UPDATE ACTION"} primary={this.state.wait_update_action} onTouchTap={this.handleUpdateActionToServer} />
-            </span>
-          </div>
-          <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-            {controlSparePart}
-          </div>
+          {form_input_action}
           <br/>
           {btnCloseService}
         </div>;
