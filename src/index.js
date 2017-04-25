@@ -13,6 +13,12 @@ import Ticket from './ticket/Ticket';
 import Appointment from './appointment/Appointment';
 import ApproveService from './approval/ApproveService';
 
+import insertCss from 'insert-css';
+import css from 're-bulma/build/css';
+try {
+  if (typeof document !== 'undefined' || document !== null) insertCss(css, { prepend: true });
+} catch (e) {}
+
 initReactFastclick();
 
 import './index.css';

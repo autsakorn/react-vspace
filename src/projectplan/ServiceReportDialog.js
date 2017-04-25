@@ -18,6 +18,7 @@ import Avatar from 'material-ui/Avatar';
 import SocialSentimentNeutral from 'material-ui/svg-icons/social/sentiment-neutral';
 import SocialMood from 'material-ui/svg-icons/social/mood';
 import Drawer from 'material-ui/Drawer';
+import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
 // import ContentAdd from 'material-ui/svg-icons/content/add';
 class ServiceReportDialog extends Component {
   constructor(props){
@@ -129,18 +130,30 @@ class ServiceReportDialog extends Component {
     }
 
     chipServiceReport.push(<Chip key={-1} onTouchTap={this.handleOpen} style={styles.chip}><Avatar color="#fff" icon={<ContentAdd />} />Add</Chip>);
-    //<i> จำนวน {this.state.serviceReport.length}</i>
+
     const label = <div><div style={{display:'flex',flexWrap:'wrap',float:'left'}}>{chipServiceReport}</div><div style={{clear:'both'}}></div></div>;
+
+    var viewAppointment = <span onTouchTap={()=>{this.setState({open:true,creatingService:false}) }}>({this.state.serviceReport.length}) view</span>
     return (
       <div>
-        <div><small style={{color:lightBlack}}>Appointment ({this.state.serviceReport.length})</small></div><div style={{textAlign:'right'}}>{label}</div>
-
-        <Drawer openSecondary={true} width={'80%'} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
-            <div style={{minHeight:'200px'}}>
-              {listServiceReport}
-            </div>
-        </Drawer>
-
+        <Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <small style={{color:lightBlack}}>Appointment {viewAppointment}</small>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <div style={{textAlign:'right'}}>{label}</div>
+              <Drawer openSecondary={true} width={'90%'} open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
+                  <div style={{minHeight:'200px'}}>
+                    {listServiceReport}
+                  </div>
+              </Drawer>
+            </Content>
+          </CardContent>
+        </Card>
+        <br/>
       </div>
     );
   }

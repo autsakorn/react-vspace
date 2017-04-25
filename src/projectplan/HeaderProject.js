@@ -12,6 +12,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import HardwareKeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import HardwareKeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import Paper from 'material-ui/Paper';
+import { Columns, Column } from 're-bulma';
 
 class HeaderProject extends Component {
   constructor(props){
@@ -64,56 +65,114 @@ class HeaderProject extends Component {
     }else{
       showMore = <HardwareKeyboardArrowDown />
     }
-    if(window.innerWidth<376){
-      columns = 1;
-      styles = {
-        header: {
-          margin:'0px 10px'
-        },
-        card: {
-          'padding': '8px',
-          'border': '1px solid rgb(217, 217, 217)',
-          'background': '#fafbfc',
-          'borderRadius': '3px'
-        },
-        root: {
-           display: 'initial'
-         },
-         gridList: {
-           width: '100%',
-           height: 'initial',
-          //  overflowY: 'auto',
-         },
-         box: {
-           textAlign: 'left'
-         },
-         oneColumnStyle: {
-           height:cellHeight,
-           overflowY: 'auto'
-         }
-      }
-      projectHeader =
-        <div style={styles.oneColumnStyle}>
-            <div style={{float:'right'}}>
-              <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span></div>
-            <div>
-              <div>
-                <div><span >{this.state.projectInfo.name}</span></div>
-                <div><small style={{color:lightBlack}} >{this.state.projectInfo.contract_no}</small></div>
-                <div><span >{this.state.projectInfo.end_user}</span></div>
-                <div><small style={{color:lightBlack}} >{this.state.projectInfo.end_user_address}</small></div>
+    // if(window.innerWidth<376){
+    //   columns = 1;
+    //   styles = {
+    //     header: {
+    //       margin:'0px 10px'
+    //     },
+    //     card: {
+    //       'padding': '8px',
+    //       'border': '1px solid rgb(217, 217, 217)',
+    //       'background': '#fafbfc',
+    //       'borderRadius': '3px'
+    //     },
+    //     root: {
+    //        display: 'initial'
+    //      },
+    //      gridList: {
+    //        width: '100%',
+    //        height: 'initial',
+    //       //  overflowY: 'auto',
+    //      },
+    //      box: {
+    //        textAlign: 'left'
+    //      },
+    //      oneColumnStyle: {
+    //        height:cellHeight,
+    //        overflowY: 'auto'
+    //      }
+    //   }
+    //   projectHeader =
+    //     <div style={styles.oneColumnStyle}>
+    //         <div style={{float:'right'}}>
+    //           <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span></div>
+    //         <div>
+    //           <div>
+    //             <div><span >{this.state.projectInfo.name}</span></div>
+    //             <div><small style={{color:lightBlack}} >{this.state.projectInfo.contract_no}</small></div>
+    //             <div><span >{this.state.projectInfo.end_user}</span></div>
+    //             <div><small style={{color:lightBlack}} >{this.state.projectInfo.end_user_address}</small></div>
+    //
+    //             <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
+    //           </div>
+    //           <div>
+    //               <div><ProjectOwner projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
+    //            </div>
+    //            <div style={{textAlign:'left',clear:'both'}}>
+    //               {contractUser}
+    //            </div>
+    //         </div>
+    //     </div>;
+    // }else{
+    //   columns = 3;
+    //   styles = {
+    //     header: {
+    //       margin:'0px 10px'
+    //     },
+    //     card: {
+    //       // 'padding': '8px',
+    //       'border': '1px solid rgb(217, 217, 217)',
+    //       'background': '#fafbfc',
+    //       'borderRadius': '3px'
+    //     },
+    //     root: {
+    //       //  display: 'flex',
+    //       //  flexWrap: 'wrap',
+    //       //  justifyContent: 'space-around',
+    //      },
+    //      gridList: {
+    //        width: '99%',
+    //       //  marginTop:'-20px',
+    //        zIndex: '10'
+    //       //  height: 'initial',
+    //       // height:' auto',
+    //       //  overflowY: 'auto',
+    //      },
+    //      box: {
+    //        textAlign: 'center'
+    //      }
+    //   }
+    //   projectHeader =
+    //     <Paper zDepth={2} style={styles.root}>
+    //       <div>
+    //         <div style={{overflow:'hidden', padding:10}}>
+    //         <div style={{width:'1%',float:'right','marginTop':'-10px',zIndex:'1000'}}>
+    //           <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
+    //         </div>
+    //           <GridList cellHeight={cellHeight}  cols={columns} style={styles.gridList} >
+    //               <div >
+    //                 <div><span >{this.state.projectInfo.name}</span></div>
+    //
+    //                 <div><small style={{color:lightBlack}} >{this.state.projectInfo.contract_no}</small></div>
+    //                 <div><span >{this.state.projectInfo.end_user}</span></div>
+    //                 <div><small style={{color:lightBlack}} >{this.state.projectInfo.end_user_address}</small></div>
+    //
+    //                 <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
+    //               </div>
+    //               <div style={styles.box}>
+    //                   <div><ProjectOwner onShowMore={this.handleOpenShowMore} projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
+    //                </div>
+    //                <div>
+    //                   <div>{contractUser}</div>
+    //                </div>
+    //           </GridList>
+    //
+    //         </div>
+    //       </div>
+    //     </Paper>;
+    // }
 
-                <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
-              </div>
-              <div>
-                  <div><ProjectOwner projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
-               </div>
-               <div style={{textAlign:'left',clear:'both'}}>
-                  {contractUser}
-               </div>
-            </div>
-        </div>;
-    }else{
       columns = 3;
       styles = {
         header: {
@@ -142,36 +201,35 @@ class HeaderProject extends Component {
            textAlign: 'center'
          }
       }
-      projectHeader =
-        <Paper zDepth={2} style={styles.root}>
-          <div>
-            <div style={{overflow:'hidden', padding:10}}>
-            <div style={{width:'1%',float:'right','marginTop':'-10px',zIndex:'1000'}}>
-              <span onTouchTap={()=>{this.setState({showMore:!this.state.showMore}) }}><small>{showMore}</small></span>
-            </div>
-              <GridList cellHeight={cellHeight}  cols={columns} style={styles.gridList} >
+    projectHeader =
+      <Paper zDepth={2} style={styles.root}>
+        <div>
+          <div style={{overflow:'hidden', padding:10}}>
+            <small>
+              <Columns>
+                <Column>
                   <div >
-                    <div><span >{this.state.projectInfo.name}</span></div>
-
-                    <div><small style={{color:lightBlack}} >{this.state.projectInfo.contract_no}</small></div>
+                    <div><span >{this.state.projectInfo.name}</span> <small style={{color:lightBlack}} >{this.state.projectInfo.contract_no}</small></div>
                     <div><span >{this.state.projectInfo.end_user}</span></div>
                     <div><small style={{color:lightBlack}} >{this.state.projectInfo.end_user_address}</small></div>
-
                     <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
                   </div>
+                </Column>
+                <Column>
                   <div style={styles.box}>
                       <div><ProjectOwner onShowMore={this.handleOpenShowMore} projectInfo={this.state.projectInfo} listUserCanAdd={this.props.listUserCanAdd} projectOwner={this.state.projectOwner} /></div>
                    </div>
+                </Column>
+                <Column>
                    <div>
                       <div>{contractUser}</div>
                    </div>
-              </GridList>
-
-            </div>
+                 </Column>
+              </Columns>
+            </small>
           </div>
-        </Paper>
-        ;
-    }
+        </div>
+      </Paper>;
 
     return(
       <div className="board-header" style={styles.header}>

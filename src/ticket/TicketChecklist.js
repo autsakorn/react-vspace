@@ -28,6 +28,8 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import Checkbox from 'material-ui/Checkbox';
 import ContentClear from 'material-ui/svg-icons/content/clear';
+import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
+import Snackbar from 'material-ui/Snackbar';
 
 class TicketChecklist extends Component {
   constructor(props){
@@ -42,6 +44,8 @@ class TicketChecklist extends Component {
       status:'Normal',
       editing_sid:'',
       editing_name:'',
+      openSnackbar:false,
+      messageSnackbar:''
     };
   }
   handleAddNewItem = (e) => {
@@ -56,12 +60,19 @@ class TicketChecklist extends Component {
     var item = this.state.item;
     var that = this;
     Put(Url.addChecklist, formData).then(function(res){
-      item.need_checklist = res.checklist;
-      that.setState({item:item,
-        newItemChecklist:"",
-        newItemWithIn:'',
-        unitTime:'Minute'
-      });
+      if(res.checklist.result){
+        item.need_checklist = res.checklist.data;
+        that.setState({item:item,
+          newItemChecklist:"",
+          newItemWithIn:'',
+          unitTime:'Minute',
+          messageSnackbar:res.checklist.message, openSnackbar:true
+        });
+      }else{
+        that.setState({
+          messageSnackbar:res.checklist.message, openSnackbar:true
+        });
+      }
     });
     e.preventDefault();
   }
@@ -81,8 +92,10 @@ class TicketChecklist extends Component {
     formData.append("token",InfoGen.token);
     formData.append("checklist_sid", e.target.value);
     formData.append("value",value);
+    var that = this;
     Put(Url.doChecklist, formData).then(function(res){
       console.log(res);
+      that.setState({messageSnackbar:res.data.result.message, openSnackbar:true});
     });
   }
   handleChangeEditItem = (e) => {
@@ -108,11 +121,18 @@ class TicketChecklist extends Component {
       var that = this;
       Put(Url.updateChecklist, formData).then(function(res){
         console.log(res);
-        item.need_checklist = res.checklist;
-        that.setState({
-          item:item, newItemChecklist:"",newItemWithIn:'',
-          unitTime:'Minute',editing_sid:'',editing_name:''
-        });
+        if(res.checklist.result){
+            item.need_checklist = res.checklist.data;
+            that.setState({
+              item:item, newItemChecklist:"",newItemWithIn:'',
+              unitTime:'Minute',editing_sid:'',editing_name:'',
+              messageSnackbar:res.checklist.message, openSnackbar:true
+            });
+        }else{
+          that.setState({
+            messageSnackbar:res.checklist.message, openSnackbar:true
+          });
+        }
       });
   }
   handleDeleteItem = () => {
@@ -126,8 +146,14 @@ class TicketChecklist extends Component {
       var that = this;
       Put(Url.removeChecklist, formData).then(function(res){
         console.log(res);
-        item.need_checklist = res.checklist;
-        that.setState({item:item, newItemChecklist:""});
+        if(res.checklist.result){
+          item.need_checklist = res.checklist.data;
+          that.setState({item:item, newItemChecklist:"",messageSnackbar:res.checklist.message, openSnackbar:true});
+        }else{
+          that.setState({
+            messageSnackbar:res.checklist.message, openSnackbar:true
+          });
+        }
       });
     }
   }
@@ -139,9 +165,11 @@ class TicketChecklist extends Component {
 
     unitControl =
       <span>
-        <RaisedButton label={"Minute"} onTouchTap={ ()=>{this.setState({unitTime:"Minute"})} } primary={(this.state.unitTime==="Minute")?true:false} />
-        <RaisedButton label={"Hour"} onTouchTap={ ()=>{this.setState({unitTime:"Hour"})} } primary={(this.state.unitTime==="Hour")?true:false} />
-        <RaisedButton label={"Day"} onTouchTap={ ()=>{this.setState({unitTime:"Day"})} } primary={(this.state.unitTime==="Day")?true:false} />
+        <CardFooter style={{marginBottom:'10px', maxWidth:'300px'}}>
+          <CardFooterItem><RaisedButton label={"Minute"} onTouchTap={ ()=>{this.setState({unitTime:"Minute"})} } primary={(this.state.unitTime==="Minute")?true:false} /></CardFooterItem>
+          <CardFooterItem><RaisedButton label={"Hour"} onTouchTap={ ()=>{this.setState({unitTime:"Hour"})} } primary={(this.state.unitTime==="Hour")?true:false} /></CardFooterItem>
+          <CardFooterItem><RaisedButton label={"Day"} onTouchTap={ ()=>{this.setState({unitTime:"Day"})} } primary={(this.state.unitTime==="Day")?true:false} /></CardFooterItem>
+        </CardFooter>
       </span>;
 
     var addAnItemChecklist;
@@ -208,13 +236,13 @@ class TicketChecklist extends Component {
               withinShow = <span style={{marginLeft:15}}>({item.within} {item.unit}) <small style={{marginLeft:15,float:'right'}}>Target {item.target_datetime}</small></span>;
             }
             checkListItem.push(
-                <div style={{padding:0,marginTop:5}} key={i} onTouchTap={()=>this.handleTouchItem(item.sid, item.name, item.within, item.unit)}>
+                <div style={{padding:0,marginTop:5}} key={i} >
                   <div style={{display:'flex'}} >
                     <Checkbox  onTouchTap={this.handleDoChecklist} defaultChecked={defaultChecked}
                       label={""} value={item.sid}
                       style={{color: lightBlack, width:'initial'}}
                     />
-                    <div style={{color:lightBlack}}><span>{item.name}</span> {withinShow}</div>
+                    <div style={{color:lightBlack}} onTouchTap={()=>this.handleTouchItem(item.sid, item.name, item.within, item.unit)}><span>{item.name}</span> {withinShow}</div>
                   </div>
                 </div>
             )
@@ -222,16 +250,32 @@ class TicketChecklist extends Component {
     });
     return(
       <div>
-        <div><small style={{color:lightBlack}}>Check List</small></div>
+        <Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <small style={{color:lightBlack}}>Check List</small>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <List>
+                {checkListItem}
+              </List>
+              <div >{addAnItemChecklist}</div>
+            </Content>
+          </CardContent>
+        </Card>
         <br/>
-        <List>
-          {checkListItem}
-        </List>
-        <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>{addAnItemChecklist}</div>
-        <br/>
-        <Divider /><br/>
+        <Snackbar
+          open={this.state.openSnackbar}
+          message={this.state.messageSnackbar}
+          autoHideDuration={4000}
+          onRequestClose={() => {this.setState({openSnackbar: false,})} }
+        />
       </div>
     )
   }
 }
+// style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}
+
 export default TicketChecklist;

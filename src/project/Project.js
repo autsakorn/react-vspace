@@ -39,11 +39,9 @@ import ActionDashboard from 'material-ui/svg-icons/action/dashboard';
 import CircularProgress from 'material-ui/CircularProgress';
 import Badge from 'material-ui/Badge';
 import TicketDrawer from '../ticket/TicketDrawer';
-import TicketDetail from '../ticket/TicketDetail';
-
+import TicketItem from '../ticket/TicketItem';
+import TicketCreate from '../ticket/TicketCreate';
 import Drawer from 'material-ui/Drawer';
-
-
 class Project extends Component {
   constructor(props){
     var showProject,showAppointment,showTask;
@@ -103,23 +101,7 @@ class Project extends Component {
     });
   }
 
-  handleOpenTicketDrawer = (ticket_sid) => {
-    this.callDataTicket(ticket_sid);
 
-  }
-  callDataTicket(ticket_sid){
-    if(this.props.ticket_sid!==null){
-      var formData = new FormData();
-      formData.append("email", InfoGen.email);
-      formData.append("token", InfoGen.token);
-      formData.append("ticket_sid", ticket_sid);
-      var that = this;
-      get(Url.ticketDetail,formData).then(function(res){
-        console.log(res);
-        that.setState({openTicketDrawer:!that.state.openTicketDrawer,ticket_sid:ticket_sid, data_ticket_detail:res.data});
-      });
-    }
-  }
 
   generateBoxProject(){
     const styles = {
@@ -207,18 +189,15 @@ class Project extends Component {
 
 
     var task = [];
+    if(this.state.info.project_create_able==="2"){
+      task.push(<TicketCreate listUserCanAddProject={this.state.listUserCanAddProject} key={"ticket-created"} />);
+    }
     this.state.task.forEach((item,i)=>{
-      task.push(
-        <div key={i+item.sid} onTouchTap={()=>{this.handleOpenTicketDrawer(item.sid)}} style={styles.styleBorder}>
-          <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
-            <div>{item.subject}</div>
-            <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
-            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small></small></div>
-
-          </Paper>
-        </div>
-      )
+        task.push(
+          <TicketItem item={item} listUserCanAddProject={this.state.listUserCanAddProject} key={item.sid+i} />
+        )
     });
+
     var elementSectionTask =
     <div><SectionElement title="Task" data={this.state.task} box={task} numberColumn={numberColumn} styles={styles} />
 
@@ -244,7 +223,7 @@ class Project extends Component {
     location.reload();
   }
   select = (index) => {
-    console.log(index);
+    // console.log(index);
     this.setState({selectedIndex: index});
     localStorage.setItem("selectedIndex",index);
     this.setShow(index);
@@ -299,7 +278,12 @@ class Project extends Component {
         <CircularProgress size={80} thickness={5} />
       </div>;
     }
+    var ticketDetail;
+    if(this.state.openTicketDrawer){
 
+    }else{
+      ticketDetail = <div />;
+    }
     return(
         <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
           <div>
@@ -330,9 +314,7 @@ class Project extends Component {
                 </BottomNavigation>
             </Paper>
             {content}
-            <Drawer width={"90%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
-              <TicketDetail ticket_sid={this.state.ticket_sid} data={this.state.data_ticket_detail} />
-            </Drawer>
+            {ticketDetail}
           </div>
 
         </MuiThemeProvider>
