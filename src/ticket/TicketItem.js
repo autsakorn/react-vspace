@@ -26,7 +26,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Badge from 'material-ui/Badge';
 import TicketDrawer from '../ticket/TicketDrawer';
 import TicketDetail from '../ticket/TicketDetail';
-
+import { Columns,Column } from 're-bulma';
 import Drawer from 'material-ui/Drawer';
 
 
@@ -82,13 +82,21 @@ class TicketItem extends Component {
         <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
       </Drawer>
     }
-    return(
 
+    var avatarCreated = <Avatar src={item.created_pic_full} />;
+
+    var avatarOwner = <Avatar style={{width:'90%', height:'initial'}} src={item.pic_full} />;
+    return(
       <div style={styles.styleBorder}>
         <Paper onTouchTap={this.handleOpenTicketDrawer} zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
+          <Column style={{width:'30%',float: 'left',marginTop: 0,paddingTop: 0}}>
+            {avatarOwner}
+          </Column>
           <div>{item.subject}</div>
           <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
-          <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small></small></div>
+          <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}>
+            <small style={{fontSize:'12px'}}>Created {item.create_datetime}</small>
+          </div>
         </Paper>
         {ticketDetail}
       </div>

@@ -33,7 +33,9 @@ class ControlSparePart extends Component {
   constructor(props){
     super(props);
     this.state = {sparepart:this.props.sparepart,
-      old_part_number:"",old_part_serial:"",new_part_serial:"",description:"",adding_spare_part:this.props.adding_spare_part};
+      old_part_number:"",old_part_serial:"",new_part_serial:"",description:"",adding_spare_part:this.props.adding_spare_part,
+      openSnackbar:false,messageSnackbar:'',will_delete_part_sid:0,willDeletePart:false
+    };
   }
   handleAddSparePart = () => {
     this.setState({adding_spare_part:!this.state.adding_spare_part});
@@ -52,7 +54,7 @@ class ControlSparePart extends Component {
   }
   addPart = () => {
     var formData = new FormData();
-    this.setState({adding_spare_part:false});
+    this.setState({adding_spare_part:false,openSnackbar:true,messageSnackbar:'Adding...'});
     formData.append("email", InfoGen.email);
     formData.append("token", InfoGen.token);
     formData.append("part_number_defective",this.state.old_part_number);
@@ -79,12 +81,15 @@ class ControlSparePart extends Component {
         old_part_number:"",
         old_part_serial:"",
         new_part_serial:"",
-        description:""
+        description:"",
+        openSnackbar:false
       });
     });
   }
+  willDeletePart = (sparepart_sid) => {
+    this.setState({will_delete_part_sid:sparepart_sid,willDeletePart:true});
+  }
   deletePart = (sparepart_sid) => {
-    if(confirm("Are you sure Delete?")){
       var formData = new FormData();
       formData.append("email", InfoGen.email);
       formData.append("token", InfoGen.token);
@@ -104,7 +109,6 @@ class ControlSparePart extends Component {
           });
         }
       });
-    }
   }
   render(){
     const styles = {
@@ -113,13 +117,21 @@ class ControlSparePart extends Component {
     var content;
     var listPart = [];
     this.state.sparepart.forEach((item,i)=>{
+      var confirmDeletePart;
+      if(item.sid===this.state.will_delete_part_sid && this.state.willDeletePart){
+          confirmDeletePart = <div>
+            <RaisedButton secondary={true} label="Confirm Delete" onTouchTap={()=>this.deletePart(this.state.will_delete_part_sid)} style={{margin:4}} />
+            <RaisedButton label="Close" onTouchTap={()=>{this.setState({will_delete_part_sid:0,willDeletePart:false})}} />
+          </div>
+      }
       listPart.push(
         <List key={item.sid} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
-          <div>{"#"+(i+1)} <span style={{float:'right'}}><ActionDelete onTouchTap={()=>this.deletePart(item.sid)} style={{color:lightBlack}} /></span></div>
+          <div>{"#"+(i+1)} <span style={{float:'right'}}><ActionDelete onTouchTap={()=>this.willDeletePart(item.sid)} style={{color:lightBlack}} /></span></div>
           <div><small style={{color:lightBlack}}>Defective Part Number: </small><small>{item.part_number_defective}</small></div>
           <div><small style={{color:lightBlack}}>Defective Part Serial: </small><small>{item.part_serial_defective}</small></div>
           <div><small style={{color:lightBlack}}>New Part Serial: </small><small>{item.part_serial}</small></div>
           <div><small style={{color:lightBlack}}>Description: </small><small>{item.description}</small></div>
+          <div>{confirmDeletePart}</div>
         </List>
       )
     });
@@ -143,10 +155,16 @@ class ControlSparePart extends Component {
     }else{
       content = <div onTouchTap={this.handleAddSparePart} style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee', marginBottom:'10px',color:lightBlack}}><small>Add Spare Part . . .</small> <small style={{color:lightBlack}}>หากมีการเปลี่ยน Spare ทำการกรอกในส่วนนี้</small></div>;
     }
+
     return(
       <div>
         <div>Spare Part<br/><br/></div>
         {listPart}<br/>{content}
+        <Snackbar
+          open={this.state.openSnackbar}
+          message={this.state.messageSnackbar}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     )
   }

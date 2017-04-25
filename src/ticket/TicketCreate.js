@@ -86,7 +86,7 @@ class TicketCreate extends Component {
       ticketDetail =
       <Drawer width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
           <AppBar
-            title={<span style={styles.title}>{"Create New Ticket"}</span>}
+            title={<span style={styles.title}>{"Create New Task"}</span>}
             iconElementLeft={<IconButton onTouchTap={()=>{this.setState({openTicketDrawer:false})} }><NavigationClose /></IconButton>}
             />
             <div>
