@@ -110,7 +110,8 @@ class TicketDetail extends Component {
       title: {
         cursor: 'pointer',
       },
-      relative: {'position':'relative'}
+      relative: {'position':'relative'},
+      button: {margin:4,padding:4}
     }
     const style = { padding: '10px' };
 
@@ -178,6 +179,58 @@ class TicketDetail extends Component {
 
       var checkList = <TicketChecklist sid={data.sid} item={data} />;
 
+
+      var SLA;
+      var slaRow = [];
+      if(data.sla_remedy_array && data.sla_remedy_array.length>0){
+        console.log(data.sla_remedy_array);
+        slaRow.push(
+          <CardFooter key={-1} style={{marginBottom:'10px', width:'100%'}}>
+            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>SLA Name</span></CardFooterItem>
+            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Due Datetime</span></CardFooterItem>
+            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Status</span></CardFooterItem>
+          </CardFooter>
+        );
+        data.sla_remedy_array.forEach((item,i)=>{
+          slaRow.push(
+              <CardFooter key={i} style={{marginBottom:'10px', width:'100%'}}>
+                <CardFooterItem style={{overflow:'hidden'}}>{item.name}</CardFooterItem>
+                <CardFooterItem style={{overflow:'hidden'}}>{item.due_datetime}</CardFooterItem>
+                <CardFooterItem style={{overflow:'hidden'}}>{item.status}</CardFooterItem>
+              </CardFooter>
+          )
+        });
+        slaRow.push(
+          <CardFooter key={-2} style={{marginBottom:'10px', width:'100%'}}>
+            <CardFooterItem>
+              <Columns>
+                <Column>
+                  <RaisedButton style={styles.button}>Response</RaisedButton>
+                  <RaisedButton style={styles.button}>Onsite</RaisedButton>
+
+                  <RaisedButton style={styles.button}>No Onsite</RaisedButton>
+                  <RaisedButton style={styles.button}>No Workaround</RaisedButton>
+
+                  <RaisedButton style={styles.button}>Workaround</RaisedButton>
+                  <RaisedButton style={styles.button}>Pending</RaisedButton>
+                  <RaisedButton style={styles.button}>Resolve</RaisedButton>
+                </Column>
+              </Columns>
+            </CardFooterItem>
+          </CardFooter>
+        );
+
+
+        SLA =
+        <Card style={{width:'100%'}}>
+          <CardHeader>
+            <CardHeaderTitle>
+              <small style={{color:lightBlack}}>SLA (Call Center Department)</small>
+            </CardHeaderTitle>
+          </CardHeader>
+          {slaRow}
+        </Card>
+      }
       return(
         <div >
         <AppBar
@@ -187,7 +240,6 @@ class TicketDetail extends Component {
             <div style={styles.box}>
                 <Columns>
                   <Column size="isOneThird" style={style}>
-
                     <Card isFullwidth>
                       <CardHeader>
                         <CardHeaderTitle>
@@ -197,17 +249,25 @@ class TicketDetail extends Component {
                       <CardContent>
                         <Content>
                           <small style={{color:lightBlack}}>
-                            <div>{data.contract_no}</div>
-                            <div>{data.urgency}</div>
-                            <div>{data.case_type}</div>
-                            <div>{data.end_user}</div>
-                            <div>{data.end_user_site}</div>
-                            <div>{data.end_user_contact_name}</div>
-                            <div>{data.end_user_email}</div>
-                            <div>{data.end_user_mobile}</div>
-                            <div>{data.end_user_phone}</div>
-                            <div>{data.end_user_company_name}</div>
+                            <div><label>No.:</label> <div style={{float:'right'}}>{data.no_ticket} <small style={{color:grey400}}>{data.refer_remedy_hd}</small></div></div>
+                            <div><label>Contract:</label> <div style={{float:'right'}}>{data.contract_no}</div></div>
+                            <div><label>Urgency:</label> <div style={{float:'right'}}>{data.urgency}</div></div>
+                            <div><label>Type:</label> <div style={{float:'right'}}>{data.case_type}</div></div>
+                            <div><label>End User:</label> <div style={{float:'right'}}>{data.end_user}</div></div>
+                            <div><label>Site:</label> <div style={{float:'right'}}>{data.end_user_site}</div></div>
+                            <div style={{clear:'both'}}></div>
                           </small>
+                        </Content>
+                            <Divider />
+                        <Content>
+                            <br/>
+                            <div>Contact User</div>
+                            <div><label>Name:</label> <div style={{float:'right'}}>{data.end_user_contact_name}</div></div>
+                            <div><label>Email:</label> <div style={{float:'right'}}>{data.end_user_email}</div></div>
+                            <div><label>Mobile:</label> <div style={{float:'right'}}>{data.end_user_mobile}</div></div>
+                            <div><label>Phone:</label> <div style={{float:'right'}}>{data.end_user_phone}</div></div>
+                            <div><label>Company:</label> <div style={{float:'right'}}>{data.end_user_company_name}</div></div>
+                            <div style={{clear:'both'}}></div>
                         </Content>
                       </CardContent>
                     </Card>
@@ -216,15 +276,17 @@ class TicketDetail extends Component {
                   </Column>
                   <Column style={style}>
 
-
                     {control_service_report}
 
                     {control_manday}
 
                     {checkList}
-                  </Column>
-                </Columns>
 
+                    {SLA}
+                  </Column>
+
+                </Columns>
+                <div style={{'textAlign':'right'}}><small>Created {data.create_datetime}</small></div>
             </div>
         </div>
       );
