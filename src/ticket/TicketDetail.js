@@ -121,7 +121,13 @@ class TicketDetail extends Component {
 
       var avatar;
       var labelOwnerCase = (data.owner_thainame)?(data.owner_thainame):'Owner?';
-      avatar = <div style={styles.relative}><Avatar src={data.pic_full} /> <small style={{color:lightBlack,'position':'absolute','top':'5px','left':'45px'}}>{labelOwnerCase}</small></div>;
+      var picAvatar;
+      if(data.pic_full){
+        picAvatar = <Avatar src={data.pic_full} />
+      }else{
+        picAvatar = <Avatar>{data.owner.toUpperCase().charAt(0)+''+data.owner.toUpperCase().charAt(1)}</Avatar>
+      }
+      avatar = <div style={styles.relative}>{picAvatar}<small style={{color:lightBlack,'position':'absolute','top':'5px','left':'45px'}}>{labelOwnerCase}</small></div>;
 
       var owner =
       <Card isFullwidth>

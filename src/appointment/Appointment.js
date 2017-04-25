@@ -24,7 +24,7 @@ import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import {List, ListItem} from 'material-ui/List';
 import Snackbar from 'material-ui/Snackbar';
-
+import SignatureCanvas from 'react-signature-canvas'
 // import Moment from 'react-moment';
 import moment from 'moment';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
@@ -188,7 +188,10 @@ export default class Appointment extends Component {
       adding_spare_part:false,
       wait_update_action: false,
       taxi_fare:0,
-      openSnackbar:false
+      openSnackbar:false,
+      openSignNow:false,
+      trimmedDataURL:'',
+      btnSendSignatureToServer:false
     }
     this.styles = {
       row: {padding:10}
@@ -260,6 +263,7 @@ export default class Appointment extends Component {
     formData.append("taxi_fare_stang",'0');
     formData.append("lat",0);
     formData.append("lng",0);
+    formData.append("signature",this.state.trimmedDataURL);
     Put(Url.checkpoint, formData).then(function(res){
       console.log(res);
       if(res.error){
@@ -510,6 +514,29 @@ export default class Appointment extends Component {
   handleUpdateTaxi = (e) => {
     this.setState({taxi_fare:e.target.value});
   }
+  openSignNow = () => {
+    this.setState({openSignNow:true});
+  }
+
+  sigPad = {}
+  clear = () => {
+    this.sigPad.clear()
+    this.setState({btnSendSignatureToServer:false,trimmedDataURL:''})
+  }
+  trim = () => {
+    try{
+      if(this.sigPad.getTrimmedCanvas){
+        console.log(this.sigPad.getTrimmedCanvas().toDataURL('image/png'));
+        var that = this;
+        this.setState({trimmedDataURL: this.sigPad.getTrimmedCanvas().toDataURL('image/png'),btnSendSignatureToServer:true});
+        console.log(this.state);
+
+        // that.handleNext();
+      }
+    }catch(e){
+      console.log(e);
+    }
+  }
   render(){
     const styles = {
       button: {margin: 12}
@@ -593,10 +620,29 @@ export default class Appointment extends Component {
       <RaisedButton label="Next" onTouchTap={this.handleNext} primary={true} style={styles.button} />
     </div>;
 
-    var step_end_user_signature =
-    <div>
-      <RaisedButton label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
-    </div>;
+    // var signNow;
+    var step_end_user_signature;
+    if(this.state.openSignNow){
+      var btnSendSignatureToServer;
+      if(this.state.btnSendSignatureToServer){
+        btnSendSignatureToServer = <div><RaisedButton primary={this.state.btnSendSignatureToServer} label="Next" style={{margin:4}} onTouchTap={this.handleNext} /></div>;
+      }
+      step_end_user_signature = <div style={{overflow: 'hidden',borderRight: '1px solid #eaeaea'}}>
+        <RaisedButton label="Back" onTouchTap={()=>{this.setState({openSignNow:false})}} style={{margin:4}} />
+        <SignatureCanvas ref={(ref) => { this.sigPad = ref }} penColor='black'
+        clearButton="true" style={{border:'1px solid #eaeaea'}} canvasProps={{width: 500, height: 200, className: 'sigCanvas'}} />
+        {btnSendSignatureToServer}
+        <RaisedButton label="Save" onTouchTap={this.trim} primary={!this.state.btnSendSignatureToServer} style={{margin:4}} />
+        <RaisedButton label="Clear" onTouchTap={this.clear} secondary={true} style={{margin:4}} />
+
+      </div>
+    }else{
+      step_end_user_signature =
+       <div>
+          <RaisedButton label="SIGN NOW" onTouchTap={this.openSignNow} primary={true} style={styles.button} />
+          <RaisedButton label="VIA EMAIL" onTouchTap={this.handleNext} secondary={true} style={styles.button} />
+       </div>;
+    }
 
     var content;
     if(this.state.data.tasks_sid){
