@@ -96,10 +96,12 @@ class ServiceReportDialog extends Component {
         serviceReport.push(
           <ListItem key={i} >
             <div>
+              <small>
               <div>{this.state.serviceReport[i].subject_service_report}</div>
               <div style={{color:lightBlack}}><small>Type: </small><small>{this.state.serviceReport[i].service_type_name}</small></div>
               <div style={{color:lightBlack}}><small>Appointment: </small><small>{this.state.serviceReport[i].appointment}
               <br/>Expect Duration (Hr.): {this.state.serviceReport[i].expect_duration}</small></div>
+              </small>
             </div>
           </ListItem>
         );

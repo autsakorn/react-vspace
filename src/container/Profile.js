@@ -18,7 +18,7 @@ import Url from '../config/url';
 import get from '../config/Get';
 import Put from '../config/Put';
 import InfoGen from '../config/InfoGen';
-import SignatureCanvas from 'react-signature-canvas'
+import SignatureCanvas from 'react-signature-canvas';
 import Divider from 'material-ui/Divider';
 class Profile extends Component {
 
@@ -161,15 +161,21 @@ class Profile extends Component {
 
     var eleSignature;
     if(this.state.info.path_signature && !this.state.signing){
-      eleSignature = <div>
-      <br/><img src={this.state.info.path_signature} style={{width:'160px'}} />
-      <div style={{position:'relative'}}>
-        <div><RaisedButton onTouchTap={()=>this.setState({signing:true})} label="New Signature" style={{marginRight:'35px'}} /></div>
-      </div>
+      var imgSignature;
+      if(this.state.info.path_signature_original){
+        imgSignature = <img src={this.state.info.path_signature} style={{width:'160px'}} />;
+      }
+
+      eleSignature =
+      <div>
+        <br/>{imgSignature}
+        <div style={{position:'relative'}}>
+          <div><RaisedButton onTouchTap={()=>this.setState({signing:true})} label="New Signature" style={{marginRight:'35px'}} /></div>
+        </div>
       </div>;
     }else{
       eleSignature = <div>
-        <div><SignatureCanvas ref={(ref) => { this.sigPad = ref }} penColor='black' clearButton="true" style={{border:'1px solid #eaeaea'}} canvasProps={{width: 500, height: 200, className: 'sigCanvas'}} /></div>
+        <div style={{overflow:'hidden'}}><SignatureCanvas ref={(ref) => { this.sigPad = ref }} penColor='black' clearButton="true" style={{border:'1px solid #eaeaea'}} canvasProps={{width: 500, height: 200, className: 'sigCanvas'}} /></div>
         <div>
           <RaisedButton onTouchTap={this.trim} label="Update New Signature" style={{margin:4}} primary={true}  />
           <RaisedButton onTouchTap={this.clear} secondary={true} label="Clear" style={{margin:4}}  />
@@ -257,7 +263,7 @@ class Profile extends Component {
                                  {eleSignature}
                                  <br/>
                               </div>
-                              
+
                            </div>
 
 

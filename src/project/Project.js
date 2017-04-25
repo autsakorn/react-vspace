@@ -64,39 +64,66 @@ class Project extends Component {
         showAppointment = 1;
         showTask = 1;
       }
+    }else{
+      showProject = 1;
+      showAppointment = 1;
+      showTask = 1;
     }
 
+    var data_board = {data:[],a:[],t:[]};
+    if(localStorage.getItem("data_board")){
+      data_board = JSON.parse(localStorage.getItem("data_board"));
+    }
+    var listUserCanAddProject;
+    if(localStorage.getItem("listUserCanAddProject")){
+      listUserCanAddProject = JSON.parse(localStorage.getItem("listUserCanAddProject"));
+    }else{
+      listUserCanAddProject = [];
+    }
     super(props);
     this.state = {
       urlProject:this.props.urlProject,
       formData:this.props.formData,
       info:this.props.info,
-      projectList:[],
+      projectList:data_board.data,
       listProject:<div />,
       listAppoinement:<div />,
       listTask:<div />,
       selectedIndex:((localStorage.getItem("selectedIndex"))?parseInt(localStorage.getItem("selectedIndex")):0),
-      appointment:[],
-      task:[],
+      appointment:data_board.a,
+      task:data_board.t,
       showProject:showProject,
       showAppointment:showAppointment,
       showTask:showTask,
-      started:0,
-      listUserCanAddProject:[],
+      started:1,
+      loader:0,
+      listUserCanAddProject:listUserCanAddProject,
       openTicketDrawer:false,
       ticket_sid:((this.props.ticket_sid)?this.props.ticket_sid:null),
       data_ticket_detail:null
     };
 
   }
+  componentDidMount(){
+    this.generateBoxProject();
+  }
+  componentWillMount(){
+    this.callProjectList("");
+  }
   callProjectList(search){
-
     var that = this;
     this.props.formData.append("search",search);
     get(this.props.urlProject,this.props.formData).then(function(pl){
         that.setState({
-          projectList:pl.data,appointment:pl.a,task:pl.t,started:1,listUserCanAddProject:pl.canAssignTo
+          projectList:pl.data,
+          appointment:pl.a,
+          task:pl.t,
+          started:1,
+          loader:1,
+          listUserCanAddProject:pl.canAssignTo
         });
+        localStorage.setItem('data_board',JSON.stringify(pl));
+        localStorage.setItem('listUserCanAddProject',JSON.stringify(pl.canAssignTo));
         that.generateBoxProject();
     });
   }
@@ -178,7 +205,7 @@ class Project extends Component {
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
             <div>{item.subject}</div>
             <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
-            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small>{item.appointment}</small></div>
+            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small>Appointment<br/>{item.appointment}</small></div>
           </Paper>
         </div>
       );
@@ -207,18 +234,18 @@ class Project extends Component {
   handleSelectProject(e){
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
     localStorage.removeItem("tasks_sid");
-    location.reload();
+    window.location.reload(true);
   }
   handleSelectAppointment = (tasks_sid) => {
     // alert(tasks_sid);
     localStorage.setItem("tasks_sid",tasks_sid);
     localStorage.removeItem("project_sid");
-    location.reload();
+    window.location.reload(true);
   }
 
   handleCreateNewProject = () => {
     localStorage.setItem("currectPage","ProjectCreate");
-    location.reload();
+    window.location.reload(true);
   }
   select = (index) => {
     // console.log(index);
@@ -237,9 +264,6 @@ class Project extends Component {
     }else {
       this.setState({showProject:1,showTask:1,showAppointment:1});
     }
-  }
-  componentDidMount(){
-    this.callProjectList("");
   }
   render(){
     var showAppointment;
@@ -264,9 +288,17 @@ class Project extends Component {
       </div>
     }
     var content;
+    var loader;
+    if(!this.state.loader){
+      loader = <div style={{textAlign:'center'}}>
+        <CircularProgress thickness={5} />
+      </div>
+    };
+
     if(this.state.started===1){
       content =
         <div>
+          {loader}
           {showAppointment}
           {showTask}
           {showProject}
@@ -308,13 +340,11 @@ class Project extends Component {
                     icon={<ActionEvent />}
                     onTouchTap={() => this.select(3)}
                   />
-
                 </BottomNavigation>
             </Paper>
             {content}
             {ticketDetail}
           </div>
-
         </MuiThemeProvider>
     )
   }

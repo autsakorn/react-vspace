@@ -85,7 +85,12 @@ class TicketItem extends Component {
 
     var avatarCreated = <Avatar src={item.created_pic_full} />;
 
-    var avatarOwner = <Avatar style={{width:'90%', height:'initial'}} src={item.pic_full} />;
+    var avatarOwner;
+    if(item.pic_full){
+      avatarOwner = <Avatar style={{width:'90%', height:'initial'}} src={item.pic_full} />;
+    }else{
+      avatarOwner = <Avatar>{item.owner.toUpperCase().charAt(0)+''+item.owner.toUpperCase().charAt(1)}</Avatar>
+    }
     return(
       <div style={styles.styleBorder}>
         <Paper onTouchTap={this.handleOpenTicketDrawer} zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
@@ -93,8 +98,8 @@ class TicketItem extends Component {
             {avatarOwner}
           </Column>
           <div>{item.subject}</div>
-          <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
-          <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}>
+          <div style={{color: lightBlack, height:16, overflow:'hidden'}}><small>{item.end_user}</small></div>
+          <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:8}}>
             <small style={{fontSize:'12px'}}>Created {item.create_datetime}</small>
           </div>
         </Paper>
