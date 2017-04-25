@@ -18,7 +18,7 @@ import Paper from 'material-ui/Paper';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import {GridList} from 'material-ui/GridList';
 import ApproveServiceDetail from '../approval/ApproveServiceDetail';
-import { Columns, Column , Notification} from 're-bulma';
+import { Columns, Column } from 're-bulma';
 import RaisedButton from 'material-ui/RaisedButton';
 import ActionSearch from 'material-ui/svg-icons/action/search';
 import IconButton from 'material-ui/IconButton';
