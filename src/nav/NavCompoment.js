@@ -125,7 +125,13 @@ class NavCompoment extends Component {
                   localStorage.setItem("currectPage","ApproveService"); }
                 } key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
                 >{item.name}</ListItem>);
-              }else{
+              }else if(item.list[0].sid==="91"){
+                listMenu.push(<ListItem onTouchTap={()=>{
+                  localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");
+                  localStorage.setItem("currectPage","Standby7x24"); }
+                } key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                >{item.name}</ListItem>);
+              } else{
                 listMenu.push(<ListItem onTouchTap={()=>{localStorage.removeItem("project_sid")}} key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
                   // nestedItems={[
                   //         <ListItem key={1} primaryText="Drafts" />,

@@ -12,6 +12,7 @@ import initReactFastclick from 'react-fastclick';
 import Ticket from './ticket/Ticket';
 import Appointment from './appointment/Appointment';
 import ApproveService from './approval/ApproveService';
+import Standby7x24 from './standby/Standby7x24';
 
 import insertCss from 'insert-css';
 import css from 're-bulma/build/css';
@@ -32,8 +33,10 @@ if(InfoGen.token){
         ReactDOM.render(<ProjectCreate info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Profile"){
         ReactDOM.render(<Profile info={resInfo.data} />, document.getElementById('root'));
-    }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Ticket"){
-        ReactDOM.render(<Ticket info={resInfo.data} />, document.getElementById('root'));
+    }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Profile"){
+        ReactDOM.render(<Profile info={resInfo.data} />, document.getElementById('root'));
+    }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Standby7x24"){
+        ReactDOM.render(<Standby7x24 info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ApproveService"){
         ReactDOM.render(<ApproveService info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("project_sid")){
