@@ -13,6 +13,7 @@ import Ticket from './ticket/Ticket';
 import Appointment from './appointment/Appointment';
 import ApproveService from './approval/ApproveService';
 import Standby7x24 from './standby/Standby7x24';
+import HistoryAppointment from './container/HistoryAppointment';
 
 import insertCss from 'insert-css';
 import css from 're-bulma/build/css';
@@ -39,7 +40,9 @@ if(InfoGen.token){
         ReactDOM.render(<Standby7x24 info={resInfo.data} />, document.getElementById('root'));
     }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ApproveService"){
         ReactDOM.render(<ApproveService info={resInfo.data} />, document.getElementById('root'));
-    }else if(localStorage.getItem("project_sid")){
+    }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="HistoryAppointment"){
+      ReactDOM.render(<HistoryAppointment my_staff={resInfo.my_staff} info={resInfo.data} />, document.getElementById('root'));
+    } else if(localStorage.getItem("project_sid")){
         formData.append('project_sid',localStorage.getItem("project_sid"));
         get(Url.projectDetail, formData).then(function(resPd){
           get(Url.listCaseAll, formData).then(function(resLCA){

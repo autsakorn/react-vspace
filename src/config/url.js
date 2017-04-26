@@ -39,7 +39,8 @@ var Url = {
   'ticketDetail':END_POINT_2+"v1/projectplan/ticketDetail",
   'approveServiceDetail' : END_POINT_2+"v1/moresystem/templateRequestTaxiDetail",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
-  'standby7x24':END_POINT_2+"v1/planning/sheduleStandby"
+  'standby7x24':END_POINT_2+"v1/planning/sheduleStandby",
+  'historyAppointment': END_POINT_2+"v1/projectplan/historyAppointment"
 }
 
 export default Url;

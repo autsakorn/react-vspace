@@ -186,7 +186,7 @@ class OwnerDialog extends Component {
         labelControl = <Chip onTouchTap={this.handleOpen} style={styles.chip}><Avatar icon={this.state.icon} /> {this.state.label}</Chip>
       }
       return(
-        <div>
+        <div >
           {labelControl}
           {dialog}
         </div>

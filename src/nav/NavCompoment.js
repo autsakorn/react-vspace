@@ -94,18 +94,27 @@ class NavCompoment extends Component {
 
     var listMenu = [];
     var that = this;
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    // if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       listMenu.push(
         <ListItem onTouchTap={
           ()=>{
             localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
             location.reload();
           }
-        } key={1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+        } key={-1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
         >{"Boards"}</ListItem>
       );
+      listMenu.push(
+        <ListItem onTouchTap={
+          ()=>{
+            localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.setItem("currectPage", "HistoryAppointment");
+            location.reload();
+          }
+        } key={-2} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+        >{"History"}</ListItem>
+      );
 
-    } else {
+    // } else {
         this.props.info.menus.forEach(function(item,i){
             // console.log(item);
             if(item.list.length>0){
@@ -140,7 +149,7 @@ class NavCompoment extends Component {
               }
             }
         });
-    }
+    // }// END ELSE
     // console.log(LogoPng);
     var logo = <span><img alt="vSpace" src="http://vspace.in.th/img/vspace.png" style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />
