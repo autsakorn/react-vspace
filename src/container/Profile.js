@@ -237,9 +237,7 @@ class Profile extends Component {
       </div>;
     return(
       <div>
-        <MuiThemeProvider>
           <div >
-            <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
 
             <MediaQuery query='(min-device-width: 769px)'>
                 <div id="vspace-container" style={style.container}>
@@ -305,7 +303,6 @@ class Profile extends Component {
             </MediaQuery>
           </div>
 
-        </MuiThemeProvider>
       </div>
     )
   }

@@ -79,7 +79,7 @@ class TicketItem extends Component {
     if(this.state.data_ticket_detail){
       ticketDetail =
       <Drawer width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
-        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
+        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.data_ticket_detail} />
       </Drawer>
     }
 
@@ -96,6 +96,8 @@ class TicketItem extends Component {
       status = <div><small style={{color:lightBlack}}>Status: <span >New</span></small></div>;
     }else if(item.status==="5"){
       status = <div><small style={{color:lightBlack}}>Status: <span style={{color:lightBlack}}>Done</span></small></div>;
+    }else if(item.status==="4"){
+      status = <div><small style={{color:lightBlack}}>Status: <span>Pending</span></small></div>
     }else{
       status = <div><small style={{color:lightBlack}}>Status: <span style={{color:lightBlack}}>Doing</span></small></div>;
     }
@@ -106,12 +108,15 @@ class TicketItem extends Component {
           <Column style={{width:'30%',float: 'left',marginTop: 0,paddingTop: 0}}>
             {avatarOwner}
           </Column>
-          <div>{item.subject}</div>
-          <div style={{color: lightBlack, height:16, overflow:'hidden'}}><small>{item.end_user}</small></div>
-          <div>{status}</div>
-          <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:8}}>
-            <small style={{fontSize:'12px'}}>Created {item.create_datetime}</small>
-          </div>
+          <Column style={{textAlign:'right'}}>
+            <div>{item.subject}</div>
+            <div style={{color:lightBlack}}>{item.case_type}</div>
+            <div style={{color: lightBlack, height:16, overflow:'hidden'}}><small>{item.end_user}</small></div>
+            <div>{status}</div>
+            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:20,bottom:8}}>
+              <small style={{fontSize:'12px'}}>Created {item.create_datetime}</small>
+            </div>
+          </Column>
         </Paper>
         {ticketDetail}
       </div>

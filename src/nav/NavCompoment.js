@@ -57,7 +57,7 @@ class NavCompoment extends Component {
     // location.reload();
     var that = this;
     that.props.onChangePage("Profile");
-    // this.setState({openRight: false});
+    this.handleCloseRight();
     // setTimeout(function () {
     // console.log(this.props);
     // }, 100);
@@ -105,9 +105,10 @@ class NavCompoment extends Component {
     listMenu.push(
       <ListItem onTouchTap={
         ()=>{
-          localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
-          location.reload();
-          // this.props.onChangePage();
+          // localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
+          // location.reload();
+          this.props.onChangePage("");
+          this.handleClose();
         }
       } key={-1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
       >{"Boards"}</ListItem>
@@ -115,12 +116,13 @@ class NavCompoment extends Component {
     listMenu.push(
       <ListItem onTouchTap={
         ()=>{
-          localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.setItem("currectPage", "HistoryAppointment");
-          location.reload();
-            // this.props.onChangePage();
+          // localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.setItem("currectPage", "HistoryAppointment");
+          // location.reload();
+            this.props.onChangePage("HistoryAppointment");
+            this.handleClose();
         }
       } key={-2} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
-      >{"History"}</ListItem>
+      >{"Appointment History"}</ListItem>
     );
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     } else {

@@ -229,9 +229,7 @@ class ApproveService extends Component {
     </Card>;
 
     return(
-      <MuiThemeProvider>
         <div>
-              <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
 
               <Drawer
                   docked={false} width={'50%'}
@@ -268,10 +266,11 @@ class ApproveService extends Component {
 
               {elementSectionApprove}
         </div>
-      </MuiThemeProvider>
     )
   }
 
 }
+
+      // <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
 
 export default ApproveService;

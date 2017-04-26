@@ -331,9 +331,7 @@ class Project extends Component {
       ticketDetail = <div />;
     }
     return(
-        <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
           <div>
-            <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
             <Paper zDepth={2} >
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
                   <BottomNavigationItem
@@ -361,7 +359,6 @@ class Project extends Component {
             {content}
             {ticketDetail}
           </div>
-        </MuiThemeProvider>
     )
   }
 }

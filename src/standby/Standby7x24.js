@@ -103,9 +103,8 @@ class Standby7x24 extends Component {
 
 
     return(
-      <MuiThemeProvider>
+
         <div>
-              <NavCompoment info={this.props.info} />
               <div>
                 <Card style={{backgroundColor:'initial'}}>
                   <CardHeader style={{padding:"20px 20px 0px 20px"}}
@@ -118,7 +117,6 @@ class Standby7x24 extends Component {
                 </Card>
               </div>
         </div>
-      </MuiThemeProvider>
     );
   }
 }

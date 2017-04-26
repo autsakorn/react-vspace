@@ -810,9 +810,9 @@ export default class Appointment extends Component {
       </div>
     }
     return(
-      <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
+
         <div>
-          <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
+
           <div style={{margin:10}}>
               {content}
           </div>
@@ -822,7 +822,7 @@ export default class Appointment extends Component {
             autoHideDuration={4000} onRequestClose={()=>{this.setState({openSnackbar:false})}}
           />
         </div>
-      </MuiThemeProvider>
     )
   }
 }
+// <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
