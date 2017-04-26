@@ -8,7 +8,13 @@ import Project from './project/Project';
 import Welcome from './login/Welcome';
 import ProjectCreate from './project/ProjectCreate';
 import initReactFastclick from 'react-fastclick';
-import Profle from './container/Profile';
+import Profile from './container/Profile';
+import Appointment from './appointment/Appointment';
+import ApproveService from './approval/ApproveService';
+import Standby7x24 from './standby/Standby7x24';
+import HistoryAppointment from './container/HistoryAppointment';
+import NavCompoment from './nav/NavCompoment';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   BrowserRouter as Router,
   Route,
@@ -18,7 +24,7 @@ import {
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = {home:"Loading...",projectCreate:"Loading...",project:"Loading...",profile:"loading..."}
+    this.state = {home:"Loading...",projectCreate:"Loading...",project:"Loading...",profile:"loading...",page:<div />,toggle:false}
     // var formData = new FormData();
     // formData.append('token',InfoGen.token);
     // formData.append('email',InfoGen.email);
@@ -40,32 +46,56 @@ class App extends Component {
   )
 
   componentDidMount() {
-    var that = this;
-    var formData = new FormData();
-    formData.append('token',InfoGen.token);
-    formData.append('email',InfoGen.email);
-    get(Url.info, formData).then(function(resInfo){
-      that.setState({projectCreate:<ProjectCreate info={resInfo.data} />});
-      that.setState({profile:<Profle info={resInfo.data} />});
-      if(localStorage.getItem("project_sid")){
-        formData.append('project_sid',localStorage.getItem("project_sid"));
-        get(Url.projectDetail, formData).then(function(resPd){
-          get(Url.listCaseAll, formData).then(function(resLCA){
-            that.setState({
-              project: <ProjectPlanApp projectOwner={resPd.project_detail.owner} info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>
-            });
-          });
-        });
-      }else if(localStorage.getItem("tasks_sid")){
+    this.genPage();
+  }
 
-      }else{
-        that.setState({
-          home: <div><Project urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>
-        });
-      }
-    },function(error){
-      console.log(error);
-    });
+  handleChangePage = (page) => {
+    console.log(page);
+    if(page){
+      localStorage.setItem("currectPage",page);
+    }else{
+      localStorage.removeItem("currectPage");
+    }
+    this.genPage();
+  }
+  genPage = () => {
+
+    var that = this;
+    if(InfoGen.token){
+      var formData = new FormData();
+      formData.append('token',InfoGen.token);
+      formData.append('email',InfoGen.email);
+      get(Url.info, formData).then(function(resInfo){
+        if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
+            that.setState({page:<MuiThemeProvider><div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><ProjectCreate onChangePage={that.handleChangePage} info={resInfo.data} /></div></MuiThemeProvider>});
+        }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Profile"){
+            that.setState({page:<Profile onChangePage={that.handleChangePage} info={resInfo.data} />,toggle:!that.state.toggle});
+        }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Standby7x24"){
+            that.setState({page:<Standby7x24 onChangePage={that.handleChangePage} info={resInfo.data} />});
+        }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ApproveService"){
+            that.setState({page:<ApproveService onChangePage={that.handleChangePage} info={resInfo.data} />});
+        }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="HistoryAppointment"){
+          that.setState({page:<HistoryAppointment onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} />});
+        } else if(localStorage.getItem("project_sid")){
+            formData.append('project_sid',localStorage.getItem("project_sid"));
+            get(Url.projectDetail, formData).then(function(resPd){
+              get(Url.listCaseAll, formData).then(function(resLCA){
+                that.setState({page:
+                  <ProjectPlanApp onChangePage={that.handleChangePage} projectOwner={resPd.project_detail.owner} info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>}
+                );
+              });
+            });
+        }else if(localStorage.getItem("tasks_sid")){
+            that.setState({page:<Appointment onChangePage={that.handleChangePage} tasks_sid={localStorage.getItem("tasks_sid")} info={resInfo.data} />});
+        }else{
+            that.setState({page:<Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} />});
+        }
+      },function(error){
+        console.log(error);
+      });
+    }else{
+      that.setState({page:<Welcome />});
+    }
   }
 
   componentWillUnmount() {
@@ -85,17 +115,17 @@ class App extends Component {
           //       <Route exact path="/profile" component={this.Profile}/>
 
     var myApp;
-    if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
-      myApp = this.ProjectCreate;
-    }else if(localStorage.getItem("project_sid")){
-      myApp = this.ProjectPlan;
-    }else{
-      myApp = this.Home;
-    }
-    console.log(this.state);
+    // if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
+    //   myApp = this.ProjectCreate;
+    // }else if(localStorage.getItem("project_sid")){
+    //   myApp = this.ProjectPlan;
+    // }else{
+    //   myApp = this.Home;
+    // }
+    // console.log(this.state);
     return (
         <div>
-          {myApp}
+          {this.state.page}
         </div>
 
     );

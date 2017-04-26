@@ -171,7 +171,7 @@ class HistoryAppointment extends Component {
     return(
       <MuiThemeProvider>
         <div>
-            <NavCompoment info={this.props.info} />
+            <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
             <Columns>
               <Column  style={styles.styleDatePickers}>
                 <DatePicker

@@ -231,7 +231,7 @@ class ApproveService extends Component {
     return(
       <MuiThemeProvider>
         <div>
-              <NavCompoment info={this.props.info} />
+              <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
 
               <Drawer
                   docked={false} width={'50%'}

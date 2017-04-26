@@ -33,16 +33,18 @@ class NavCompoment extends Component {
     // console.log(props);
     this.state = {open: false,openRight:false};
   }
-  handleSignOut(){
+  handleSignOut = () => {
     localStorage.removeItem("case_email");
     localStorage.removeItem("case_token");
     location.reload();
+    // this.props.onChangePage();
   }
-  handlevSpace(){
+  handlevSpace = () => {
     localStorage.removeItem("project_sid");
     localStorage.removeItem("currectPage");
     localStorage.removeItem("tasks_sid");
-    location.reload();
+    // location.reload();
+    this.props.onChangePage();
   }
   handleToggleRight = () => this.setState({openRight: !this.state.openRight});
   handleCloseRight = () => this.setState({openRight: false});
@@ -51,8 +53,14 @@ class NavCompoment extends Component {
   handleClose = () => this.setState({open: false});
 
   handleProfile = () => {
-    localStorage.setItem("currectPage","Profile");
-    location.reload();
+    // localStorage.setItem("currectPage","Profile");
+    // location.reload();
+    var that = this;
+    that.props.onChangePage("Profile");
+    // this.setState({openRight: false});
+    // setTimeout(function () {
+    // console.log(this.props);
+    // }, 100);
   }
   render(){
     const style = {
@@ -99,6 +107,7 @@ class NavCompoment extends Component {
         ()=>{
           localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
           location.reload();
+          // this.props.onChangePage();
         }
       } key={-1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
       >{"Boards"}</ListItem>
@@ -108,6 +117,7 @@ class NavCompoment extends Component {
         ()=>{
           localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.setItem("currectPage", "HistoryAppointment");
           location.reload();
+            // this.props.onChangePage();
         }
       } key={-2} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
       >{"History"}</ListItem>
@@ -190,7 +200,7 @@ class NavCompoment extends Component {
             docked={false} openSecondary={true}
             width={260}
             open={this.state.openRight}
-            onRequestChange={(openRight) => this.setState({openRight})}
+            onRequestChange={(openRight) => {this.setState({openRight})} }
           >
             <div style={{textAlign:'left'}}><Subheader>{this.props.info.email}</Subheader></div>
             <MenuItem style={{textAlign:'left'}} onTouchTap={this.handleProfile} >Profile</MenuItem>

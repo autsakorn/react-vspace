@@ -812,7 +812,7 @@ export default class Appointment extends Component {
     return(
       <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
         <div>
-          <NavCompoment info={this.props.info} />
+          <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
           <div style={{margin:10}}>
               {content}
           </div>
