@@ -1,4 +1,5 @@
 var END_POINT_2 = 'http://vspace.in.th/apis/';
+export var END_POINT_PDF = 'http://vspace.in.th/pdf/';
 var Url = {
   'info':END_POINT_2+"v1/user/header",
   'projectDetail':END_POINT_2+"v1/projectplan/projectdetail",
@@ -39,7 +40,9 @@ var Url = {
   'ticketDetail':END_POINT_2+"v1/projectplan/ticketDetail",
   'approveServiceDetail' : END_POINT_2+"v1/moresystem/templateRequestTaxiDetail",
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
-  'standby7x24':END_POINT_2+"v1/planning/sheduleStandby"
+  'standby7x24':END_POINT_2+"v1/planning/sheduleStandby",
+  'historyAppointment': END_POINT_2+"v1/projectplan/historyAppointment",
+  'changeStatusTicket':END_POINT_2+"v1/incident/updateSLA"
 }
 
 export default Url;

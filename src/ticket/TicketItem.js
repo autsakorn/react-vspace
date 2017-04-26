@@ -28,7 +28,7 @@ import TicketDrawer from '../ticket/TicketDrawer';
 import TicketDetail from '../ticket/TicketDetail';
 import { Columns,Column } from 're-bulma';
 import Drawer from 'material-ui/Drawer';
-
+import FlatButton from 'material-ui/FlatButton';
 
 class TicketItem extends Component {
   constructor(props){
@@ -64,7 +64,7 @@ class TicketItem extends Component {
     const styles = {
       styleBorder: {
         border: '1px solid #fafbf9',
-        height:120,
+        height:180,
         borderRadius: '3px',
         // margin:'10px 10px 0px 10px'
         backgroundColor: '#fafbfc'
@@ -91,6 +91,15 @@ class TicketItem extends Component {
     }else{
       avatarOwner = <Avatar>{item.owner.toUpperCase().charAt(0)+''+item.owner.toUpperCase().charAt(1)}</Avatar>
     }
+    var status;
+    if(item.status==="1"){
+      status = <div><small style={{color:lightBlack}}>Status: <span >New</span></small></div>;
+    }else if(item.status==="5"){
+      status = <div><small style={{color:lightBlack}}>Status: <span style={{color:lightBlack}}>Done</span></small></div>;
+    }else{
+      status = <div><small style={{color:lightBlack}}>Status: <span style={{color:lightBlack}}>Doing</span></small></div>;
+    }
+
     return(
       <div style={styles.styleBorder}>
         <Paper onTouchTap={this.handleOpenTicketDrawer} zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
@@ -99,6 +108,7 @@ class TicketItem extends Component {
           </Column>
           <div>{item.subject}</div>
           <div style={{color: lightBlack, height:16, overflow:'hidden'}}><small>{item.end_user}</small></div>
+          <div>{status}</div>
           <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:8}}>
             <small style={{fontSize:'12px'}}>Created {item.create_datetime}</small>
           </div>

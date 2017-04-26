@@ -19,6 +19,8 @@ import SocialSentimentNeutral from 'material-ui/svg-icons/social/sentiment-neutr
 import SocialMood from 'material-ui/svg-icons/social/mood';
 import Drawer from 'material-ui/Drawer';
 import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
+import {END_POINT_PDF} from '../config/url';
+import ActionPageview from 'material-ui/svg-icons/action/pageview';
 // import ContentAdd from 'material-ui/svg-icons/content/add';
 class ServiceReportDialog extends Component {
   constructor(props){
@@ -79,6 +81,7 @@ class ServiceReportDialog extends Component {
     var listServiceReport;
     var chipServiceReport = [];
       for (let i = 0; i < this.state.serviceReport.length; i++) {
+        console.log(this.state.serviceReport[i]);
         // serviceReport.push(
         //   <div key={i}>
         //     <span>{i+1} {this.state.serviceReport[i].subject_service_report} {this.state.serviceReport[i].engineer}</span>
@@ -93,16 +96,33 @@ class ServiceReportDialog extends Component {
         chipServiceReport.push(
           <Chip style={{margin:2,overflow: 'auto',maxWidth: '270px'}} key={i}><Avatar icon={iconStatusService} />{this.state.serviceReport[i].subject_service_report}</Chip>
         );
+        var pdfElement;
+        if(this.state.serviceReport[i].path_service_report){
+          pdfElement = <div style={{color:lightBlack}}>PDF: <a target="new" href={END_POINT_PDF+this.state.serviceReport[i].path_service_report} >Service Report</a></div>
+        }else{
+          pdfElement = <div style={{color:lightBlack}}>PDF: - </div>
+        }
+
+        var primaryText =
+        <div>
+          <small>
+            <div>{this.state.serviceReport[i].subject_service_report}</div>
+            <div style={{color:lightBlack}}><small>Type: </small><small>{this.state.serviceReport[i].service_type_name}</small></div>
+            <div style={{color:lightBlack}}>Staff: {this.state.serviceReport[i].staff_name}</div>
+            {pdfElement}
+          </small>
+        </div>
+
+        var secondaryText =
+        <div style={{color:lightBlack}}>
+          <small>Appointment: </small><small>{this.state.serviceReport[i].appointment}
+          <br/>Expect Duration (Hr.): {this.state.serviceReport[i].expect_duration}</small>
+        </div>
+        var avatar = <Avatar src={this.state.serviceReport[i].staff_pic} />
         serviceReport.push(
-          <ListItem key={i} >
-            <div>
-              <small>
-              <div>{this.state.serviceReport[i].subject_service_report}</div>
-              <div style={{color:lightBlack}}><small>Type: </small><small>{this.state.serviceReport[i].service_type_name}</small></div>
-              <div style={{color:lightBlack}}><small>Appointment: </small><small>{this.state.serviceReport[i].appointment}
-              <br/>Expect Duration (Hr.): {this.state.serviceReport[i].expect_duration}</small></div>
-              </small>
-            </div>
+          <ListItem key={i} leftAvatar={avatar}
+          primaryText={primaryText} secondaryTextLines={2}
+          secondaryText={secondaryText}>
           </ListItem>
         );
       }
@@ -135,7 +155,7 @@ class ServiceReportDialog extends Component {
 
     const label = <div><div style={{display:'flex',flexWrap:'wrap',float:'left'}}>{chipServiceReport}</div><div style={{clear:'both'}}></div></div>;
 
-    var viewAppointment = <span onTouchTap={()=>{this.setState({open:true,creatingService:false}) }}>({this.state.serviceReport.length}) view</span>
+    var viewAppointment = <span onTouchTap={()=>{this.setState({open:true,creatingService:false}) }}>({this.state.serviceReport.length}) <ActionPageview style={{color:lightBlack}} /></span>
     return (
       <div>
         <Card isFullwidth>
