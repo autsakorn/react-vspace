@@ -29,6 +29,7 @@ import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import Checkbox from 'material-ui/Checkbox';
 import ContentClear from 'material-ui/svg-icons/content/clear';
 import TicketChecklist from '../ticket/TicketChecklist';
+import TicketControlStatus from '../ticket/TicketControlStatus';
 
 import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
@@ -150,7 +151,6 @@ class TicketDetail extends Component {
         </CardContent>
       </Card>;
 
-
       var jobData;
       // if(data.task.length>0){
         jobData = <ServiceReportDialog serviceReport={data.task} onCreatedService={this.handleCreatedService} caseSid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject}  />
@@ -185,7 +185,7 @@ class TicketDetail extends Component {
 
       var checkList = <TicketChecklist sid={data.sid} item={data} />;
 
-
+      //SLA
       var SLA;
       var slaRow = [];
       if(data.sla_remedy_array && data.sla_remedy_array.length>0){
@@ -206,26 +206,28 @@ class TicketDetail extends Component {
               </CardFooter>
           )
         });
-        slaRow.push(
-          <CardFooter key={-2} style={{marginBottom:'10px', width:'100%'}}>
-            <CardFooterItem>
-              <Columns>
-                <Column>
-                  <RaisedButton style={styles.button}>Response</RaisedButton>
-                  <RaisedButton style={styles.button}>Onsite</RaisedButton>
 
-                  <RaisedButton style={styles.button}>No Onsite</RaisedButton>
-                  <RaisedButton style={styles.button}>No Workaround</RaisedButton>
+        if(InfoGen.email==="autsakorn.t@firstlogic.co.th"){
+          slaRow.push(
+            <CardFooter key={-2} style={{marginBottom:'10px', width:'100%'}}>
+              <CardFooterItem>
+                <Columns>
+                  <Column>
+                    <RaisedButton style={styles.button}>Response</RaisedButton>
+                    <RaisedButton style={styles.button}>Onsite</RaisedButton>
 
-                  <RaisedButton style={styles.button}>Workaround</RaisedButton>
-                  <RaisedButton style={styles.button}>Pending</RaisedButton>
-                  <RaisedButton style={styles.button}>Resolve</RaisedButton>
-                </Column>
-              </Columns>
-            </CardFooterItem>
-          </CardFooter>
-        );
+                    <RaisedButton style={styles.button}>No Onsite</RaisedButton>
+                    <RaisedButton style={styles.button}>No Workaround</RaisedButton>
 
+                    <RaisedButton style={styles.button}>Workaround</RaisedButton>
+                    <RaisedButton style={styles.button}>Pending</RaisedButton>
+                    <RaisedButton style={styles.button}>Resolve</RaisedButton>
+                  </Column>
+                </Columns>
+              </CardFooterItem>
+            </CardFooter>
+          );
+        }
 
         SLA =
         <Card style={{width:'100%'}}>
@@ -237,12 +239,15 @@ class TicketDetail extends Component {
           {slaRow}
         </Card>
       }
+      // END SLA
+
+      var control_status_ticket = <TicketControlStatus ticket_sid={this.props.ticket_sid} data={this.props.data} />;
+
       return(
         <div >
         <AppBar
           title={<span style={styles.title}>{this.props.data.subject}</span>}
-          iconElementLeft={<IconButton onTouchTap={()=>{this.props.closeWindow()}}><NavigationClose /></IconButton>}
-          />
+          iconElementLeft={<IconButton onTouchTap={()=>{this.props.closeWindow()}}><NavigationClose /></IconButton>}/>
             <div style={styles.box}>
                 <Columns>
                   <Column size="isOneThird" style={style}>
@@ -289,6 +294,8 @@ class TicketDetail extends Component {
                     {checkList}
 
                     {SLA}
+
+                    {control_status_ticket}
                   </Column>
 
                 </Columns>

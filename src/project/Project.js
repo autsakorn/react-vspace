@@ -82,6 +82,7 @@ class Project extends Component {
     }
     super(props);
     this.state = {
+      search:'',
       urlProject:this.props.urlProject,
       formData:this.props.formData,
       info:this.props.info,
@@ -112,8 +113,12 @@ class Project extends Component {
   }
   callProjectList(search){
     var that = this;
-    this.props.formData.append("search",search);
-    get(this.props.urlProject,this.props.formData).then(function(pl){
+    // this.props.formData.append("search",search);
+    var formData = new FormData();
+    formData.append("email",InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("search",this.state.search);
+    get(this.props.urlProject,formData).then(function(pl){
         that.setState({
           projectList:pl.data,
           appointment:pl.a,
@@ -143,14 +148,14 @@ class Project extends Component {
       },
       styleBorder: {
         border: '1px solid #fafbf9',
-        height:120,
+        height:180,
         borderRadius: '3px',
         // margin:'10px 10px 0px 10px'
         backgroundColor: '#fafbfc'
       },
       styleBorderNew: {
         border: '1px dashed #838383',
-        height:120,
+        height:180,
         borderRadius: '3px',
         backgroundColor:'#fff'
       }
@@ -179,7 +184,11 @@ class Project extends Component {
     that.state.projectList.forEach((tile,i) => {
       var avatarOwner = [];
       tile.owner.forEach((item,k) => {
-          avatarOwner.push(<Avatar key={item.pic_full} src={item.pic_full} />);
+          if(item.pic_full){
+            avatarOwner.push(<Avatar key={item.email} src={item.pic_full} />);
+          }else{
+            avatarOwner.push(<Avatar style={{float:'right'}} key={item.email} >{item.email.toUpperCase().charAt(0)+item.email.toUpperCase().charAt(1)}</Avatar>);
+          }
       });
       boxProject.push(
           <div
@@ -189,7 +198,7 @@ class Project extends Component {
             <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
               <div>{tile.name}</div>
               <div style={{color: lightBlack}}>{tile.contract}</div>
-              <div style={{textAlign:'right', position:'absolute',right:4,bottom:22}}>
+              <div style={{textAlign:'right', position:'absolute',right:8,bottom:8}}>
                 {avatarOwner}
               </div>
             </Paper>
@@ -205,7 +214,7 @@ class Project extends Component {
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
             <div>{item.subject}</div>
             <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
-            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:4,bottom:22}}><small>Appointment<br/>{item.appointment}</small></div>
+            <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:8,bottom:8}}><small>Appointment<br/>{item.appointment}</small></div>
           </Paper>
         </div>
       );
@@ -214,7 +223,7 @@ class Project extends Component {
 
 
     var task = [];
-    if(this.state.info.project_create_able==="2"){
+    if(this.state.info.case_create_able==="1"){
       task.push(<TicketCreate listUserCanAddProject={this.state.listUserCanAddProject} key={"ticket-created"} />);
     }
     this.state.task.forEach((item,i)=>{
@@ -264,6 +273,7 @@ class Project extends Component {
     }else {
       this.setState({showProject:1,showTask:1,showAppointment:1});
     }
+    this.callProjectList();
   }
   render(){
     var showAppointment;
@@ -360,7 +370,7 @@ class SectionElement extends Component {
         />
         <CardText>
           <div style={this.props.styles.root}>
-            <GridList cellHeight={120}
+            <GridList cellHeight={200}
               cols={this.props.numberColumn}
               padding={10}
               style={this.props.styles.gridList}

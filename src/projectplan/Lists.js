@@ -28,7 +28,7 @@ import Paper from 'material-ui/Paper';
 class Lists extends Component {
     constructor(props) {
         super(props);
-        console.log('Lists', props);
+        // console.log('Lists', props);
         this.state = {
             header: this.props.header,
             case: this.props.item,

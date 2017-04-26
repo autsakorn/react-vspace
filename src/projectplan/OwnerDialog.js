@@ -183,7 +183,13 @@ class OwnerDialog extends Component {
       if(this.state.open){
         labelControl = <div><AutoComplete onNewRequest={this.handleNewMember} hintText="Find by Email" openOnFocus={true} filter={AutoComplete.caseInsensitiveFilter} dataSource={dataSource1} /><ContentClear onTouchTap={this.handleClose} style={styles.chip} /></div>
       }else{
-        labelControl = <Chip onTouchTap={this.handleOpen} style={styles.chip}><Avatar icon={this.state.icon} /> {this.state.label}</Chip>
+        var chipAvatar;
+        if(this.state.src){
+          chipAvatar = <Avatar src={this.state.src} />
+        }else{
+          chipAvatar = <Avatar icon={this.state.icon} />
+        }
+        labelControl = <Chip onTouchTap={this.handleOpen} style={styles.chip}>{chipAvatar} {this.state.label}</Chip>
       }
       return(
         <div >

@@ -27,6 +27,7 @@ import OwnerDialog from '../projectplan/OwnerDialog';
 import Paper from 'material-ui/Paper';
 import HistoryAppointmentItem from '../container/HistoryAppointmentItem';
 import {GridList} from 'material-ui/GridList';
+import {END_POINT_PDF} from '../config/url';
 class HistoryAppointment extends Component {
   constructor(props){
     super(props);
@@ -142,12 +143,11 @@ class HistoryAppointment extends Component {
         >
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
             <div>{item.subject_service_report}</div>
-            <div>{item.end_user}</div>
-            <div>Appointment <small style={{float:'right'}}>{item.appointment}</small></div>
-            <div style={{color: lightBlack}}>{item.end_user_site}</div>
+            <div><small style={{color:grey400}}>{item.end_user}</small></div>
+            <div><small style={{color:grey400}}>Appointment <small style={{float:'right'}}>{item.appointment}</small></small></div>
             <div><small style={{color:grey400}}>{item.no_task}</small></div>
-            <div style={{textAlign:'right', position:'absolute',right:2,bottom:8}}>
-            <div><small><a target="new" href={"http://vspace.in.th/pdf/"+item.path_service_report} >Service Report(PDF)</a></small></div>
+            <div style={{textAlign:'right', position:'absolute',right:8,bottom:8}}>
+            <div><small><a target="new" href={END_POINT_PDF+item.path_service_report} >Service Report (PDF)</a></small></div>
             </div>
           </Paper>
         </div>
@@ -203,12 +203,11 @@ class HistoryAppointment extends Component {
             <div>
               <CardText>
                 <div style={styles.root}>
-                  <GridList cellHeight={120}
+                  <GridList cellHeight={200}
                     cols={numberColumn}
                     padding={10}
                     style={styles.gridList}
                   >
-
                   {content}
                   </GridList>
                 </div>
@@ -234,14 +233,14 @@ const styles = {
 
   styleBorder: {
     border: '1px solid #fafbf9',
-    height:120,
+    height:180,
     borderRadius: '3px',
     // margin:'10px 10px 0px 10px'
     backgroundColor: '#fafbfc'
   },
   styleBorderNew: {
     border: '1px dashed #838383',
-    height:120,
+    height:180,
     borderRadius: '3px',
     backgroundColor:'#fff'
   },

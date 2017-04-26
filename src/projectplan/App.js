@@ -13,7 +13,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {...props};
-    console.log(this.state);
+    // console.log(this.state);
   }
   handleChangeStaffCase = (ticketSid, emailNewOwner) => {
     var formData = new FormData();

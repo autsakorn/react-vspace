@@ -67,14 +67,14 @@ class TicketCreate extends Component {
     const styles = {
       styleBorder: {
         border: '1px solid #fafbf9',
-        height:120,
+        height:180,
         borderRadius: '3px',
         // margin:'10px 10px 0px 10px'
         backgroundColor: '#fafbfc'
       },
       styleBorderNew: {
         border: '1px dashed #838383',
-        height:120,
+        height:180,
         borderRadius: '3px',
         backgroundColor:'#fff'
       }
