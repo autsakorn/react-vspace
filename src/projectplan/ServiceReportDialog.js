@@ -106,7 +106,7 @@ class ServiceReportDialog extends Component {
         var primaryText =
         <div>
           <small>
-            <div>{this.state.serviceReport[i].subject_service_report}</div>
+            <div>{this.state.serviceReport[i].no_task+" "+this.state.serviceReport[i].subject_service_report}</div>
             <div style={{color:lightBlack}}><small>Type: </small><small>{this.state.serviceReport[i].service_type_name}</small></div>
             <div style={{color:lightBlack}}>Staff: {this.state.serviceReport[i].staff_name}</div>
             {pdfElement}

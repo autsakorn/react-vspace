@@ -174,7 +174,7 @@ class FormLogin extends Component{
       </div>
     );
 
-    var logo = <span><img src={LogoPng} style={{height:42}} /></span>;
+    var logo = <span><img src="http://vspace.in.th/img/vspace-sky.png" style={{height:42}} /></span>;
      const TextFieldExampleSimple = () => (
       <div>
         <div>

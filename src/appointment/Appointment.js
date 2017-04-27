@@ -28,6 +28,7 @@ import SignatureCanvas from 'react-signature-canvas'
 // import Moment from 'react-moment';
 import moment from 'moment';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import Checkbox from 'material-ui/Checkbox';
 
 class ControlSparePart extends Component {
   constructor(props){
@@ -123,7 +124,10 @@ class ControlSparePart extends Component {
   }
   render(){
     const styles = {
-      button: {margin: 12}
+      button: {margin: 12},
+      checkbox: {
+        marginBottom: 16,
+      }
     };
     var content;
     var listPart = [];
@@ -228,36 +232,36 @@ export default class Appointment extends Component {
       console.log(res);
       // that.setState({data:res.data});
       if(res.data.request_taxi==="0"){
-        if(res.data.status_from_log==="0"){
+        if(res.data.status_from_log==="0" || res.data.status_from_log===0){
           that.setState({data:res.data,stepIndex:0, indexFinished:2});
-        }else if(res.data.status_from_log==="100"){
+        }else if(res.data.status_from_log==="100" || res.data.status_from_log===100){
           that.setState({data:res.data,stepIndex:0, indexFinished:2});
-        }else if(res.data.status_from_log==="200"){
+        }else if(res.data.status_from_log==="200" || res.data.status_from_log===200){
           that.setState({data:res.data,stepIndex:0, indexFinished:2});
-        }else if(res.data.status_from_log==="300"){
+        }else if(res.data.status_from_log==="300" || res.data.status_from_log===300){
           that.setState({data:res.data,stepIndex:1, indexFinished:2});
-        }else if(res.data.status_from_log==="400"){
+        }else if(res.data.status_from_log==="400" || res.data.status_from_log===400){
           that.setState({data:res.data,stepIndex:2, indexFinished:2});
-        }else if(res.data.status_from_log==="500"){
+        }else if(res.data.status_from_log==="500" || res.data.status_from_log===500){
           that.setState({data:res.data,stepIndex:3, indexFinished:2});
         }else{
           that.setState({data:res.data, stepIndex:3,indexFinished:2});
         }
       }else{
-        if(res.data.status_from_log==="0"){
+        if(res.data.status_from_log==="0" || res.data.status_from_log===0){
           that.setState({data:res.data,stepIndex:0, indexFinished:4});
-        }else if(res.data.status_from_log==="100"){
+        }else if(res.data.status_from_log==="100" || res.data.status_from_log===100){
           that.setState({data:res.data,stepIndex:0, indexFinished:4});
-        }else if(res.data.status_from_log==="200"){
+        }else if(res.data.status_from_log==="200" || res.data.status_from_log===200){
           that.setState({data:res.data,stepIndex:1, indexFinished:4});
-        }else if(res.data.status_from_log==="300"){
+        }else if(res.data.status_from_log==="300" || res.data.status_from_log===300){
           that.setState({data:res.data,stepIndex:2, indexFinished:4});
-        }else if(res.data.status_from_log==="400"){
+        }else if(res.data.status_from_log==="400" || res.data.status_from_log===400){
           that.setState({data:res.data,stepIndex:3, indexFinished:4});
-        }else if(res.data.status_from_log==="500"){
+        }else if(res.data.status_from_log==="500" || res.data.status_from_log===500){
           that.setState({data:res.data,stepIndex:4, indexFinished:4});
         }else {
-          that.setState({data:res.data, stepIndex:5,indexFinished:4});
+          that.setState({data:res.data, stepIndex:5,indexFinished:5});
         }
       }
     });
@@ -558,6 +562,31 @@ export default class Appointment extends Component {
       console.log(e);
     }
   }
+  handleDoSerial = (e, ticket_serial_sid, ticket_sid) => {
+    var status = "100";
+    if(e.currentTarget.checked){
+      status = "-100";
+    }
+    var formData = new FormData();
+    formData.append("ticket_serial_sid", ticket_serial_sid);
+    formData.append("status", status);
+    formData.append("task_sid", this.state.tasks_sid);
+    formData.append("email", InfoGen.email);
+    formData.append("token",InfoGen.token);
+    var that = this;
+    var tmp = this.state.data;
+    Put(Url.do_serial_pm, formData).then(function(res){
+      console.log(res);
+      if(!res.error){
+        tmp.serial_in_ticket.forEach((item,i)=>{
+            if(item.sid===ticket_serial_sid){
+              tmp.serial_in_ticket[i].status=status;
+              that.setState({data:tmp});
+            }
+        });
+      }
+    });
+  }
   render(){
     const styles = {
       button: {margin: 12}
@@ -680,6 +709,23 @@ export default class Appointment extends Component {
         btnCloseService = <RaisedButton label="Close Service" onTouchTap={this.handleNext} primary={true} style={styles.button} />
       }
 
+      var serial_in_ticket = [];
+      this.state.data.serial_in_ticket.forEach((item,i)=>{
+        var checked = false
+        if(item.status==="100"){
+          checked = true;
+        }
+        serial_in_ticket.push(
+          <div key={i}>
+            <Checkbox onTouchTap={(e)=>{this.handleDoSerial(e, item.sid, item.ticket_sid)}}
+              checked={checked}
+              label={item.serial_detail}
+              style={styles.checkbox}
+            />
+          </div>
+        );
+      });
+
       var form_input_action;
         form_input_action =
           <div>
@@ -703,16 +749,18 @@ export default class Appointment extends Component {
 
       var step_input_action =
         <div>
+          <div>{serial_in_ticket}</div>
           {form_input_action}
           <br/>
           {btnCloseService}
         </div>;
+      console.log(757);
       var txtTaxi = <TextField type="number" min={0} value={this.state.taxi_fare} hintText="Taxi (Baht)?" onChange={this.handleUpdateTaxi} floatingLabelText="Taxi (Baht)?" floatingLabelFixed={true} fullWidth={true}/>;
-      var step_arrived =
-      <div>
+      var step_arrived = <div>
         {txtTaxi}
         <RaisedButton label="Finish" onTouchTap={this.handleNext} primary={true} style={styles.button} />
       </div>;
+      console.log(step_arrived);
 
       var stepper;
       // CHECK CONDITION FOR GEN CHECK POINT 0 is not require taxi
@@ -783,11 +831,25 @@ export default class Appointment extends Component {
         <div >
           <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
           <Divider />
-          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
+          <div style={{padding:10}}><span >Type: </span>
+            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
           <Divider />
+
+          <div style={{padding:10}}><span >Task: </span>
+            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_case_type}</span>
+            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_ticket}</span>
+            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_contract}</span>
+          </div>
+          <Divider />
+          <div style={{padding:10}}><span >Serial: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_serial}</span></div>
+          <Divider />
+
           <div style={{padding:10}}><span>End User: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.end_user}</span></div>
           <Divider />
-          <div style={{padding:10}}><span>Site: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_end_user_site}</span></div>
+          <div style={{padding:10}}>
+            <span>Site: </span>
+            <span style={{color:lightBlack,marginLeft:10}}>{((this.state.data.service_report_address)?this.state.data.service_report_address:this.state.data.ticket_end_user_site)}</span>
+          </div>
           <Divider />
           {appointment_element}
           <div style={{padding:10}}>

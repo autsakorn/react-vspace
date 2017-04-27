@@ -68,6 +68,9 @@ class App extends Component {
       formData.append('token',InfoGen.token);
       formData.append('email',InfoGen.email);
       get(Url.info, formData).then(function(resInfo){
+        if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Boards"){
+          that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
+        }
         if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
             that.setState({page:
               <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />

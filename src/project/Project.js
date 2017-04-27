@@ -215,7 +215,7 @@ class Project extends Component {
       box.push(
         <div key={i+item.tasks_sid} onTouchTap={()=>this.handleSelectAppointment(item.tasks_sid)} style={styles.styleBorder} >
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
-            <div>{item.subject}</div>
+            <div>{item.no_task}<br/>{item.subject}</div>
             <div style={{color: lightBlack}}><small>{item.end_user}</small></div>
             <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:8,bottom:8}}><small>Appointment<br/>{item.appointment}</small></div>
           </Paper>

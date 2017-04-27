@@ -107,7 +107,7 @@ class NavCompoment extends Component {
         ()=>{
           // localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");localStorage.removeItem("currectPage");
           // location.reload();
-          this.props.onChangePage("");
+          this.props.onChangePage("Boards");
           this.handleClose();
         }
       } key={-1} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
@@ -161,6 +161,20 @@ class NavCompoment extends Component {
             }
         });
     }// END ELSE
+    listMenu.push(
+      <ListItem onTouchTap={
+        ()=>{
+          this.props.onChangePage("Profile");
+          this.handleClose();
+        }
+      } key={-3} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+      >{"Profile"}</ListItem>
+    );
+    listMenu.push(
+      <ListItem onTouchTap={this.handleSignOut} key={-4} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+      >{"Sign Out"}</ListItem>
+    );
+
     // console.log(LogoPng);
     var logo = <span><img alt="vSpace" src="http://vspace.in.th/img/vspace.png" style={{height:48}} /></span>;
     var iconMenuLeft = <ActionViewModule style={{color:'#FFFFFF', height:36,width:36}} />

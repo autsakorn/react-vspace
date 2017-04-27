@@ -42,7 +42,8 @@ var Url = {
   'savesignature_member':END_POINT_2+"v1/moresystem/savesignature",
   'standby7x24':END_POINT_2+"v1/planning/sheduleStandby",
   'historyAppointment': END_POINT_2+"v1/projectplan/historyAppointment",
-  'changeStatusTicket':END_POINT_2+"v1/incident/updateSLA"
+  'changeStatusTicket':END_POINT_2+"v1/incident/updateSLA",
+  'do_serial_pm':END_POINT_2+"v1/pm/insert/do_serial_pm"
 }
 
 export default Url;
