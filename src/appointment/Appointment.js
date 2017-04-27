@@ -35,7 +35,8 @@ class ControlSparePart extends Component {
     this.state = {sparepart:this.props.sparepart,
       old_part_number:"",old_part_serial:"",new_part_serial:"",description:"",adding_spare_part:this.props.adding_spare_part,
       openSnackbar:false,messageSnackbar:'',will_delete_part_sid:0,willDeletePart:false,
-      is_number_one:this.props.is_number_one
+      is_number_one:this.props.is_number_one,
+      new_part_number:''
     };
   }
   handleAddSparePart = () => {
@@ -47,7 +48,15 @@ class ControlSparePart extends Component {
   updateOldPartSerial = (e) => {
     this.setState({old_part_serial:e.target.value});
   }
+
   updateNewPartNumber = (e) => {
+    this.setState({new_part_number:e.target.value});
+  }
+  updateNewPartSerial = (e) => {
+    this.setState({new_part_serial:e.target.value});
+  }
+
+  updateNewPartSerial = (e) => {
     this.setState({new_part_serial:e.target.value});
   }
   updateDescription = (e) => {
@@ -60,7 +69,7 @@ class ControlSparePart extends Component {
     formData.append("token", InfoGen.token);
     formData.append("part_number_defective",this.state.old_part_number);
     formData.append("part_serial_defective", this.state.old_part_serial);
-    formData.append("part_number", this.state.old_part_number);
+    formData.append("part_number", this.state.new_part_number);
     formData.append("part_serial", this.state.new_part_serial);
     formData.append("description",this.state.description);
     formData.append("quantity","1");
@@ -75,7 +84,8 @@ class ControlSparePart extends Component {
         part_number_defective:that.state.old_part_number,
         part_serial_defective:that.state.old_part_serial,
         part_serial:that.state.new_part_serial,
-        description:that.state.description
+        description:that.state.description,
+
       });
       that.setState({
         sparepart:tmp,
@@ -156,7 +166,8 @@ class ControlSparePart extends Component {
         </div>
         <div style={{backgroundColor:'#fafbfc',padding:'10px',border:'1px solid #eeeeee'}}>
           <div><small>New Part (พาร์ทใหม่)</small></div>
-          <TextField hintText="Part Serial" onChange={this.updateNewPartNumber} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
+          <TextField hintText="Part Number" onChange={this.updateNewPartNumber} value={this.state.new_part_number} floatingLabelText="Part Number" fullWidth={true} />
+          <TextField hintText="Part Serial" onChange={this.updateNewPartSerial} value={this.state.new_part_serial} floatingLabelText="Part Serial" fullWidth={true} />
           <TextField hintText="Description" onChange={this.updateDescription} value={this.state.description} floatingLabelText="Description" fullWidth={true} />
         </div>
         <RaisedButton label="Add" primary={true} style={styles.button} onTouchTap={this.addPart}/>
