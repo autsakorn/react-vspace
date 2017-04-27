@@ -34,9 +34,7 @@ class Welcome extends Component {
             page = < div > Sign Up < /div>
         }
         return (
-          <MuiThemeProvider>
             <div> {page} </div>
-          </MuiThemeProvider>
         )
     }
 }

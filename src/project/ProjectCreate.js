@@ -585,18 +585,18 @@ class ProjectCreate extends Component {
         </Card>
 
     return(
-      <MuiThemeProvider>
+
         <div>
           <div>
-            <NavCompoment info={this.props.info} />
+
           </div>
           <div>
             {formCreate}
           </div>
         </div>
-      </MuiThemeProvider>
     )
   }
 }
+            // <NavCompoment onChangePage={()=>{this.props.onChangePage()}} info={this.props.info} />
 
 export default ProjectCreate;

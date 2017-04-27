@@ -38,12 +38,16 @@ import ActionAssignment from 'material-ui/svg-icons/action/assignment';
 import { Columns,Column } from 're-bulma';
 import { Card,CardHeader,CardHeaderTitle,CardContent,Content, CardFooter,CardFooterItem } from 're-bulma';
 
+import TicketSlaRemedy from '../ticket/TicketSlaRemedy';
+
 class TicketDetail extends Component {
   constructor(props){
       super(props);
       this.state = {
         ticket_sid:this.props.ticket_sid,
-        data: this.props.data
+        data: this.props.data,
+        openFormSlaRemedy:false,
+        toSlaStatus:0
       };
 
   }
@@ -131,25 +135,28 @@ class TicketDetail extends Component {
       avatar = <div style={styles.relative}>{picAvatar}<small style={{color:lightBlack,'position':'absolute','top':'5px','left':'45px'}}>{labelOwnerCase}</small></div>;
 
       var owner =
-      <Card isFullwidth>
-        <CardHeader>
-          <CardHeaderTitle>
-            <small style={{color:lightBlack}}>Owner</small>
-          </CardHeaderTitle>
-        </CardHeader>
-        <CardContent>
-          <Content>
-            <small style={{color:lightBlack}}>
-            <div style={{'height':'50px'}}>
-              {avatar}
-            </div>
-            <div style={{textAlign:'left'}}>
-              <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.props.listUserCanAddProject} />
-            </div>
-            </small>
-          </Content>
-        </CardContent>
-      </Card>;
+      <div>
+        <Card isFullwidth>
+          <CardHeader>
+            <CardHeaderTitle>
+              <small style={{color:lightBlack}}>Owner</small>
+            </CardHeaderTitle>
+          </CardHeader>
+          <CardContent>
+            <Content>
+              <small style={{color:lightBlack}}>
+              <div style={{'height':'50px'}}>
+                {avatar}
+              </div>
+              <div style={{textAlign:'left'}}>
+                <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.props.listUserCanAddProject} />
+              </div>
+              </small>
+            </Content>
+          </CardContent>
+        </Card>
+      <br/>
+      </div>;
 
       var jobData;
       // if(data.task.length>0){
@@ -185,18 +192,31 @@ class TicketDetail extends Component {
 
       var checkList = <TicketChecklist sid={data.sid} item={data} />;
 
+      var slaRemedy;
+      if(this.state.openFormSlaRemedy){
+        slaRemedy = <CardContent style={{border:'1px solid #dedede'}}><TicketSlaRemedy ticket_sid={this.state.ticket_sid} cancelSlaRemedy={()=>{this.setState({openFormSlaRemedy:false}) }} status={this.state.toSlaStatus} statusTxt={this.state.toSlaTxt} /></CardContent>;
+      }
+
       //SLA
       var SLA;
+      var control_status_ticket;
       var slaRow = [];
-      if(data.sla_remedy_array && data.sla_remedy_array.length>0){
+      var btnActivitySlaRemedy;
+      if(data.sla_remedy_array && data.sla_remedy_array.length>0 || data.refer_remedy_hd){
         console.log(data.sla_remedy_array);
-        slaRow.push(
+        if(data.sla_remedy_array.length>0){
+          slaRow.push(
+            <CardFooter key={-1} style={{marginBottom:'10px', width:'100%'}}>
+              <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>SLA Name</span></CardFooterItem>
+              <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Due Datetime</span></CardFooterItem>
+              <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Status</span></CardFooterItem>
+            </CardFooter>
+          );
+        }else{
           <CardFooter key={-1} style={{marginBottom:'10px', width:'100%'}}>
-            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>SLA Name</span></CardFooterItem>
-            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Due Datetime</span></CardFooterItem>
-            <CardFooterItem style={{overflow:'hidden'}}><span style={{color:grey400}}>Status</span></CardFooterItem>
+            <div>SLA (CCD) Not Measured</div>
           </CardFooter>
-        );
+        }
         data.sla_remedy_array.forEach((item,i)=>{
           slaRow.push(
               <CardFooter key={i} style={{marginBottom:'10px', width:'100%'}}>
@@ -207,27 +227,30 @@ class TicketDetail extends Component {
           )
         });
 
-        if(InfoGen.email==="autsakorn.t@firstlogic.co.th"){
-          slaRow.push(
-            <CardFooter key={-2} style={{marginBottom:'10px', width:'100%'}}>
-              <CardFooterItem>
-                <Columns>
-                  <Column>
-                    <RaisedButton style={styles.button}>Response</RaisedButton>
-                    <RaisedButton style={styles.button}>Onsite</RaisedButton>
-
-                    <RaisedButton style={styles.button}>No Onsite</RaisedButton>
-                    <RaisedButton style={styles.button}>No Workaround</RaisedButton>
-
-                    <RaisedButton style={styles.button}>Workaround</RaisedButton>
-                    <RaisedButton style={styles.button}>Pending</RaisedButton>
-                    <RaisedButton style={styles.button}>Resolve</RaisedButton>
-                  </Column>
-                </Columns>
-              </CardFooterItem>
-            </CardFooter>
-          );
-        }
+        // if(InfoGen.email==="autsakorn.t@firstlogic.co.th" || InfoGen.email==="visa.r@firstlogic.co.th"){
+        //   slaRow.push(
+        //     <CardFooter key={-2} style={{marginBottom:'10px', width:'100%'}}>
+        //       <CardFooterItem>
+        //         <Columns>
+        //           <Column>
+        //           </Column>
+        //         </Columns>
+        //       </CardFooterItem>
+        //     </CardFooter>
+        //   );
+        // }
+        btnActivitySlaRemedy =
+        <div>
+          <div>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:2, toSlaTxt:'Response'});}} style={styles.button}>Response</RaisedButton>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:7, toSlaTxt:'Onsite'});}} style={styles.button}>Onsite</RaisedButton>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:11, toSlaTxt:'No Onsite'});}} style={styles.button}>No Onsite</RaisedButton>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:3, toSlaTxt:'Workaround'});}} style={styles.button}>Workaround</RaisedButton>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:10, toSlaTxt:'No Workaround'});}} style={styles.button}>No Workaround</RaisedButton>
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:5, toSlaTxt:'Resolve'});}} style={styles.button}>Resolve</RaisedButton>
+            <RaisedButton  onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:4, toSlaTxt:'Pending'});}} style={styles.button}>Pending</RaisedButton>
+          </div>
+        </div>;
 
         SLA =
         <Card style={{width:'100%'}}>
@@ -238,10 +261,44 @@ class TicketDetail extends Component {
           </CardHeader>
           {slaRow}
         </Card>
+      }else{
+        SLA = <TicketControlStatus ticket_sid={this.props.ticket_sid} data={this.props.data} />;
       }
       // END SLA
 
-      var control_status_ticket = <TicketControlStatus ticket_sid={this.props.ticket_sid} data={this.props.data} />;
+      //WORKLOG ZONE
+      var worklog = [];
+      console.log(data);
+      if(data.worklog){
+        data.worklog.forEach((item,i)=>{
+            worklog.push(<div key={i}><Avatar src={item.created_pic} /> {item.worklog} <br/><small style={{fontSize:'70%'}}>Created {item.create_datetime_df}</small></div>);
+        });
+      }
+      var worklogElement =
+      <Card isFullwidth>
+        <CardHeader>
+          <CardHeaderTitle>
+            <small style={{color:lightBlack}}>Worklog</small>
+          </CardHeaderTitle>
+        </CardHeader>
+        <CardContent>
+          <Content>
+            {worklog}
+          </Content>
+
+          <div>{slaRemedy}</div>
+          <div>
+            {btnActivitySlaRemedy}
+            <RaisedButton onTouchTap={()=>{this.setState({openFormSlaRemedy:true,toSlaStatus:8, toSlaTxt:'Worklog'});}} style={styles.button}>Worklog</RaisedButton>
+          </div>
+        </CardContent>
+      </Card>
+
+      control_status_ticket =
+      <div>
+        {SLA}
+        <div>{worklogElement}</div>
+      </div>;
 
       return(
         <div >
@@ -250,6 +307,13 @@ class TicketDetail extends Component {
           iconElementLeft={<IconButton onTouchTap={()=>{this.props.closeWindow()}}><NavigationClose /></IconButton>}/>
             <div style={styles.box}>
                 <Columns>
+                  <Column style={style}>
+
+                    {control_service_report}
+                    {checkList}
+
+                    {control_status_ticket}
+                  </Column>
                   <Column size="isOneThird" style={style}>
                     <Card isFullwidth>
                       <CardHeader>
@@ -262,6 +326,7 @@ class TicketDetail extends Component {
                           <small style={{color:lightBlack}}>
                             <div><label>No.:</label> <div style={{float:'right'}}>{data.no_ticket} <small style={{color:grey400}}>{data.refer_remedy_hd}</small></div></div>
                             <div><label>Contract:</label> <div style={{float:'right'}}>{data.contract_no}</div></div>
+                            <div><label>Serial:</label> <div style={{float:'right'}}>{data.serial_no}</div></div>
                             <div><label>Urgency:</label> <div style={{float:'right'}}>{data.urgency}</div></div>
                             <div><label>Type:</label> <div style={{float:'right'}}>{data.case_type}</div></div>
                             <div><label>End User:</label> <div style={{float:'right'}}>{data.end_user}</div></div>
@@ -284,18 +349,7 @@ class TicketDetail extends Component {
                     </Card>
                     <br/>
                     {owner}
-                  </Column>
-                  <Column style={style}>
-
-                    {control_service_report}
-
                     {control_manday}
-
-                    {checkList}
-
-                    {SLA}
-
-                    {control_status_ticket}
                   </Column>
 
                 </Columns>

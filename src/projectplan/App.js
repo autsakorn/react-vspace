@@ -6,7 +6,7 @@ import MyApp from './MyApp';
 import get from '../config/Get.js';
 import Url from '../config/url';
 import InfoGen from '../config/InfoGen';
-
+import MainApp from './App';
 import './style.css';
 
 class App extends Component {
@@ -61,16 +61,13 @@ class App extends Component {
       }
     }
     return(
-      <MuiThemeProvider>
         <div className="color-5-0">
-          <NavCompoment info={this.props.info} />
           <div id="vspace-container" style={style.container}>
             <div className="vspace-wrapper" style={style.wrapper}>
               <MyApp info={this.props.info} projectOwner={this.props.projectOwner} toggleUpdate={"true"} onChangeStaffCase={this.handleChangeStaffCase} casetype={this.state.casetype} projectInfo={this.state.projectInfo} listType={this.state.listType} listUserCanAddProject={this.state.listUserCanAddProject} />
             </div>
           </div>
         </div>
-      </MuiThemeProvider>
     )
   }
 }

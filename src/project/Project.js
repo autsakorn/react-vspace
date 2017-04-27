@@ -111,6 +111,9 @@ class Project extends Component {
   componentWillMount(){
     this.callProjectList("");
   }
+  componentWillUnmount(){
+    this.setState({projectList:[],appointment:[],task:[]});
+  }
   callProjectList(search){
     var that = this;
     // this.props.formData.append("search",search);
@@ -240,21 +243,24 @@ class Project extends Component {
     that.setState({listProject:elementSectionProject,listAppoinement:elementSectionAppointment,listTask:elementSectionTask});
 
   }
-  handleSelectProject(e){
+  handleSelectProject = (e) => {
     localStorage.setItem("project_sid", e.currentTarget.dataset.id);
     localStorage.removeItem("tasks_sid");
-    window.location.reload(true);
+    // window.location.reload(true);
+    this.props.onChangePage();
   }
   handleSelectAppointment = (tasks_sid) => {
     // alert(tasks_sid);
     localStorage.setItem("tasks_sid",tasks_sid);
     localStorage.removeItem("project_sid");
-    window.location.reload(true);
+    // window.location.reload(true);
+    this.props.onChangePage();
   }
 
   handleCreateNewProject = () => {
-    localStorage.setItem("currectPage","ProjectCreate");
-    window.location.reload(true);
+    // localStorage.setItem("currectPage","ProjectCreate");
+    // window.location.reload(true);
+    this.props.onChangePage("ProjectCreate");
   }
   select = (index) => {
     // console.log(index);
@@ -325,9 +331,7 @@ class Project extends Component {
       ticketDetail = <div />;
     }
     return(
-        <MuiThemeProvider style={{backgroundColor:'#eaeaea'}}>
           <div>
-            <NavCompoment info={this.props.info} />
             <Paper zDepth={2} >
                 <BottomNavigation selectedIndex={this.state.selectedIndex}>
                   <BottomNavigationItem
@@ -355,7 +359,6 @@ class Project extends Component {
             {content}
             {ticketDetail}
           </div>
-        </MuiThemeProvider>
     )
   }
 }

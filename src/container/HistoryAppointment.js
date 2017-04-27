@@ -169,9 +169,7 @@ class HistoryAppointment extends Component {
     // </Chip>
 
     return(
-      <MuiThemeProvider>
         <div>
-            <NavCompoment info={this.props.info} />
             <Columns>
               <Column  style={styles.styleDatePickers}>
                 <DatePicker
@@ -214,7 +212,6 @@ class HistoryAppointment extends Component {
               </CardText>
             </div>
         </div>
-      </MuiThemeProvider>
     );
   }
 }

@@ -113,6 +113,9 @@ class Profile extends Component {
       console.log(e);
     }
   }
+  handleChangePage = () => {
+    this.props.onChangePage();
+  }
   render(){
     var style = {
         container: {
@@ -220,8 +223,6 @@ class Profile extends Component {
             </div>
             <br/>
          </div>
-
-
          <div>
           <br/>
           <RaisedButton label="Update Profile" onTouchTap={this.updateProfile} primary={this.state.is_update} />
@@ -235,11 +236,8 @@ class Profile extends Component {
         <br/><br/>
       </div>;
     return(
-
       <div>
-        <MuiThemeProvider>
           <div >
-            <NavCompoment info={this.props.info} />
 
             <MediaQuery query='(min-device-width: 769px)'>
                 <div id="vspace-container" style={style.container}>
@@ -303,10 +301,8 @@ class Profile extends Component {
                       </div>
                   </div>
             </MediaQuery>
-
           </div>
 
-        </MuiThemeProvider>
       </div>
     )
   }
