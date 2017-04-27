@@ -425,7 +425,7 @@ class ServiceReportCreate extends Component {
               </StepContent>
             </Step>
             <Step>
-              <StepLabel>CONTRACT USER</StepLabel>
+              <StepLabel>CONTACT USER</StepLabel>
               <StepContent>
                 <div>
                   <ServiceReportContactUser onContactUser={this.handleContactUser} projectContact={this.props.projectContact} />
