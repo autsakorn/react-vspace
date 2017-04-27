@@ -79,7 +79,7 @@ class TicketItem extends Component {
     if(this.state.data_ticket_detail){
       ticketDetail =
       <Drawer width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
-        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.data_ticket_detail} />
+        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
       </Drawer>
     }
 

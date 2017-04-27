@@ -135,19 +135,25 @@ class HistoryAppointment extends Component {
 
     var tableBody = [];
     this.state.data.forEach((item, i) => {
+      var linkPDF;
+      if(item.path_service_report){
+        linkPDF = <a target="new" href={END_POINT_PDF+item.path_service_report} >Service Report (PDF)</a>;
+      }else{
+        linkPDF = <span>PDF Empty</span>;
+      }
       tableBody.push(
         <div
           key={i}
           style={styles.styleBorder}
-
         >
           <Paper zDepth={2} style={{padding:'10px',height:'100%',position:'relative'}}>
+            <div><small>{item.no_task}</small> <small style={{color:lightBlack}}>{item.contract_no}</small></div>
             <div>{item.subject_service_report}</div>
-            <div><small style={{color:grey400}}>{item.end_user}</small></div>
-            <div><small style={{color:grey400}}>Appointment <small style={{float:'right'}}>{item.appointment}</small></small></div>
-            <div><small style={{color:grey400}}>{item.no_task}</small></div>
+            <div><small style={{color:lightBlack}}>{item.end_user}</small></div>
+            <div style={{maxHeight: '50px',overflow: 'hidden'}}><small style={{color:lightBlack}}>{((item.service_report_address)?item.service_report_address:item.end_user_site)}</small></div>
+            <div style={{marginTop:'10px'}}><small style={{color:lightBlack}}><small style={{float:'left'}}>Appointment</small> <small style={{float:'right'}}>{item.appointment}</small></small></div>
             <div style={{textAlign:'right', position:'absolute',right:8,bottom:8}}>
-            <div><small><a target="new" href={END_POINT_PDF+item.path_service_report} >Service Report (PDF)</a></small></div>
+            <div><small>{linkPDF}</small></div>
             </div>
           </Paper>
         </div>

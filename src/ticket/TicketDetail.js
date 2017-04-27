@@ -307,13 +307,7 @@ class TicketDetail extends Component {
           iconElementLeft={<IconButton onTouchTap={()=>{this.props.closeWindow()}}><NavigationClose /></IconButton>}/>
             <div style={styles.box}>
                 <Columns>
-                  <Column style={style}>
 
-                    {control_service_report}
-                    {checkList}
-
-                    {control_status_ticket}
-                  </Column>
                   <Column size="isOneThird" style={style}>
                     <Card isFullwidth>
                       <CardHeader>
@@ -351,6 +345,15 @@ class TicketDetail extends Component {
                     {owner}
                     {control_manday}
                   </Column>
+
+                  <Column style={style}>
+
+                    {control_service_report}
+                    {checkList}
+
+                    {control_status_ticket}
+                  </Column>
+
 
                 </Columns>
                 <div style={{'textAlign':'right'}}><small>Created {data.create_datetime}</small></div>
