@@ -27,7 +27,7 @@ import Snackbar from 'material-ui/Snackbar';
 class ServiceReportDialog extends Component {
   constructor(props){
     super(props);
-    console.log('ServiceReportDialog', this.props.listUserCanAddTask);
+    // console.log('ServiceReportDialog', this.props.serviceReport);
     this.state = {
       open: false,
       serviceReport:this.props.serviceReport,
@@ -54,6 +54,7 @@ class ServiceReportDialog extends Component {
     this.setState({open:false});
   }
   handleCreatedService = (task) => {
+    console.log(task);
     // this.props.onCreatedService();
     // var serviceReport = this.state.serviceReport;
     // serviceReport.push({
@@ -62,7 +63,8 @@ class ServiceReportDialog extends Component {
     //   service_type_name:"",
     //   appointment:""
     // });
-    this.setState({serviceReport:task, openSnackbar:true,messageSnackbar:'Appointment Created'});
+    this.props.onCreatedService();
+    this.setState({openSnackbar:true,messageSnackbar:'Appointment Created'});
   }
 
   render(){
@@ -81,7 +83,7 @@ class ServiceReportDialog extends Component {
       />,
     ];
 
-    var propsServiceReport = this.state.serviceReport;
+    var propsServiceReport = this.props.serviceReport;
     var serviceReport = [];
     // var listServiceReport;
     var chipServiceReport = [];

@@ -16,7 +16,7 @@ import HistoryAppointment from './container/HistoryAppointment';
 import NavCompoment from './nav/NavCompoment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Asset from './asset/Asset.js';
-
+import Snackbar from 'material-ui/Snackbar';
 import Manage7x24 from './standby/Manage7x24';
 import {
   BrowserRouter as Router,
@@ -27,7 +27,7 @@ import {
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = {home:"Loading...",projectCreate:"Loading...",project:"Loading...",profile:"loading...",page:<div />,toggle:false}
+    this.state = {home:"Loading...",projectCreate:"Loading...",project:"Loading...",profile:"loading...",page:<div />,toggle:false,openSnackbar:false}
     // var formData = new FormData();
     // formData.append('token',InfoGen.token);
     // formData.append('email',InfoGen.email);
@@ -53,6 +53,7 @@ class App extends Component {
   }
 
   handleChangePage = (page) => {
+    this.setState({openSnackbar:true});
     console.log(page);
     if(page){
       localStorage.removeItem("project_sid");
@@ -72,37 +73,37 @@ class App extends Component {
       formData.append('email',InfoGen.email);
       get(Url.info, formData).then(function(resInfo){
         if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Boards"){
-          that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
+          that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Manage7x24"){
-            that.setState({page:
+            that.setState({openSnackbar:false,page:
               <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
                 <Manage7x24 />
               </div>
             });
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
-            that.setState({page:
+            that.setState({openSnackbar:false,page:
               <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
               <ProjectCreate onChangePage={that.handleChangePage} info={resInfo.data} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Profile"){
-            that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
               <Profile onChangePage={that.handleChangePage} info={resInfo.data} /></div>,toggle:!that.state.toggle});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Standby7x24"){
-            that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
               <Standby7x24 onChangePage={that.handleChangePage} info={resInfo.data} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ApproveService"){
-            that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
               <ApproveService onChangePage={that.handleChangePage} info={resInfo.data} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="HistoryAppointment"){
-          that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+          that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
             <HistoryAppointment onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Asset"){
-          that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+          that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
             <Asset onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} /></div>});
         } else if(localStorage.getItem("project_sid")){
             formData.append('project_sid',localStorage.getItem("project_sid"));
             get(Url.projectDetail, formData).then(function(resPd){
               get(Url.listCaseAll, formData).then(function(resLCA){
-                that.setState({page:
+                that.setState({openSnackbar:false,page:
                   <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
                   <ProjectPlanApp listUserCanAddTask={resInfo.listUserCanAddTask} onChangePage={that.handleChangePage} projectOwner={resPd.project_detail.owner} info={resInfo.data} projectInfo={resPd.project_detail.project_detail} casetype={resPd.data} listType={resLCA.data} listUserCanAddProject={resPd.listUserCanAddProject}/>
                   </div>}
@@ -110,11 +111,14 @@ class App extends Component {
               });
             });
         }else if(localStorage.getItem("tasks_sid")){
-            that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
               <Appointment onChangePage={that.handleChangePage} tasks_sid={localStorage.getItem("tasks_sid")} info={resInfo.data} /></div>});
         }else{
-            that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
-              <Project listUserCanAddTask={resInfo.listUserCanAddTask} onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
+            that.setState({
+              openSnackbar:false,
+              page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+              <Project listUserCanAddTask={resInfo.listUserCanAddTask} onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>
+            });
         }
       },function(error){
         console.log(error);
@@ -153,7 +157,13 @@ class App extends Component {
       <MuiThemeProvider>
         <div>
           {this.state.page}
+          <Snackbar
+            open={this.state.openSnackbar}
+            message="Loading..."
+            onRequestClose={()=>{this.setState({openSnackbar:false})}}
+          />
         </div>
+
       </MuiThemeProvider>
     );
   }

@@ -44,7 +44,8 @@ var Url = {
   'historyAppointment': END_POINT_2+"v1/projectplan/historyAppointment",
   'changeStatusTicket':END_POINT_2+"v1/incident/updateSLA",
   'do_serial_pm':END_POINT_2+"v1/pm/insert/do_serial_pm",
-  'closeProject':END_POINT_2+"v1/projectmodify/closeProject"
+  'closeProject':END_POINT_2+"v1/projectmodify/closeProject",
+  'tasks':END_POINT_2+"v1/projectplan/tasks"
 }
 
 export default Url;

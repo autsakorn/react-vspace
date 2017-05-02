@@ -45,18 +45,32 @@ import TicketSlaRemedy from '../ticket/TicketSlaRemedy';
 class TicketDetail extends Component {
   constructor(props){
       super(props);
-      console.log('listUserCanAddTask ticket detail', this.props.listUserCanAddTask);
+      // console.log('listUserCanAddTask ticket detail', this.props.listUserCanAddTask);
       this.state = {
         ticket_sid:this.props.ticket_sid,
         data: this.props.data,
         openFormSlaRemedy:false,
         toSlaStatus:0,
-        openAppointment:false
+        openAppointment:false,
+        tasks:[]
       };
   }
   handleOpenAppointment = () => {
     // this.setState({openAppointment:true});
     this.props.onOpenAppointment();
+  }
+  componentWillMount(){
+    this.loadTasks();
+  }
+  loadTasks = () => {
+    var formData = new FormData();
+    formData.append("email", InfoGen.email);
+    formData.append("token",InfoGen.token);
+    formData.append("ticket_sid",this.props.ticket_sid);
+    var that = this;
+    get(Url.tasks,formData).then(function(res){
+      that.setState({tasks:res.data});
+    });
   }
   componentDidMount(){
 
@@ -99,7 +113,9 @@ class TicketDetail extends Component {
 
     });
   }
-
+  handleCreatedService = () => {
+    this.loadTasks();
+  }
   render(){
 
     const iconStyles = {
@@ -165,10 +181,11 @@ class TicketDetail extends Component {
       </div>;
 
       var jobData;
-      // if(data.task.length>0){
-        jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={data.task} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddTask={this.props.listUserCanAddTask}  />
+
+      // if(this.state.tasks.length>0){
+        jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={this.state.tasks} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddTask={this.props.listUserCanAddTask}  />
       // }else{
-        // jobData = <span></span>
+      //   jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={[]} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddTask={this.props.listUserCanAddTask}  />
       // }
       var control_service_report =
       <div>
