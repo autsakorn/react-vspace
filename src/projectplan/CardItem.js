@@ -23,13 +23,13 @@ import Url from '../config/url';
 import get from '../config/Get';
 import Put from '../config/Put';
 import InfoGen from '../config/InfoGen';
-import TicketDrawer from '../ticket/TicketDrawer';
+import TicketDetail from '../ticket/TicketDetail';
 import Drawer from 'material-ui/Drawer';
 import Paper from 'material-ui/Paper';
 class CardItem extends Component {
   constructor(props) {
     super(props);
-    // console.log('CardItem props', this.props.case.owner);
+    console.log('listUserCanAddTask props', this.props.listUserCanAddTask);
     this.state = {
       item:this.props.case,
       editing:false,
@@ -38,6 +38,7 @@ class CardItem extends Component {
       projectContact: this.props.projectContact,
       owner_value:this.props.case.owner,
       listUserCanAddProject:this.props.listUserCanAddProject,
+      listUserCanAddTask:this.props.listUserCanAddTask,
       open: false,
       status: this.props.case.status,
       mandaysCase: this.props.case.man_days,
@@ -264,15 +265,17 @@ class CardItem extends Component {
           </div>
           <Drawer onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})}
           docked={false} width={'100%'} openSecondary={true} open={this.state.openTicketDrawer} >
-              <TicketDrawer
+              <TicketDetail
+                  ticket_sid={this.state.sid}
                   onOpenTicketDrawer={()=>this.setState({openTicketDrawer:false})}
                   onChangeSubject={this.onChangeSubject}
                   onChangeStaffCase={this.handleSelectItemOwner}
-                  case={this.state.item} sid={this.props.case.sid}
-                  name={this.state.name}
+                  data={this.state.item} sid={this.props.case.sid}
+                  name={this.state.name} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }}
                   projectContact={this.props.projectContact}
                   owner_value={this.props.case.owner}
                   listUserCanAddProject={this.props.listUserCanAddProject}
+                  listUserCanAddTask={this.props.listUserCanAddTask}
                   status={this.props.case.status}
                   mandaysCase={this.props.case.man_days}
                   projectInfo={this.props.projectInfo}

@@ -68,7 +68,7 @@ class Column extends Component {
     var lists = [];
     var that = this;
     this.props.casetype.forEach((item,k) => {
-      lists.push(<Lists info={this.props.info} projectInfo={this.state.projectInfo} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddProject={this.state.listUserCanAddProject} key={k} sid={item.sid} type={item.type} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
+      lists.push(<Lists info={this.props.info} projectInfo={this.state.projectInfo} onChangeStaffCase={this.handleChangeStaffCase} listUserCanAddTask={this.props.listUserCanAddTask} listUserCanAddProject={this.state.listUserCanAddProject} key={k} sid={item.sid} type={item.type} header={item.type} item={item.case} onAdding={that.onAdding} status={item.status} onEdit={this.onEdit} onEditChange={this.onEditChange} onDelete={this.onDelete} onAddNew={this.onAddNew} />);
     });
     const styles = {
       root: {

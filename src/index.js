@@ -26,6 +26,7 @@ initReactFastclick();
 import './index.css';
 var formData = new FormData();
 
+
 // if(InfoGen.token){
 //   formData.append('token',InfoGen.token);
 //   formData.append('email',InfoGen.email);

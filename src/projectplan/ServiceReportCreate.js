@@ -28,17 +28,21 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import OwnerDialog from '../projectplan/OwnerDialog';
+import OwnerDialog from '../projectplan/OwnerDialog2';
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import MapsLocalTaxi from 'material-ui/svg-icons/maps/local-taxi';
 import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+
+import Divider from 'material-ui/Divider';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
-
+    console.log('ServiceReportCreate', this.props.listUserCanAddTask);
     const appointment_date = new Date();
     appointment_date.setFullYear(appointment_date.getFullYear());
     appointment_date.setHours(0, 0, 0, 0);
@@ -49,17 +53,26 @@ class ServiceReportCreate extends Component {
     this.state = {
       serviceReport:this.props.serviceReport,
       createService:this.props.createService,
-      stepIndex: 0,finished: false,caseSid:this.props.caseSid,
+      stepIndex: 0,finished: false,
+      ticket_sid:this.props.ticket_sid,
       value24: appointment_time, value12: null, openSelectStaff:false,
       staff:[],
       subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"8",
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
       openSnackbar:false,
-      messageSnackbar:''
+      messageSnackbar:'',
+      creatingService:true
     };
   }
   componentWillUnmount(){
 
+  }
+  handleStatusCreating = () => {
+    if(this.state.createService){
+      this.setState({creatingService:false});
+    }else{
+      this.setState({creatingService:true})
+    }
   }
   handleContactUser = (name, email, mobile, phone, company) => {
     this.setState({end_user_name:name});
@@ -88,7 +101,8 @@ class ServiceReportCreate extends Component {
     }else{
       this.setState({createService:true});
     }
-    this.props.onStatusCreating(this.state.createService);
+    this.handleStatusCreating();
+    // this.props.onStatusCreating(this.state.createService);
   }
 
   handleNext = () => {
@@ -100,7 +114,7 @@ class ServiceReportCreate extends Component {
           this.goToNext();
       }
     }else if(stepIndex===2 && this.state.staff.length<1){
-      this.props.listUserCanAddProject.forEach((item,i)=>{
+      this.props.listUserCanAddTask.forEach((item,i)=>{
         if(item.email===localStorage.getItem("case_email")){
             var temp = [{name:item.engname, email:item.email, pic_employee:item.pic_employee}];
             this.setState({staff:temp});
@@ -131,7 +145,7 @@ class ServiceReportCreate extends Component {
   handleServiceReportCreate = () => {
     console.log(this.state);
     this.setState({openSnackbar:true,messageSnackbar:'Appointment Creating...'});
-    this.props.onCloseDialog();
+
     var that = this;
     var engineer = [];
     this.state.staff.forEach((item) => {
@@ -161,7 +175,7 @@ class ServiceReportCreate extends Component {
     }
     console.log(dataCreateService);
     var formData = new FormData();
-    formData.append('ticket_sid', this.state.caseSid);
+    formData.append('ticket_sid', this.state.ticket_sid);
     formData.append('email',InfoGen.email);
     formData.append('token',InfoGen.token);
     formData.append('data', JSON.stringify(dataCreateService));
@@ -169,6 +183,7 @@ class ServiceReportCreate extends Component {
         console.log(res);
         that.props.onCreatedService(res.task);
         that.setState({stepIndex:0,staff:[],openSnackbar:false,messageSnackbar:'Appointment Created'});
+        that.props.onCloseDialog();
     });
   }
 
@@ -305,7 +320,7 @@ class ServiceReportCreate extends Component {
     };
     const {finished, stepIndex} = this.state;
 
-    var staffList = this.props.listUserCanAddProject.map((item,k) => {
+    var staffList = this.props.listUserCanAddTask.map((item,k) => {
         return <ListItem key={k}
           leftAvatar={<Avatar src={item.pic_employee} />}
           primaryText={item.thainame}
@@ -322,13 +337,13 @@ class ServiceReportCreate extends Component {
     var staffSelected = [];
     var confirmStaff = [];
     this.state.staff.forEach((item,i) => {
-        staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
+        staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.email}</Chip>);
         confirmStaff.push(<Chip style={{margin:4,backgroundColor:'none'}} key={item.email} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
     });
 
     var sectionStaff = <div style={styles.wrapper}>
       {staffSelected}
-      <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddProject} title="" label="Add" icon={<SocialPersonAdd />}  />
+      <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddTask} title="" label="Add" icon={<SocialPersonAdd />}  />
     </div>;
 
     var createService;
@@ -345,7 +360,6 @@ class ServiceReportCreate extends Component {
         <MenuItem key={6} value={"6"} primaryText="Pre-Install" />,
         <MenuItem key={7} value={"7"} primaryText="Testing" />,
       ];
-
 
       var request_benefit;
       var transportationItem = [];
@@ -374,7 +388,13 @@ class ServiceReportCreate extends Component {
       });
       request_benefit = <List> {transportationItem}</List>
       createService =
-        <div style={{maxWidth: '100%', margin: 'auto'}}>
+        <div style={{maxWidth: '100%', margin: 'auto', paddingTop:'10px'}}>
+          <Divider />
+          <div style={{textAlign:'right'}} onTouchTap={()=>this.props.onCloseDialog()}>
+            <FloatingActionButton mini={true}>
+              <NavigationClose   />
+            </FloatingActionButton>
+          </div>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
               <StepLabel>SUBJECT</StepLabel>
@@ -444,7 +464,7 @@ class ServiceReportCreate extends Component {
             </Step>
           </Stepper>
           <Snackbar
-            open={this.state.openSnackbar}
+            open={this.state.openSnackbar} autoHideDuration={4000}
             message={this.state.messageSnackbar}
             onRequestClose={()=>{this.setState({openSnackbar:false})}}
           />

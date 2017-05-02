@@ -64,7 +64,7 @@ class App extends Component {
         <div className="color-5-0">
           <div id="vspace-container" style={style.container}>
             <div className="vspace-wrapper" style={style.wrapper}>
-              <MyApp info={this.props.info} projectOwner={this.props.projectOwner} toggleUpdate={"true"} onChangeStaffCase={this.handleChangeStaffCase} casetype={this.state.casetype} projectInfo={this.state.projectInfo} listType={this.state.listType} listUserCanAddProject={this.state.listUserCanAddProject} />
+              <MyApp listUserCanAddTask={this.props.listUserCanAddTask} info={this.props.info} projectOwner={this.props.projectOwner} toggleUpdate={"true"} onChangeStaffCase={this.handleChangeStaffCase} casetype={this.state.casetype} projectInfo={this.state.projectInfo} listType={this.state.listType} listUserCanAddProject={this.state.listUserCanAddProject} />
             </div>
           </div>
         </div>

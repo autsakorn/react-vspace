@@ -28,7 +28,7 @@ import Paper from 'material-ui/Paper';
 class Lists extends Component {
     constructor(props) {
         super(props);
-        // console.log('Lists', props);
+        console.log('listUserCanAddTask props', this.props.listUserCanAddTask);
         this.state = {
             header: this.props.header,
             case: this.props.item,
@@ -37,7 +37,8 @@ class Lists extends Component {
             sid: this.props.sid,
             type: this.props.type,
             listUserCanAddProject: this.props.listUserCanAddProject,
-            projectInfo:this.props.projectInfo
+            projectInfo:this.props.projectInfo,
+            listUserCanAddTask:this.props.listUserCanAddTask
         }
         this.onAddNew = this.onAddNew.bind(this);
         this.onAdding = this.onAdding.bind(this);
@@ -79,7 +80,7 @@ class Lists extends Component {
         formData.append('email', InfoGen.email);
         formData.append('storage', JSON.stringify(dataForCreateCase));
         Put(Url.caseCreate, formData).then(function(res) {
-            console.log('resCaseCreated', res);
+
             that.props.item.push({sid:res.data_res.ticket_sid,subject:data,task:[],need_checklist:[],man_days:8});
             that.setState({case:that.props.item});
         });
@@ -139,7 +140,7 @@ class Lists extends Component {
                     projectInfo={this.props.projectInfo}
                     case={item}
                     onEdit={this.onEdit}
-                    onEditChange={this.onEditChange}
+                    onEditChange={this.onEditChange} listUserCanAddTask={this.props.listUserCanAddTask}
                     onDelete={this.onDelete} />);
         });
             const style = {
