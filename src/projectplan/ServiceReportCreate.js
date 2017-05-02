@@ -42,7 +42,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
-    console.log('ServiceReportCreate', this.props.listUserCanAddTask);
+    // console.log('ServiceReportCreate', this.props.listUserCanAddTask);
     const appointment_date = new Date();
     appointment_date.setFullYear(appointment_date.getFullYear());
     appointment_date.setHours(0, 0, 0, 0);
