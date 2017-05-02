@@ -91,7 +91,8 @@ export default class OwnerDialog2 extends Component {
     }
     var closeBtn;
     if(this.state.open){
-      closeBtn = <div style={{textAlign:'right'}}><TextField hintText="Filter" onChange={this.changeTxt} /><ContentClear onTouchTap={this.handleClose} /></div>;
+      closeBtn = <div style={{textAlign:'right'}}>
+      <TextField hintText="Filter" style={{width:'95%'}} onChange={this.changeTxt} /><ContentClear onTouchTap={this.handleClose} /></div>;
     }
     var chipAvatar;
     if(this.state.src){

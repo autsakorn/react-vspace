@@ -27,12 +27,13 @@ import io from 'socket.io-client';
 import {Table, Thead,Tr,Th,Tbody,Td,Tfoot } from 're-bulma';
 import AppAsset from '../asset/AppAsset';
 
-const socket = io.connect("http://202.129.207.80:4000");
+
 export default class Asset extends Component {
 
   constructor(props){
     super(props);
-    this.state = {data:[]}
+    // const socket = ;
+    this.state = {data:[],socket:io.connect("http://202.129.207.80:4000")}
   }
   componentDidMount(){
     // this.socket.on('message', msg => console.log(msg));
@@ -43,9 +44,10 @@ export default class Asset extends Component {
     // });
   }
   render(){
+    console.log(this.state.socket);
     return(
-      <SocketProvider socket={socket}>
-        <AppAsset socket={socket} data={this.state.data} />
+      <SocketProvider socket={this.state.socket}>
+        <AppAsset socket={this.state.socket} data={this.state.data} />
       </SocketProvider>
     )
   }
