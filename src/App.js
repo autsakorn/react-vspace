@@ -15,7 +15,7 @@ import Standby7x24 from './standby/Standby7x24';
 import HistoryAppointment from './container/HistoryAppointment';
 import NavCompoment from './nav/NavCompoment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import Asset from './asset/Asset.js';
+import Asset from './asset/Asset.js';
 
 // import Manage7x24 from './standby/Manage7x24';
 import {
@@ -96,8 +96,8 @@ class App extends Component {
           that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
             <HistoryAppointment onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Asset"){
-          // that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
-          //   <Asset onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} /></div>});
+          that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            <Asset onChangePage={that.handleChangePage} my_staff={resInfo.my_staff} info={resInfo.data} /></div>});
         } else if(localStorage.getItem("project_sid")){
             formData.append('project_sid',localStorage.getItem("project_sid"));
             get(Url.projectDetail, formData).then(function(resPd){
