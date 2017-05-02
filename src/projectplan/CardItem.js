@@ -29,7 +29,7 @@ import Paper from 'material-ui/Paper';
 class CardItem extends Component {
   constructor(props) {
     super(props);
-    // console.log('CardItem props', this.props.case.owner);
+    console.log('listUserCanAddTask props', this.props.listUserCanAddTask);
     this.state = {
       item:this.props.case,
       editing:false,
@@ -38,6 +38,7 @@ class CardItem extends Component {
       projectContact: this.props.projectContact,
       owner_value:this.props.case.owner,
       listUserCanAddProject:this.props.listUserCanAddProject,
+      listUserCanAddTask:this.props.listUserCanAddTask,
       open: false,
       status: this.props.case.status,
       mandaysCase: this.props.case.man_days,
@@ -274,6 +275,7 @@ class CardItem extends Component {
                   projectContact={this.props.projectContact}
                   owner_value={this.props.case.owner}
                   listUserCanAddProject={this.props.listUserCanAddProject}
+                  listUserCanAddTask={this.props.listUserCanAddTask}
                   status={this.props.case.status}
                   mandaysCase={this.props.case.man_days}
                   projectInfo={this.props.projectInfo}

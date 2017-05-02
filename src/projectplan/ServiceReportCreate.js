@@ -28,7 +28,7 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import OwnerDialog from '../projectplan/OwnerDialog';
+import OwnerDialog from '../projectplan/OwnerDialog2';
 import SocialPersonAdd from 'material-ui/svg-icons/social/person-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import MapsLocalTaxi from 'material-ui/svg-icons/maps/local-taxi';
@@ -42,7 +42,7 @@ import NavigationClose from 'material-ui/svg-icons/navigation/close';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
-
+    console.log('ServiceReportCreate', this.props.listUserCanAddTask);
     const appointment_date = new Date();
     appointment_date.setFullYear(appointment_date.getFullYear());
     appointment_date.setHours(0, 0, 0, 0);
@@ -114,7 +114,7 @@ class ServiceReportCreate extends Component {
           this.goToNext();
       }
     }else if(stepIndex===2 && this.state.staff.length<1){
-      this.props.listUserCanAddProject.forEach((item,i)=>{
+      this.props.listUserCanAddTask.forEach((item,i)=>{
         if(item.email===localStorage.getItem("case_email")){
             var temp = [{name:item.engname, email:item.email, pic_employee:item.pic_employee}];
             this.setState({staff:temp});
@@ -320,7 +320,7 @@ class ServiceReportCreate extends Component {
     };
     const {finished, stepIndex} = this.state;
 
-    var staffList = this.props.listUserCanAddProject.map((item,k) => {
+    var staffList = this.props.listUserCanAddTask.map((item,k) => {
         return <ListItem key={k}
           leftAvatar={<Avatar src={item.pic_employee} />}
           primaryText={item.thainame}
@@ -337,13 +337,13 @@ class ServiceReportCreate extends Component {
     var staffSelected = [];
     var confirmStaff = [];
     this.state.staff.forEach((item,i) => {
-        staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
+        staffSelected.push(<Chip data-id={item.email} style={styles.chip} key={item.email} onRequestDelete={() => this.handleRequestDelete(item.email)} ><Avatar src={item.pic_employee} /> {item.email}</Chip>);
         confirmStaff.push(<Chip style={{margin:4,backgroundColor:'none'}} key={item.email} ><Avatar src={item.pic_employee} /> {item.name}</Chip>);
     });
 
     var sectionStaff = <div style={styles.wrapper}>
       {staffSelected}
-      <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddProject} title="" label="Add" icon={<SocialPersonAdd />}  />
+      <OwnerDialog onShowMore={()=>{}} onSelectItem={this.handleSelectStaff} listItem={this.props.listUserCanAddTask} title="" label="Add" icon={<SocialPersonAdd />}  />
     </div>;
 
     var createService;

@@ -23,6 +23,8 @@ import IconMenu from 'material-ui/IconMenu';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import OwnerDialog from '../projectplan/OwnerDialog';
+import OwnerDialog2 from '../projectplan/OwnerDialog2';
+
 import SocialPeople from 'material-ui/svg-icons/social/people';
 // import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
@@ -43,6 +45,7 @@ import TicketSlaRemedy from '../ticket/TicketSlaRemedy';
 class TicketDetail extends Component {
   constructor(props){
       super(props);
+      console.log('listUserCanAddTask ticket detail', this.props.listUserCanAddTask);
       this.state = {
         ticket_sid:this.props.ticket_sid,
         data: this.props.data,
@@ -152,7 +155,7 @@ class TicketDetail extends Component {
                 {avatar}
               </div>
               <div style={{textAlign:'left'}}>
-                <OwnerDialog onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.props.listUserCanAddProject} />
+                <OwnerDialog2 onShowMore={()=>{}} icon={<SocialPeople />} label={"Change"} title={"Change Owner"} onSelectItem={this.handleSelectItemOwner} listItem={this.props.listUserCanAddTask} />
               </div>
               </small>
             </Content>
@@ -163,7 +166,7 @@ class TicketDetail extends Component {
 
       var jobData;
       // if(data.task.length>0){
-        jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={data.task} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject}  />
+        jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={data.task} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddTask={this.props.listUserCanAddTask}  />
       // }else{
         // jobData = <span></span>
       // }

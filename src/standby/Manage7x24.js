@@ -20,17 +20,17 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import * as firebase from 'firebase';
 
-var config = {
-    apiKey: "AIzaSyDd86kbn_C4jm5Fhc1lrmsJJrVHbMPt954",
-    authDomain: "vspace-66a6f.firebaseapp.com",
-    databaseURL: "https://vspace-66a6f.firebaseio.com",
-    projectId: "vspace-66a6f",
-    storageBucket: "vspace-66a6f.appspot.com",
-    messagingSenderId: "1069991339940"
-};
-const database = firebase
-  .initializeApp(config)
-  .database();
+// var config = {
+//     apiKey: "AIzaSyDd86kbn_C4jm5Fhc1lrmsJJrVHbMPt954",
+//     authDomain: "vspace-66a6f.firebaseapp.com",
+//     databaseURL: "https://vspace-66a6f.firebaseio.com",
+//     projectId: "vspace-66a6f",
+//     storageBucket: "vspace-66a6f.appspot.com",
+//     messagingSenderId: "1069991339940"
+// };
+// const database = firebase
+//   .initializeApp(config)
+//   .database();
 
 export default class Manage7x24 extends Component{
     constructor(props){
@@ -138,7 +138,7 @@ export default class Manage7x24 extends Component{
       console.log(res);
     }
     genStandby7x24 = () => {
-    
+
     }
     render(){
       console.log(this.state);

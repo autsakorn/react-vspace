@@ -119,7 +119,8 @@ class HeaderProject extends Component {
       }
       var btnCloseProject;
       if(this.state.projectInfo.data_status!=="400" && !this.state.openCloseProject){
-        btnCloseProject = <div><RaisedButton style={{margin:4}} onTouchTap={()=>{this.setState({openCloseProject:!this.state.openCloseProject})}} label="Close Project" /></div>;
+        btnCloseProject = <div>
+        <RaisedButton style={{margin:4}} onTouchTap={()=>{this.setState({openCloseProject:!this.state.openCloseProject})}} label="Close Project" /></div>;
       }else if(this.state.projectInfo.data_status==="400"){
         btnCloseProject = <div>Closed</div>;
       }
@@ -129,8 +130,9 @@ class HeaderProject extends Component {
           <div style={{border:'1px solid #ededed', padding:4}}>
             <div></div>
             <div>
-              <div style={{margin:4}}>CLOSE PROJECT หมายถึงการทำงานใน Project นี้สิ้นสุดลงแล้ว, เมื่อคุณ CLOSE PROJECT แล้วจะไม่สามารถทำการสร้าง Task ใน Project ได้อีก</div>
-              <div><TextField style={{margin:4}} hintText="Remart" value={this.state.remarkCloseProject} onChange={this.remarkCloseProject} /></div>
+              <div style={{margin:4}}>
+                <small style={{color:lightBlack}}>CLOSE PROJECT หมายถึงการทำงานใน Project นี้สิ้นสุดลงแล้ว, เมื่อคุณ CLOSE PROJECT แล้วจะไม่สามารถทำการสร้าง Task ใน Project ได้อีก</small></div>
+              <div><TextField fullWidth={true} hintText="Remark" value={this.state.remarkCloseProject} onChange={this.remarkCloseProject} /></div>
               <div>
                 <RaisedButton onTouchTap={this.closeProject} primary={true} style={{margin:4}} label="Confirm Close" />
                 <RaisedButton style={{margin:4}} onTouchTap={()=>{this.setState({openCloseProject:!this.state.openCloseProject})}} label="Cancel Close" />
@@ -150,8 +152,10 @@ class HeaderProject extends Component {
                     <div><span >{this.state.projectInfo.end_user}</span></div>
                     <div><small style={{color:lightBlack}} >{this.state.projectInfo.end_user_address}</small></div>
                     <div ><small style={{color:grey400}} >Create {this.state.projectInfo.create_datetime_df}</small></div>
-                    {btnCloseProject}
-                    {formCloseProject}
+                    <div>
+                      {btnCloseProject}
+                      {formCloseProject}
+                    </div>
                   </div>
                 </Column>
                 <Column>

@@ -40,6 +40,7 @@ class TicketItem extends Component {
     // console.log(this.props.item);
     this.state = {item:this.props.item,openTicketDrawer:false,data_ticket_detail:null,
       listUserCanAddProject:this.props.listUserCanAddProject,
+      listUserCanAddTask:this.props.listUserCanAddTask,
       openAppointment:false,ticket_sid:this.props.item.sid
     };
   }
@@ -99,7 +100,7 @@ class TicketItem extends Component {
     if(this.state.data_ticket_detail){
       ticketDetail =
       <Drawer docked={true} width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true}  open={this.state.openTicketDrawer} >
-        <TicketDetail onOpenAppointment={this.handleOpenAppointment} listUserCanAddProject={this.state.listUserCanAddProject} projectContact={this.state.item.contactPeople} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
+        <TicketDetail onOpenAppointment={this.handleOpenAppointment} listUserCanAddProject={this.state.listUserCanAddProject} listUserCanAddTask={this.props.listUserCanAddTask} projectContact={this.state.item.contactPeople} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
       </Drawer>
     }
 
@@ -143,8 +144,8 @@ class TicketItem extends Component {
             {avatarOwner}
           </Column>
           <Column style={{textAlign:'right'}}>
-            <div>{item.subject}</div>
-            <div style={{color:lightBlack}}>{item.case_type}</div>
+            <div>{item.no_ticket} {item.subject}</div>
+            <div style={{color:lightBlack}}>{item.contract_no} {item.case_type}</div>
             <div style={{color: lightBlack, height:16, overflow:'hidden'}}><small>{item.end_user}</small></div>
             <div>{status}</div>
             <div style={{color: lightBlack,textAlign:'right',position:'absolute',right:20,bottom:8}}>

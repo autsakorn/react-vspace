@@ -231,7 +231,7 @@ class Project extends Component {
     }
     this.state.task.forEach((item,i)=>{
         task.push(
-          <TicketItem item={item} listUserCanAddProject={this.state.listUserCanAddProject} key={item.sid+i} />
+          <TicketItem item={item} listUserCanAddTask={this.props.listUserCanAddTask} listUserCanAddProject={this.state.listUserCanAddProject} key={item.sid+i} />
         )
     });
 

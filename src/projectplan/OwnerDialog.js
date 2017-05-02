@@ -95,6 +95,7 @@ class OwnerDialog extends Component {
       var listItem = [];
       const dataSource1 = [];
       this.state.listItem.forEach((item) => {
+          console.log(item);
           var avatar = <Avatar src={item.pic_employee} />;
           listItem.push(<ListItem key={item.email}
             leftAvatar={avatar}
@@ -194,7 +195,7 @@ class OwnerDialog extends Component {
       return(
         <div >
           {labelControl}
-        
+
         </div>
       );
     }
