@@ -17,7 +17,7 @@ import NavCompoment from './nav/NavCompoment';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Asset from './asset/Asset.js';
 
-// import Manage7x24 from './standby/Manage7x24';
+import Manage7x24 from './standby/Manage7x24';
 import {
   BrowserRouter as Router,
   Route,
@@ -73,12 +73,12 @@ class App extends Component {
       get(Url.info, formData).then(function(resInfo){
         if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Boards"){
           that.setState({page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
-        // }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Manage7x24"){
-        //     that.setState({page:
-        //       <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
-        //         <Manage7x24 />
-        //       </div>
-        //     })
+        }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Manage7x24"){
+            that.setState({page:
+              <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+                <Manage7x24 />
+              </div>
+            });
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="ProjectCreate"){
             that.setState({page:
               <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
