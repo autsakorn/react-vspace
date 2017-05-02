@@ -20,26 +20,28 @@ import TextField from 'material-ui/TextField';
 import moment from 'moment';
 import * as firebase from 'firebase';
 
-// var config = {
-//     apiKey: "AIzaSyDd86kbn_C4jm5Fhc1lrmsJJrVHbMPt954",
-//     authDomain: "vspace-66a6f.firebaseapp.com",
-//     databaseURL: "https://vspace-66a6f.firebaseio.com",
-//     projectId: "vspace-66a6f",
-//     storageBucket: "vspace-66a6f.appspot.com",
-//     messagingSenderId: "1069991339940"
-// };
-// const database = firebase
-//   .initializeApp(config)
-//   .database();
-
 export default class Manage7x24 extends Component{
     constructor(props){
+      var config = {
+          apiKey: "AIzaSyDd86kbn_C4jm5Fhc1lrmsJJrVHbMPt954",
+          authDomain: "vspace-66a6f.firebaseapp.com",
+          databaseURL: "https://vspace-66a6f.firebaseio.com",
+          projectId: "vspace-66a6f",
+          storageBucket: "vspace-66a6f.appspot.com",
+          messagingSenderId: "1069991339940"
+      };
+      const database = firebase
+        .initializeApp(config)
+        .database();
+
       super(props);
       this.state = {txtHoliday:'',
-      days:[],
-      daysRef:null,
-      standby_buddy:[],
-      holiday:[],RunStart:0,RunTo:30};
+        days:[],
+        daysRef:null,
+        standby_buddy:[],
+        holiday:[],RunStart:0,RunTo:30,
+        database:database
+      };
     }
     componentWillMount(){
       this.loadDataBuddy7x24();
@@ -48,7 +50,7 @@ export default class Manage7x24 extends Component{
       // this.loadDataHolidayAndGenDayOneYear(); // โหลดข้อมูล วันหยุดและสร้าง วัน ทั้งปี
     }
     loadDataBuddy7x24 = () => {
-      var buddy = database.ref('/standby_buddy');
+      var buddy = this.state.database.ref('/standby_buddy');
       buddy.on('value', snapshot => {
           const store = snapshot.val();
           console.log(store);
@@ -56,7 +58,7 @@ export default class Manage7x24 extends Component{
       });
     }
     loadDataDays = () => {
-      var days = database.ref('/days');
+      var days = this.state.database.ref('/days');
       days.on('value', snapshot => {
         const store = snapshot.val();
         // console.log(store);
@@ -77,7 +79,7 @@ export default class Manage7x24 extends Component{
       this.setState({txtHoliday:e.target.value});
     }
     loadDataHolidayAndGenDayOneYear = () => {
-      var days = database.ref('/holiday');
+      var days = this.state.database.ref('/holiday');
       days.on('value', snapshot => {
         const store = snapshot.val();
         console.log(store);
@@ -106,7 +108,7 @@ export default class Manage7x24 extends Component{
           }
         });
         dataDays.push({'day':day,is_holiday:is_holiday,is_offical_holiday:is_offical_holiday,holiday_name:dddd});
-        database.ref().child('days').push({'day':day,is_holiday:is_holiday,is_offical_holiday:is_offical_holiday,holiday_name:dddd}, response => {console.log(response)});
+        this.state.database.ref().child('days').push({'day':day,is_holiday:is_holiday,is_offical_holiday:is_offical_holiday,holiday_name:dddd}, response => {console.log(response)});
         // console.log(dataDetail);
       }
     }
@@ -134,7 +136,7 @@ export default class Manage7x24 extends Component{
 
       }
       // database.ref().update(updates);
-      var res = database.ref().child(`days/${uid}`).update(data, response => response);
+      var res = this.state.database.ref().child(`days/${uid}`).update(data, response => response);
       console.log(res);
     }
     genStandby7x24 = () => {

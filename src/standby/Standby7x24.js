@@ -16,7 +16,7 @@ import { Columns, Column } from 're-bulma';
 import Avatar from 'material-ui/Avatar';
 import ActionStar from 'material-ui/svg-icons/action/grade';
 import {red500, yellow500, blue500} from 'material-ui/styles/colors';
-
+import moment from 'moment';
 
 class Standby7x24 extends Component {
   constructor(props){
@@ -99,21 +99,48 @@ class Standby7x24 extends Component {
         );
       }
     });
-    var eleStandby = <Columns>{dataStandby7x24}</Columns>
+    var backupTeam;
+    var nowHour =(moment().format('HH'));
+    if(this.state.queStandby[0]){
+      var tmp = this.state.queStandby[0].otherProducts[0];
+      if(parseInt(tmp.time_start)<=nowHour){
+        backupTeam =
+        <Column>
+          <div> <Avatar src={tmp.pic_full} /> {tmp.thainame}</div>
+          <div> Tel : {tmp.mobile}</div>
+          <div> Email : {tmp.emailaddr}</div>
+          <div><small> {tmp.standby_date}  ({tmp.time_start} - {tmp.time_end}) </small></div>
+        </Column>
+      }
 
+      var tmp = this.state.queStandby[0].otherProducts[1];
+      if(parseInt(tmp.time_start)<=nowHour){
+        backupTeam =
+        <Column>
+          <div> <Avatar src={tmp.pic_full} /> {tmp.thainame}</div>
+          <div> Tel : {tmp.mobile}</div>
+          <div> Email : {tmp.emailaddr}</div>
+          <div><small> {tmp.standby_date}  ({tmp.time_start} - {tmp.time_end}) </small></div>
+        </Column>
+      }
 
+    }
+    var eleStandby =
+      <Columns>
+        <Column><div style={{clear:'both'}}>Oracle 7x24<br/></div><Columns style={{clear:'both',margin:0}}>{dataStandby7x24}</Columns></Column>
+        <Column><div style={{clear:'both'}}>Backup<br/></div><Columns style={{clear:'both',margin:0}}>{backupTeam}</Columns></Column>
+      </Columns>
     return(
 
         <div>
               <div>
                 <Card style={{backgroundColor:'initial'}}>
                   <CardHeader style={{padding:"20px 20px 0px 20px"}}
-                    title={"Standby7x24 "}
+                    title={"Standby7x24"}
                   />
                   <CardText>
                       {eleStandby}
                   </CardText>
-
                 </Card>
               </div>
         </div>
