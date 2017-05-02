@@ -35,6 +35,10 @@ import MapsLocalTaxi from 'material-ui/svg-icons/maps/local-taxi';
 import ActionSchedule from 'material-ui/svg-icons/action/schedule';
 import Checkbox from 'material-ui/Checkbox';
 import Snackbar from 'material-ui/Snackbar';
+
+import Divider from 'material-ui/Divider';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 class ServiceReportCreate extends Component {
   constructor(props){
     super(props);
@@ -49,17 +53,26 @@ class ServiceReportCreate extends Component {
     this.state = {
       serviceReport:this.props.serviceReport,
       createService:this.props.createService,
-      stepIndex: 0,finished: false,caseSid:this.props.caseSid,
+      stepIndex: 0,finished: false,
+      ticket_sid:this.props.ticket_sid,
       value24: appointment_time, value12: null, openSelectStaff:false,
       staff:[],
       subject:"",detail:"",service_type:"1",service_type_lable:"Onsite",appointment_date:appointment_date,expect_duration:"8",
       end_user_name:"",end_user_email:"",end_user_mobile:"",end_user_phone:"",end_user_company:"",openServiceType:false,
       openSnackbar:false,
-      messageSnackbar:''
+      messageSnackbar:'',
+      creatingService:true
     };
   }
   componentWillUnmount(){
 
+  }
+  handleStatusCreating = () => {
+    if(this.state.createService){
+      this.setState({creatingService:false});
+    }else{
+      this.setState({creatingService:true})
+    }
   }
   handleContactUser = (name, email, mobile, phone, company) => {
     this.setState({end_user_name:name});
@@ -88,7 +101,8 @@ class ServiceReportCreate extends Component {
     }else{
       this.setState({createService:true});
     }
-    this.props.onStatusCreating(this.state.createService);
+    this.handleStatusCreating();
+    // this.props.onStatusCreating(this.state.createService);
   }
 
   handleNext = () => {
@@ -131,7 +145,7 @@ class ServiceReportCreate extends Component {
   handleServiceReportCreate = () => {
     console.log(this.state);
     this.setState({openSnackbar:true,messageSnackbar:'Appointment Creating...'});
-    this.props.onCloseDialog();
+
     var that = this;
     var engineer = [];
     this.state.staff.forEach((item) => {
@@ -161,7 +175,7 @@ class ServiceReportCreate extends Component {
     }
     console.log(dataCreateService);
     var formData = new FormData();
-    formData.append('ticket_sid', this.state.caseSid);
+    formData.append('ticket_sid', this.state.ticket_sid);
     formData.append('email',InfoGen.email);
     formData.append('token',InfoGen.token);
     formData.append('data', JSON.stringify(dataCreateService));
@@ -169,6 +183,7 @@ class ServiceReportCreate extends Component {
         console.log(res);
         that.props.onCreatedService(res.task);
         that.setState({stepIndex:0,staff:[],openSnackbar:false,messageSnackbar:'Appointment Created'});
+        that.props.onCloseDialog();
     });
   }
 
@@ -346,7 +361,6 @@ class ServiceReportCreate extends Component {
         <MenuItem key={7} value={"7"} primaryText="Testing" />,
       ];
 
-
       var request_benefit;
       var transportationItem = [];
       var iconTaxi = <span><MapsLocalTaxi /> Taxi</span>
@@ -374,7 +388,13 @@ class ServiceReportCreate extends Component {
       });
       request_benefit = <List> {transportationItem}</List>
       createService =
-        <div style={{maxWidth: '100%', margin: 'auto'}}>
+        <div style={{maxWidth: '100%', margin: 'auto', paddingTop:'10px'}}>
+          <Divider />
+          <div style={{textAlign:'right'}} onTouchTap={()=>this.props.onCloseDialog()}>
+            <FloatingActionButton mini={true}>
+              <NavigationClose   />
+            </FloatingActionButton>
+          </div>
           <Stepper activeStep={stepIndex} orientation="vertical">
             <Step>
               <StepLabel>SUBJECT</StepLabel>
@@ -444,7 +464,7 @@ class ServiceReportCreate extends Component {
             </Step>
           </Stepper>
           <Snackbar
-            open={this.state.openSnackbar}
+            open={this.state.openSnackbar} autoHideDuration={4000}
             message={this.state.messageSnackbar}
             onRequestClose={()=>{this.setState({openSnackbar:false})}}
           />

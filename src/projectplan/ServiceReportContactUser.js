@@ -121,24 +121,21 @@ class ServiceReportContactUser extends Component {
         if(this.state.projectContact.length>0){
           this.state.projectContact.forEach((item,k) => {
             var tmp =
-                  <ListItem key={k} style={{padding:0}} onTouchTap={()=>this.selectedContactUser(item.name,item.email,item.mobile,item.phone,item.company)}
-                    primaryText={item.name}
-                    secondaryText={
-                      <p>
-                        <span style={{color: darkBlack}}></span>
-                        {item.email}, {item.mobile}, {item.phone} {item.company}
-                      </p>
-                    }
-                    secondaryTextLines={2}
-                  />
-                ;
-
+                  <div key={k} style={{padding:0, marginBottom:10}} onTouchTap={()=>this.selectedContactUser(item.name,item.email,item.mobile,item.phone,item.company)}>
+                    <div>{item.name}</div>
+                    <div>
+                      <span style={{color: lightBlack}}>
+                        {item.email} {item.mobile} {item.phone}<br/>
+                        {item.company}
+                      </span>
+                    </div>
+                  </div>
             listContact.push(tmp);
           });
         }
 
         var showCheckBox = false;
-        var table = <List style={{margin:'0px -16px'}}>{listContact}</List>;
+        var table = <List style={{margin:'5px 0px'}}>{listContact}</List>;
 
         var btnAddContact;
         var stepAdd;

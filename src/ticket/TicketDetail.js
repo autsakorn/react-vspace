@@ -47,11 +47,14 @@ class TicketDetail extends Component {
         ticket_sid:this.props.ticket_sid,
         data: this.props.data,
         openFormSlaRemedy:false,
-        toSlaStatus:0
+        toSlaStatus:0,
+        openAppointment:false
       };
-
   }
-
+  handleOpenAppointment = () => {
+    // this.setState({openAppointment:true});
+    this.props.onOpenAppointment();
+  }
   componentDidMount(){
 
   }
@@ -160,7 +163,7 @@ class TicketDetail extends Component {
 
       var jobData;
       // if(data.task.length>0){
-        jobData = <ServiceReportDialog serviceReport={data.task} onCreatedService={this.handleCreatedService} caseSid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject}  />
+        jobData = <ServiceReportDialog onOpenAppointment={this.handleOpenAppointment} serviceReport={data.task} onCreatedService={this.handleCreatedService} ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} listUserCanAddProject={this.props.listUserCanAddProject}  />
       // }else{
         // jobData = <span></span>
       // }
@@ -268,7 +271,7 @@ class TicketDetail extends Component {
 
       //WORKLOG ZONE
       var worklog = [];
-      console.log(data);
+      // console.log(data);
       if(data.worklog){
         data.worklog.forEach((item,i)=>{
             worklog.push(<div key={i}><Avatar src={item.created_pic} /> {item.worklog} <br/><small style={{fontSize:'70%'}}>Created {item.create_datetime_df}</small></div>);

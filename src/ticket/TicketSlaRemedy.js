@@ -67,7 +67,7 @@ export default class TicketSlaRemedy extends Component {
     var that = this;
     var duration_in_milliseconds = this.state.value24;
     var expect_duration = moment(duration_in_milliseconds).format('HH:mm');
-    var appointment_date = moment(this.state.appointment_date).format('YYYY-MM-DD');
+    var appointment_date = moment(this.state.minDate).format('YYYY-MM-DD');
     var datetime = appointment_date+' '+expect_duration;
     var formData = new FormData();
     formData.append("ticket_sid",this.props.ticket_sid);

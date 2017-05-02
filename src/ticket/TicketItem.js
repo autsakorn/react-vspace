@@ -29,21 +29,32 @@ import TicketDetail from '../ticket/TicketDetail';
 import { Columns,Column } from 're-bulma';
 import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import ServiceReportCreate from '../projectplan/ServiceReportCreate';
 
 class TicketItem extends Component {
   constructor(props){
     super(props);
-    this.state = {item:this.props.item,openTicketDrawer:false,data_ticket_detail:null,listUserCanAddProject:this.props.listUserCanAddProject};
+    // console.log(this.props.item);
+    this.state = {item:this.props.item,openTicketDrawer:false,data_ticket_detail:null,
+      listUserCanAddProject:this.props.listUserCanAddProject,
+      openAppointment:false,ticket_sid:this.props.item.sid
+    };
   }
   componentDidMount(){
     // this.callDataTicket(this.state.item.sid);
   }
   handleOpenTicketDrawer = () => {
-    this.callDataTicket(this.state.item.sid);
+    var that = this;
+    // this.callDataTicket(this.state.item.sid);
+    that.setState({ticket_sid:that.state.item.sid, data_ticket_detail:that.state.item,openTicketDrawer:true});
 
     // this.setState({openTicketDrawer:true});
     // console.log(this.state);
   }
+
   callDataTicket(ticket_sid){
     if(this.props.ticket_sid!==null){
       var formData = new FormData();
@@ -51,14 +62,23 @@ class TicketItem extends Component {
       formData.append("token", InfoGen.token);
       formData.append("ticket_sid", ticket_sid);
       var that = this;
-      get(Url.ticketDetail,formData).then(function(res){
+      // get(Url.ticketDetail,formData).then(function(res){
         // console.log(res);
-        that.setState({ticket_sid:ticket_sid, data_ticket_detail:res.data,
+        that.setState({ticket_sid:ticket_sid, data_ticket_detail:that.state.item,
           // listUserCanAddProject:res.canAssignTo
         });
         that.setState({openTicketDrawer:true});
-      });
+      // });
     }
+  }
+  handleOpenAppointment = () => {
+    this.setState({openAppointment:true});
+  }
+  handleCreatedService = (task) => {
+    console.log(task);
+    var tmp = this.state.item;
+    tmp.task = task;
+    this.setState({item:tmp});
   }
   render(){
     const styles = {
@@ -78,8 +98,8 @@ class TicketItem extends Component {
     var ticketDetail;
     if(this.state.data_ticket_detail){
       ticketDetail =
-      <Drawer width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true} docked={false} open={this.state.openTicketDrawer} >
-        <TicketDetail listUserCanAddProject={this.state.listUserCanAddProject} projectContact={[]} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
+      <Drawer docked={true} width={"100%"} onRequestChange={(openTicketDrawer) => this.setState({openTicketDrawer})} openSecondary={true}  open={this.state.openTicketDrawer} >
+        <TicketDetail onOpenAppointment={this.handleOpenAppointment} listUserCanAddProject={this.state.listUserCanAddProject} projectContact={this.state.item.contactPeople} closeWindow={()=>{ this.setState({openTicketDrawer:false}) }} ticket_sid={this.state.item.sid} data={this.state.item} />
       </Drawer>
     }
 
@@ -101,6 +121,20 @@ class TicketItem extends Component {
     }else{
       status = <div><small style={{color:lightBlack}}>Status: <span style={{color:lightBlack}}>Doing</span></small></div>;
     }
+
+    // var createAppointment;
+    // console.log(this.state.openAppointment);
+    // <Drawer openSecondary={true} width={'100%'} open={this.state.openAppointment} docked={false} onRequestChange={(openAppointment) => this.setState({openAppointment})}>
+    // if(this.state.openAppointment){
+    //     createAppointment =
+    //       <div>
+    //           <ServiceReportCreate createService={true} onCloseDialog={()=>this.setState({openAppointment:false})}
+    //               onCreatedService={this.handleCreatedService} onStatusCreating={this.handleStatusCreating}
+    //               caseSid={this.state.ticket_sid} projectContact={this.state.item.contactPeople} serviceReport={this.props.serviceReport}
+    //               listUserCanAddProject={this.props.listUserCanAddProject} />
+    //       </div>
+    // }
+    // </Drawer>
 
     return(
       <div style={styles.styleBorder}>

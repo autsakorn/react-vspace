@@ -178,7 +178,7 @@ class OwnerDialog extends Component {
           </div>
         </div>
       </Dialog>;
-
+                // {dialog}
       var labelControl;
       if(this.state.open){
         labelControl = <div><AutoComplete onNewRequest={this.handleNewMember} hintText="Find by Email" openOnFocus={true} filter={AutoComplete.caseInsensitiveFilter} dataSource={dataSource1} /><ContentClear onTouchTap={this.handleClose} style={styles.chip} /></div>
@@ -194,7 +194,7 @@ class OwnerDialog extends Component {
       return(
         <div >
           {labelControl}
-          {dialog}
+        
         </div>
       );
     }

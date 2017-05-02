@@ -36,6 +36,9 @@ class NavCompoment extends Component {
   handleSignOut = () => {
     localStorage.removeItem("case_email");
     localStorage.removeItem("case_token");
+    localStorage.removeItem("data_board");
+    localStorage.removeItem("tasks_sid");
+    localStorage.removeItem("project_sid");
     location.reload();
     // this.props.onChangePage();
   }
@@ -124,6 +127,17 @@ class NavCompoment extends Component {
       } key={-2} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
       >{"Appointment History"}</ListItem>
     );
+    if(this.props.info.email==="autsakorn.t@firstlogic.co.th"){
+      listMenu.push(
+        <ListItem onTouchTap={
+          ()=>{
+            this.props.onChangePage("Manage7x24");
+            this.handleClose();
+          }
+        } key={-5} style={{color:lightBlack,marginLeft:'5px'}} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+        >{"Manage7x24"}</ListItem>
+      );
+    }
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     } else {
         this.props.info.menus.forEach(function(item,i){
@@ -147,8 +161,16 @@ class NavCompoment extends Component {
                 >{item.name}</ListItem>);
               }else if(item.list[0].sid==="91"){
                 listMenu.push(<ListItem onTouchTap={()=>{
-                  localStorage.removeItem("project_sid");localStorage.removeItem("tasks_sid");
+                  localStorage.removeItem("project_sid");
+                  localStorage.removeItem("tasks_sid");
                   localStorage.setItem("currectPage","Standby7x24"); }
+                } key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
+                >{item.name}</ListItem>);
+              }else if(item.list[0].sid==="93"){
+                listMenu.push(<ListItem onTouchTap={()=>{
+                  localStorage.removeItem("project_sid");localStorage.removeItem("ticket_sid");
+                  localStorage.removeItem("tasks_sid");
+                  localStorage.setItem("currectPage","Asset"); }
                 } key={i} style={{color:lightBlack,marginLeft:'5px'}} href={item.list[0].link} initiallyOpen={true} rightIcon={<NavigationChevronRight />}
                 >{item.name}</ListItem>);
               } else{
@@ -161,6 +183,7 @@ class NavCompoment extends Component {
             }
         });
     }// END ELSE
+
     listMenu.push(
       <ListItem onTouchTap={
         ()=>{

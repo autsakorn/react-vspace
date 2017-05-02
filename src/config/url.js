@@ -1,4 +1,4 @@
-var END_POINT_2 = 'http://vspace.in.th/apis/';
+var END_POINT_2 = 'http://vspace01.vspace.in.th/apis/';
 export var END_POINT_PDF = 'http://vspace.in.th/pdf/';
 var Url = {
   'info':END_POINT_2+"v1/user/header",
@@ -43,7 +43,8 @@ var Url = {
   'standby7x24':END_POINT_2+"v1/planning/sheduleStandby",
   'historyAppointment': END_POINT_2+"v1/projectplan/historyAppointment",
   'changeStatusTicket':END_POINT_2+"v1/incident/updateSLA",
-  'do_serial_pm':END_POINT_2+"v1/pm/insert/do_serial_pm"
+  'do_serial_pm':END_POINT_2+"v1/pm/insert/do_serial_pm",
+  'closeProject':END_POINT_2+"v1/projectmodify/closeProject"
 }
 
 export default Url;
