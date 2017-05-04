@@ -73,7 +73,8 @@ class App extends Component {
       formData.append('email',InfoGen.email);
       get(Url.info, formData).then(function(resInfo){
         if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Boards"){
-          that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} /><Project onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
+          that.setState({openSnackbar:false,page:<div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />
+            <Project listUserCanAddTask={resInfo.listUserCanAddTask} onChangePage={that.handleChangePage} urlProject={Url.project} formData={formData} info={resInfo.data} projectList={[]} /></div>});
         }else if(localStorage.getItem("currectPage") && localStorage.getItem("currectPage")==="Manage7x24"){
             that.setState({openSnackbar:false,page:
               <div><NavCompoment onChangePage={that.handleChangePage} info={resInfo.data} />

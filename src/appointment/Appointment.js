@@ -637,14 +637,12 @@ export default class Appointment extends Component {
                 defaultDate={minDate}
                 disableYearSelection={this.state.disableYearSelection}
               />
-
               <TimePicker
                 format="24hr" floatingLabelText="Appointment Time"
                 hintText="Appointment Time" defaultTime={minHour}
                 value={this.state.value24}
                 onChange={this.handleAppointmentTime}
               />
-
               <div>
                 <TextField type="number" min={1} value={this.state.data.expect_duration} onChange={this.handleExpectDuration} hintText="Expect Duration" floatingLabelText="Expect Duration (Hours.)"/>
               </div>
@@ -653,9 +651,15 @@ export default class Appointment extends Component {
           <Divider />
         </div>
     }else{
+      var editingAppointment;
+      if(this.state.data.appointment_type==="2"){
+
+      }else{
+        editingAppointment = <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} />;
+      }
       appointment_element = <div>
         <div style={{padding:10}}><span>Appointment: </span>
-        <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.appointment +" ("+this.state.data.expect_duration+")"}</span> <ContentCreate onTouchTap={this.handleEditingAppointment} style={{color:lightBlack}} /></div>
+        <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.appointment +" ("+this.state.data.expect_duration+")"}</span> {editingAppointment}</div>
         <Divider />
       </div>
     }
@@ -825,57 +829,68 @@ export default class Appointment extends Component {
           </Step>
         </Stepper>
       }
-
-      content =
-      <Paper zDepth={2} >
-        <div >
-          <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
-          <Divider />
-          <div style={{padding:10}}><span >Type: </span>
-            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
-          <Divider />
-
-          <div style={{padding:10}}><span >Task: </span>
-            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_case_type}</span>
-            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_ticket}</span>
-            <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_contract}</span>
+      if(this.state.data.appointment_type==="2"){
+        content =
+        <Paper zDepth={2} >
+          <div >
+            <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
+            <Divider />
+            {appointment_element}
           </div>
-          <Divider />
-          <div style={{padding:10}}><span >Serial: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_serial}</span></div>
-          <Divider />
+        </Paper>;
 
-          <div style={{padding:10}}><span>End User: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.end_user}</span></div>
-          <Divider />
-          <div style={{padding:10}}>
-            <span>Site: </span>
-            <span style={{color:lightBlack,marginLeft:10}}>{((this.state.data.service_report_address)?this.state.data.service_report_address:this.state.data.ticket_end_user_site)}</span>
-          </div>
-          <Divider />
-          {appointment_element}
-          <div style={{padding:10}}>
-            <div><span>Contact User: </span><ContentCreate onTouchTap={this.handleEditingContactUser} style={{color:lightBlack}} /></div>
-            <div>
-              <span style={{color:lightBlack,marginLeft:10}}>
-              <div>{contact_user_element}</div>
-              </span>
+      }else{
+        content =
+          <Paper zDepth={2} >
+            <div >
+              <div style={{padding:10}}><span >Subject: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_task+" "+this.state.data.subject_service_report}</span></div>
+              <Divider />
+              <div style={{padding:10}}><span >Type: </span>
+                <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.service_type_name}</span></div>
+              <Divider />
+
+              <div style={{padding:10}}><span >Task: </span>
+                <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_case_type}</span>
+                <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.no_ticket}</span>
+                <span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_contract}</span>
+              </div>
+              <Divider />
+              <div style={{padding:10}}><span >Serial: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.ticket_serial}</span></div>
+              <Divider />
+
+              <div style={{padding:10}}><span>End User: </span><span style={{color:lightBlack,marginLeft:10}}>{this.state.data.end_user}</span></div>
+              <Divider />
+              <div style={{padding:10}}>
+                <span>Site: </span>
+                <span style={{color:lightBlack,marginLeft:10}}>{((this.state.data.service_report_address)?this.state.data.service_report_address:this.state.data.ticket_end_user_site)}</span>
+              </div>
+              <Divider />
+              {appointment_element}
+              <div style={{padding:10}}>
+                <div><span>Contact User: </span><ContentCreate onTouchTap={this.handleEditingContactUser} style={{color:lightBlack}} /></div>
+                <div>
+                  <span style={{color:lightBlack,marginLeft:10}}>
+                  <div>{contact_user_element}</div>
+                  </span>
+                </div>
+              </div>
+              <Divider />
+              <br />
+              <div style={{padding:10}}>
+                <div>CHECK POINT</div>
+                <div></div>
+              </div>
+              {stepper}
+              <br/>
+              {finished && (
+                <p style={{margin: '20px 0', textAlign: 'center'}}>
+                  This appointment is finished
+                </p>
+              )}
+              <br/>
             </div>
-          </div>
-          <Divider />
-          <br />
-          <div style={{padding:10}}>
-            <div>CHECK POINT</div>
-            <div></div>
-          </div>
-          {stepper}
-          <br/>
-          {finished && (
-            <p style={{margin: '20px 0', textAlign: 'center'}}>
-              This appointment is finished
-            </p>
-          )}
-          <br/>
-        </div>
-      </Paper>
+          </Paper>;
+      }
     }else{
       content =
       <div style={{textAlign:'center'}}>
@@ -883,9 +898,7 @@ export default class Appointment extends Component {
       </div>
     }
     return(
-
         <div>
-
           <div style={{margin:10}}>
               {content}
           </div>

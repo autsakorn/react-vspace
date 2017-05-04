@@ -190,7 +190,9 @@ class Project extends Component {
           if(item.pic_full){
             avatarOwner.push(<Avatar key={item.email} src={item.pic_full} />);
           }else{
-            avatarOwner.push(<Avatar style={{float:'right'}} key={item.email} >{item.email.toUpperCase().charAt(0)+item.email.toUpperCase().charAt(1)}</Avatar>);
+            if(item.email){
+              avatarOwner.push(<Avatar style={{float:'right'}} key={item.email} >{item.email.toUpperCase().charAt(0)+item.email.toUpperCase().charAt(1)}</Avatar>);
+            }
           }
       });
       boxProject.push(

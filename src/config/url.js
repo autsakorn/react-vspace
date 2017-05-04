@@ -1,4 +1,4 @@
-var END_POINT_2 = 'http://vspace01.vspace.in.th/apis/';
+var END_POINT_2 = 'http://vspace.in.th/apis/';
 export var END_POINT_PDF = 'http://vspace.in.th/pdf/';
 var Url = {
   'info':END_POINT_2+"v1/user/header",
