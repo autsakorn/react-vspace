@@ -319,7 +319,7 @@ class ServiceReportCreate extends Component {
       },
     };
     const {finished, stepIndex} = this.state;
-
+    console.log(this.props);
     var staffList = this.props.listUserCanAddTask.map((item,k) => {
         return <ListItem key={k}
           leftAvatar={<Avatar src={item.pic_employee} />}

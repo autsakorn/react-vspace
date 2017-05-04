@@ -174,7 +174,8 @@ class ServiceReportDialog extends Component {
           <div>
               <ServiceReportCreate createService={true} onCloseDialog={()=>this.setState({open:false})}
                   onCreatedService={this.handleCreatedService} onStatusCreating={this.handleStatusCreating}
-                  ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact} serviceReport={this.props.serviceReport}
+                  ticket_sid={this.props.ticket_sid} projectContact={this.props.projectContact}
+                  serviceReport={this.props.serviceReport}
                   listUserCanAddTask={this.props.listUserCanAddTask} />
           </div>
     }
